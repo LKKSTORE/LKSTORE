@@ -1,146 +1,192 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LKSTORE</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #0d0d0d;
-      color: white;
-    }/* HEADER */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  background: linear-gradient(90deg, #8B0000, #000000);
-}
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: #ff1a1a;
-}
+    body{
+      background: radial-gradient(circle at top, #1a0000, #000000);
+      color:white;
+    }
 
-nav a {
-  color: white;
-  margin-left: 20px;
-  text-decoration: none;
-  font-weight: bold;
-}
+    /* NAVBAR */
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 40px;
+      background: rgba(0,0,0,0.7);
+      border-bottom: 1px solid #ff1a1a33;
+      position: sticky;
+      top:0;
+      backdrop-filter: blur(10px);
+    }
 
-nav a:hover {
-  color: #ff1a1a;
-}
+    .logo{
+      font-size:26px;
+      font-weight:900;
+      color:#ff1a1a;
+      letter-spacing:2px;
+    }
 
-/* HERO */
-.hero {
-  text-align: center;
-  padding: 80px 20px;
-  background: radial-gradient(circle, #2b0000, #000000);
-}
+    nav a{
+      color:#fff;
+      margin-left:20px;
+      text-decoration:none;
+      font-weight:600;
+      transition:0.3s;
+    }
 
-.hero h1 {
-  font-size: 48px;
-  color: #ff1a1a;
-}
+    nav a:hover{
+      color:#ff1a1a;
+    }
 
-.hero p {
-  font-size: 18px;
-  color: #ccc;
-}
+    /* HERO */
+    .hero{
+      padding:100px 20px;
+      text-align:center;
+    }
 
-.btn {
-  margin-top: 20px;
-  padding: 12px 25px;
-  background: #ff1a1a;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 8px;
-}
+    .hero h1{
+      font-size:60px;
+      color:#ff1a1a;
+      text-shadow:0 0 20px #ff1a1a55;
+    }
 
-.btn:hover {
-  background: #b30000;
-}
+    .hero p{
+      margin-top:15px;
+      font-size:18px;
+      color:#cccccc;
+    }
 
-/* PRODUTOS */
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 40px;
-}
+    .btn{
+      margin-top:25px;
+      padding:14px 30px;
+      background: linear-gradient(90deg,#ff1a1a,#b30000);
+      border:none;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+      border-radius:10px;
+      transition:0.3s;
+    }
 
-.card {
-  background: #1a1a1a;
-  border: 1px solid #ff1a1a;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
+    .btn:hover{
+      transform: scale(1.05);
+      box-shadow:0 0 20px #ff1a1a55;
+    }
 
-.card h3 {
-  color: #ff1a1a;
-}
+    /* PRODUCTS */
+    .products{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:25px;
+      padding:50px;
+    }
 
-.card button {
-  margin-top: 10px;
-  padding: 8px 15px;
-  background: #ff1a1a;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 6px;
-}
+    .card{
+      background: rgba(20,20,20,0.9);
+      border:1px solid #ff1a1a33;
+      padding:20px;
+      border-radius:15px;
+      text-align:center;
+      transition:0.3s;
+      box-shadow:0 0 10px #000;
+    }
 
-.card button:hover {
-  background: #b30000;
-}
+    .card:hover{
+      transform: translateY(-8px);
+      border-color:#ff1a1a;
+      box-shadow:0 0 25px #ff1a1a33;
+    }
 
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #000;
-  border-top: 1px solid #ff1a1a;
-  color: #777;
-}
+    .card h3{
+      color:#ff1a1a;
+      margin-bottom:10px;
+    }
+
+    .card p{
+      color:#ccc;
+      font-size:14px;
+    }
+
+    .card button{
+      margin-top:15px;
+      padding:10px 20px;
+      background:#ff1a1a;
+      border:none;
+      color:white;
+      border-radius:8px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .card button:hover{
+      background:#b30000;
+      transform:scale(1.05);
+    }
+
+    /* FOOTER */
+    footer{
+      text-align:center;
+      padding:25px;
+      color:#777;
+      border-top:1px solid #ff1a1a22;
+      margin-top:40px;
+    }
 
   </style>
 </head>
-<body>  <header>
-    <div class="logo">LKSTORE</div>
-    <nav>
-      <a href="#">Início</a>
-      <a href="#">Produtos</a>
-      <a href="#">Login</a>
-    </nav>
-  </header>  <section class="hero">
-    <h1>Bem-vindo à LKSTORE</h1>
-    <p>Sua loja de streaming e conteúdos digitais</p>
-    <button class="btn">Explorar Agora</button>
-  </section>  <section class="products">
-    <div class="card">
-      <h3>Produto 1</h3>
-      <p>Acesso streaming premium</p>
-      <button>Comprar</button>
-    </div><div class="card">
-  <h3>Produto 2</h3>
-  <p>Conteúdo exclusivo</p>
-  <button>Comprar</button>
-</div>
+<body>
 
-<div class="card">
-  <h3>Produto 3</h3>
-  <p>Assinatura mensal</p>
-  <button>Comprar</button>
-</div>
+<header>
+  <div class="logo">LKSTORE</div>
+  <nav>
+    <a href="#">Início</a>
+    <a href="#">Produtos</a>
+    <a href="#">Login</a>
+  </nav>
+</header>
 
-  </section>  <footer>
-    © 2026 LKSTORE - Todos os direitos reservados
-  </footer></body>
+<section class="hero">
+  <h1>LKSTORE</h1>
+  <p>Streaming • Conteúdos • Experiência Premium</p>
+  <button class="btn">Explorar Agora</button>
+</section>
+
+<section class="products">
+
+  <div class="card">
+    <h3>Premium 1</h3>
+    <p>Acesso completo ao streaming</p>
+    <button>Comprar</button>
+  </div>
+
+  <div class="card">
+    <h3>Premium 2</h3>
+    <p>Conteúdos exclusivos HD</p>
+    <button>Comprar</button>
+  </div>
+
+  <div class="card">
+    <h3>Premium 3</h3>
+    <p>Assinatura mensal VIP</p>
+    <button>Comprar</button>
+  </div>
+
+</section>
+
+<footer>
+  © 2026 LKSTORE - Todos os direitos reservados
+</footer>
+
+</body>
 </html>
