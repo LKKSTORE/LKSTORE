@@ -223,7 +223,16 @@ window.onload = function(){
 <script src="firebase.js"></script>
 
 <script>
-  / / login aqui
+function login(){
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if(u && p){
+    alert("Login OK");
+  } else {
+    alert("Preencha tudo");
+  }
+}
 </script>
 
 </body>
