@@ -226,16 +226,6 @@ window.onload = function(){
   firebase config aqui
   login aqui
 </script>
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-const auth = getAuth();
-
-createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    console.log("Conta criada:", userCredential.user);
-  })
-  .catch((error) => {
-    console.log(error.message);
-  });
 </body>
 </html>
