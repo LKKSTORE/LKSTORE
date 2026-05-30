@@ -235,6 +235,38 @@ function login(){
   }
 }
 </script>
+<div id="loginBox" style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999;">
+  
+  <h2 style="color:red;">LKSTORE LOGIN</h2>
 
+  <input id="user" placeholder="Usuário" style="padding:10px;margin:5px;">
+  <input id="pass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
+
+  <button onclick="login()" style="padding:10px 20px;background:red;color:white;border:none;">
+    Entrar
+  </button>
+
+  <p id="msg" style="color:white;"></p>
+</div>
+
+<script>
+function login(){
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if(u && p){
+    localStorage.setItem("logado", "sim");
+    document.getElementById("loginBox").style.display = "none";
+  } else {
+    document.getElementById("msg").innerText = "Preencha tudo!";
+  }
+}
+
+window.onload = function(){
+  if(localStorage.getItem("logado") === "sim"){
+    document.getElementById("loginBox").style.display = "none";
+  }
+}
+</script>
 </body>
 </html>
