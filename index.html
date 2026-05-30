@@ -308,45 +308,6 @@ function showLogin(){
   document.getElementById("loginForm").style.display = "block";
   document.getElementById("registerForm").style.display = "none";
 }
-
-// cadastro
-function register(){
-  let u = document.getElementById("regUser").value;
-  let p = document.getElementById("regPass").value;
-
-  if(u && p){
-    localStorage.setItem("user_"+u, p);
-    alert("Conta criada!");
-    showLogin();
-  } else {
-    alert("Preencha tudo!");
-  }
-}
-
-// login
-function login(){
-  let u = document.getElementById("loginUser").value;
-  let p = document.getElementById("loginPass").value;
-
-  let savedPass = localStorage.getItem("user_"+u);
-
-  if(savedPass && savedPass === p){
-    localStorage.setItem("logado", "sim");
-
-    document.getElementById("authBox").style.display = "none";
-    document.getElementById("mainSite").style.display = "block";
-  } else {
-    alert("Usuário ou senha inválidos");
-  }
-}
-
-// auto login
-window.onload = function(){
-  if(localStorage.getItem("logado") === "sim"){
-    document.getElementById("authBox").style.display = "none";
-    document.getElementById("mainSite").style.display = "block";
-  }
-}
 </script>
 </body>
 </html>
