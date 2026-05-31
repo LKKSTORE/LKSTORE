@@ -9,14 +9,18 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
 body{background:radial-gradient(circle at top,#1a0000,#000);color:white;}
 
+/* HEADER */
 header{
 display:flex;justify-content:space-between;
-padding:18px 40px;background:rgba(0,0,0,0.7);
-position:sticky;top:0;
+padding:18px 40px;
+background:rgba(0,0,0,0.7);
+position:sticky;
+top:0;
 }
 
 .logo{color:red;font-size:26px;font-weight:900;}
 
+/* PRODUTOS */
 .products{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -40,6 +44,7 @@ margin-top:10px;
 cursor:pointer;
 }
 
+/* CARRINHO */
 #cartBox{
 position:fixed;
 right:20px;
@@ -47,7 +52,11 @@ top:20px;
 background:#111;
 padding:15px;
 border-radius:10px;
-width:220px;
+width:240px;
+}
+
+#cartBox button{
+cursor:pointer;
 }
 </style>
 </head>
@@ -83,8 +92,27 @@ width:220px;
 <!-- CARRINHO -->
 <div id="cartBox">
 <h3 style="color:red;">Carrinho</h3>
+
 <div id="cartItems"></div>
+
 <p>Total: R$ <span id="total">0</span></p>
+
+<button onclick="finalizarWhatsApp()" style="margin-top:10px;padding:10px;background:green;color:white;border:none;width:100%;">
+Finalizar no WhatsApp
+</button>
+
+<button onclick="mostrarPix()" style="margin-top:8px;padding:10px;background:#ff1a1a;color:white;border:none;width:100%;">
+Ver Pix
+</button>
+
+<div id="pixBox" style="display:none;margin-top:10px;background:#222;padding:10px;border-radius:8px;">
+<p>📌 PIX:</p>
+<p id="pixKey" style="color:#00ff99;">SUA-CHAVE-PIX-AQUI</p>
+<button onclick="copiarPix()" style="margin-top:5px;padding:5px;background:#444;color:white;border:none;width:100%;">
+Copiar Pix
+</button>
+</div>
+
 </div>
 
 <script>
@@ -94,7 +122,7 @@ let total = 0;
 
 // adicionar produto
 function addToCart(name, price){
-cart.push({name,price});
+cart.push({name, price});
 updateCart();
 }
 
@@ -122,6 +150,41 @@ document.getElementById("total").innerText = total;
 function removeItem(index){
 cart.splice(index,1);
 updateCart();
+}
+
+// WHATSAPP
+function finalizarWhatsApp(){
+if(cart.length === 0){
+alert("Carrinho vazio!");
+return;
+}
+
+let msg = "Olá! Quero comprar:%0A";
+let total = 0;
+
+cart.forEach(item=>{
+msg += `- ${item.name} R$ ${item.price}%0A`;
+total += item.price;
+});
+
+msg += `%0ATotal: R$ ${total}`;
+
+let numero = "5581999999999"; // TROCA SEU NÚMERO
+
+let url = `https://wa.me/${numero}?text=${msg}`;
+window.open(url,"_blank");
+}
+
+// PIX
+function mostrarPix(){
+let box = document.getElementById("pixBox");
+box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+function copiarPix(){
+let pix = document.getElementById("pixKey").innerText;
+navigator.clipboard.writeText(pix);
+alert("PIX copiado!");
 }
 
 </script>
