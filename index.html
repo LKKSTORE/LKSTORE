@@ -333,7 +333,12 @@ function updateCart(){
 function removeItem(index){
   cart.splice(index, 1);
   updateCart();
-}
+<div id="cartBox" style="position:fixed;right:20px;top:20px;background:#111;color:white;padding:10px;border-radius:10px;width:220px;">
+  <h3>Carrinho</h3>
+  <div id="cartItems"></div>
+  <p>Total: R$ <span id="total">0</span></p>
+</div>
 </script>
+  
 </body>  
 </html>
