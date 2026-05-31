@@ -17,6 +17,7 @@ font-family:Arial,sans-serif;
 body{
 background:#0b0b0b;
 color:white;
+min-height:100vh;
 }
 
 /* HEADER */
@@ -47,8 +48,8 @@ gap:10px;
 }
 
 .icon{
-width:40px;
-height:40px;
+width:42px;
+height:42px;
 border-radius:50%;
 display:flex;
 align-items:center;
@@ -56,6 +57,11 @@ justify-content:center;
 cursor:pointer;
 background:#222;
 position:relative;
+transition:.3s;
+}
+
+.icon:hover{
+transform:scale(1.05);
 }
 
 .cart{
@@ -75,6 +81,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 font-size:12px;
+font-weight:bold;
 }
 
 /* BUSCA */
@@ -121,6 +128,10 @@ color:#ff3b3b;
 margin-bottom:10px;
 }
 
+.card p{
+margin-bottom:10px;
+}
+
 .card button{
 width:100%;
 padding:10px;
@@ -131,20 +142,27 @@ border-radius:8px;
 cursor:pointer;
 }
 
-/* CARRINHO */
+button{
+cursor:pointer;
+  /* CARRINHO */
 
 #cartBox{
 position:fixed;
 right:-300px;
 top:70px;
-width:260px;
-height:420px;
+width:280px;
+height:450px;
 background:#111;
 border-left:2px solid #ff3b3b;
 padding:15px;
 transition:.3s;
 overflow:auto;
 z-index:999;
+}
+
+#cartBox h3{
+color:#ff3b3b;
+margin-bottom:10px;
 }
 
 #cartItems p{
@@ -213,37 +231,6 @@ background:#ff3b3b;
 color:white;
 border:none;
 border-radius:8px;
-cursor:pointer;
-}
-
-/* PERFIL */
-
-#perfilBox,
-#afiliadoBox{
-display:none;
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:#111;
-padding:20px;
-border-radius:12px;
-width:320px;
-border:1px solid #ff3b3b;
-z-index:99999;
-}
-
-/* WHATSAPP */
-
-.whats{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#25D366;
-padding:14px;
-border-radius:50px;
-text-decoration:none;
-color:white;
 }
 
 </style>
@@ -309,9 +296,7 @@ Comprar R$ 7
 
 <div id="cartBox">
 
-<h3 style="color:#ff3b3b;">
-Carrinho
-</h3>
+<h3>Carrinho</h3>
 
 <div id="cartItems"></div>
 
@@ -321,9 +306,16 @@ Total: R$
 </p>
 
 <button
-onclick="abrirCheckout()"
-style="width:100%;padding:10px;background:gold;margin-top:10px;">
-Finalizar
+onclick="finalizarCompraDireto()"
+style="
+width:100%;
+padding:12px;
+background:#00c853;
+color:white;
+border:none;
+border-radius:8px;
+margin-top:10px;">
+💳 Finalizar Compra
 </button>
 
 </div>
@@ -355,7 +347,9 @@ Fechar
 
 <h2>LKSTORE</h2>
 
-<input id="loginUser" placeholder="Usuário">
+<input
+id="loginUser"
+placeholder="Usuário">
 
 <input
 id="loginPass"
@@ -375,41 +369,129 @@ Criar Conta
 </div>
 
 </div>
-
-<!-- PERFIL -->
+  <!-- PERFIL TELA CHEIA -->
 
 <div id="perfilBox">
 
-<h2 style="color:#ff3b3b;">
-Meu Perfil
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+">
+
+<h1 style="
+font-size:30px;
+color:white;
+">
+👤 Meu Perfil
+</h1>
+
+<button
+onclick="fecharPerfil()"
+style="
+background:none;
+border:none;
+color:white;
+font-size:30px;
+cursor:pointer;
+">
+✕
+</button>
+
+</div>
+
+<!-- FOTO -->
+
+<div style="text-align:center;">
+
+<div style="
+width:120px;
+height:120px;
+border-radius:50%;
+background:white;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:50px;
+color:#ff1a1a;
+font-weight:bold;
+">
+👤
+</div>
+
+<h2
+id="perfilNome"
+style="margin-top:15px;">
+Usuário
 </h2>
 
-<p id="perfilNome">
-Usuário
+<p style="opacity:.8;">
+Membro LKSTORE
 </p>
 
-<hr style="margin:15px 0;">
+</div>
 
-<button onclick="abrirCompras()">
+<hr style="
+margin:25px 0;
+border:1px solid rgba(255,255,255,.2);
+">
+
+<button
+onclick="abrirCompras()"
+style="
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+background:white;
+color:black;
+font-weight:bold;">
 📦 Minhas Compras
 </button>
 
-<br><br>
-
-<button onclick="abrirAfiliado()">
+<button
+onclick="abrirAfiliado()"
+style="
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+background:white;
+color:black;
+font-weight:bold;">
 💰 Virar Afiliado
 </button>
 
-<br><br>
-
-<button onclick="window.open('https://wa.me/5582991585655')">
+<button
+onclick="window.open('https://wa.me/5582991585655')"
+style="
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+background:white;
+color:black;
+font-weight:bold;">
 💬 Suporte
 </button>
 
-<br><br>
-
-<button onclick="fecharPerfil()">
-Fechar
+<button
+onclick="logout()"
+style="
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+background:#000;
+color:white;
+font-weight:bold;">
+🚪 Sair da Conta
 </button>
 
 </div>
@@ -418,40 +500,67 @@ Fechar
 
 <div id="afiliadoBox">
 
-<h2 style="color:#ff3b3b;">
+<h2 style="
+color:#ff3b3b;
+margin-bottom:15px;
+">
 Programa de Afiliados
 </h2>
 
 <p>
-Ganhe 10% por venda.
+Ganhe 10% de comissão por venda.
 </p>
+
+<br>
 
 <input
 id="linkAfiliado"
 value="https://lkstore.com/ref123"
 readonly
-style="width:100%;padding:10px;margin-top:10px;">
+style="
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+">
 
 <br><br>
 
-<button onclick="copiarLinkAfiliado()">
-Copiar Link
+<button
+onclick="copiarLinkAfiliado()"
+style="
+width:100%;
+padding:12px;
+background:#00c853;
+color:white;
+border:none;
+border-radius:8px;">
+📋 Copiar Link
 </button>
 
 <br><br>
 
-<button onclick="fecharAfiliado()">
+<button
+onclick="fecharAfiliado()"
+style="
+width:100%;
+padding:12px;
+background:#ff3b3b;
+color:white;
+border:none;
+border-radius:8px;">
 Fechar
 </button>
 
 </div>
 
+<!-- WHATSAPP -->
+
 <a
 class="whats"
 href="https://wa.me/5582991585655">
 💬
-  </a>
-  <script>
+</a><script>
 
 let cart=[];
 
@@ -466,7 +575,7 @@ if(user){
 document.getElementById("authBox").style.display="none";
 
 document.getElementById("perfilNome").innerText=
-"👤 " + user;
+user;
 
 }
 
@@ -484,8 +593,7 @@ if(user===savedUser && pass===savedPass){
 
 document.getElementById("authBox").style.display="none";
 
-document.getElementById("perfilNome").innerText=
-"👤 " + user;
+document.getElementById("perfilNome").innerText=user;
 
 alert("Login realizado!");
 
@@ -503,16 +611,14 @@ let user=document.getElementById("loginUser").value;
 let pass=document.getElementById("loginPass").value;
 
 if(user==="" || pass===""){
-
 alert("Preencha usuário e senha");
 return;
-
 }
 
 localStorage.setItem("lk_user",user);
 localStorage.setItem("lk_pass",pass);
 
-alert("Conta criada!");
+alert("Conta criada! Agora faça login.");
 
 }
 
@@ -562,6 +668,19 @@ alert("Link copiado!");
 
 }
 
+/* LOGOUT */
+
+function logout(){
+
+localStorage.removeItem("lk_user");
+localStorage.removeItem("lk_pass");
+
+alert("Você saiu da conta!");
+
+location.reload();
+
+}
+
 /* CARRINHO */
 
 function addToCart(n,p){
@@ -594,11 +713,11 @@ let box=document.getElementById("cartItems");
 
 box.innerHTML="";
 
-let t=0;
+let total=0;
 
 cart.forEach((i,index)=>{
 
-t+=i.p;
+total+=i.p;
 
 box.innerHTML+=`
 <p>
@@ -613,12 +732,10 @@ style="color:red;cursor:pointer;">
 
 });
 
-document.getElementById("total").innerText=t;
+document.getElementById("total").innerText=total;
 document.getElementById("cartCount").innerText=cart.length;
 
 }
-
-/* REMOVER */
 
 function removeItem(index){
 
@@ -654,50 +771,115 @@ box.innerHTML+=`
 <p>${item.n} - R$ ${item.p}</p>
 `;
 
-total+=item.p;
+total+=item.p
+  <script>
 
-});
+let cart=[];
 
-document.getElementById("checkoutTotal").innerText=total;
+/* LOGIN */
+
+window.onload=function(){
+
+let user=localStorage.getItem("lk_user");
+
+if(user){
+
+document.getElementById("authBox").style.display="none";
+
+document.getElementById("perfilNome").innerText=user;
 
 }
 
-function fecharCheckout(){
-
-document.getElementById("checkoutBox").style.display="none";
-
 }
 
-/* BUSCA */
+function login(){
 
-function filtrar(){
+let user=document.getElementById("loginUser").value;
+let pass=document.getElementById("loginPass").value;
 
-let input=document
-.getElementById("search")
-.value
-.toLowerCase();
+let savedUser=localStorage.getItem("lk_user");
+let savedPass=localStorage.getItem("lk_pass");
 
-let items=document.querySelectorAll(".item");
+if(user===savedUser && pass===savedPass){
 
-items.forEach(item=>{
+document.getElementById("authBox").style.display="none";
 
-let texto=item.innerText.toLowerCase();
+document.getElementById("perfilNome").innerText=user;
 
-if(texto.includes(input)){
-
-item.style.display="block";
+alert("Login realizado!");
 
 }else{
 
-item.style.display="none";
+alert("Usuário ou senha inválidos");
 
 }
 
-});
+}
+
+function register(){
+
+let user=document.getElementById("loginUser").value;
+let pass=document.getElementById("loginPass").value;
+
+if(user==="" || pass===""){
+
+alert("Preencha usuário e senha");
+return;
 
 }
 
-</script>
+localStorage.setItem("lk_user",user);
+localStorage.setItem("lk_pass",pass);
 
-</body>
-</html>
+alert("Conta criada! Agora faça login.");
+
+}
+
+/* PERFIL COM ANIMAÇÃO */
+
+function abrirPerfil(){
+
+document.getElementById("perfilBox").style.right="0";
+
+}
+
+function fecharPerfil(){
+
+document.getElementById("perfilBox").style.right="-100%";
+
+}
+
+/* COMPRAS */
+
+function abrirCompras(){
+
+alert("Nenhuma compra encontrada.");
+
+}
+
+/* AFILIADO */
+
+function abrirAfiliado(){
+
+document.getElementById("afiliadoBox").style.display="block";
+
+}
+
+function fecharAfiliado(){
+
+document.getElementById("afiliadoBox").style.display="none";
+
+}
+
+function copiarLinkAfiliado(){
+
+let link=document.getElementById("linkAfiliado").value;
+
+navigator.clipboard.writeText(link);
+
+alert("Link copiado!");
+
+}
+
+/* SA
+}
