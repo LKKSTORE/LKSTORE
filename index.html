@@ -86,18 +86,6 @@ width:320px;
 z-index:9999;
 }
 
-#authBox{
-display:none;
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.95);
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:99999;
-}
-
 button{cursor:pointer;}
 
 </style>
@@ -143,7 +131,7 @@ Checkout
 </button>
 
 <button onclick="gerarPagamento()" style="width:100%;padding:10px;background:green;color:white;">
-Pagar PagSeguro
+Pagar
 </button>
 
 </div>
@@ -163,19 +151,8 @@ Fechar
 
 </div>
 
-<!-- LOGIN -->
-<div id="authBox">
-
-<h2 style="color:red;">LOGIN</h2>
-
-<input id="loginUser" placeholder="Usuário" style="padding:10px;margin:5px;">
-<input id="loginPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-
-<button onclick="login()" style="padding:10px;background:red;color:white;width:100%;">
-Entrar
-</button>
-
-</div>
+<!-- LOGIN SIMPLES -->
+<div id="authBox" style="display:none;"></div>
 
 <!-- SUPORTE -->
 <a href="https://wa.me/5582991585655"
@@ -187,23 +164,13 @@ style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:14px;bor
 
 let cart=[];
 
-/* LOGIN */
-function login(){
-let u=document.getElementById("loginUser").value;
-let p=document.getElementById("loginPass").value;
-
-if(u && p){
-localStorage.setItem("logado","1");
-document.getElementById("authBox").style.display="none";
-}
-}
-
-/* CARRINHO */
+/* ADD */
 function addToCart(n,p){
 cart.push({n,p});
 update();
 }
 
+/* UPDATE */
 function update(){
 let box=document.getElementById("cartItems");
 box.innerHTML="";
@@ -225,7 +192,7 @@ X
 document.getElementById("total").innerText=t;
 }
 
-/* REMOVE ITEM */
+/* REMOVE */
 function removeItem(index){
 cart.splice(index,1);
 update();
@@ -251,7 +218,7 @@ function fecharCheckout(){
 document.getElementById("checkoutBox").style.display="none";
 }
 
-/* PAGSEGURO */
+/* PAGAMENTO (LINKS JUNTOS) */
 function gerarPagamento(){
 
 if(cart.length===0){
@@ -261,9 +228,27 @@ return;
 
 let total = cart.reduce((a,b)=>a + b.p, 0);
 
+const links = [
+"https://pag.ae/81R2Yyh2N",
+"https://pag.ae/81R2Yyh2N",
+"https://pag.ae/81R2Yyh2N"
+];
+
+let index = 0;
+
+if(total <= 4){
+index = 0;
+}
+else if(total <= 6){
+index = 1;
+}
+else{
+index = 2;
+}
+
 alert("Total: R$ " + total);
 
-window.open("https://pag.ae/81R2Yyh2N", "_blank");
+window.open(links[index], "_blank");
 }
 
 </script>
