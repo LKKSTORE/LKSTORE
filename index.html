@@ -209,12 +209,26 @@ let box=document.getElementById("cartItems");
 box.innerHTML="";
 let t=0;
 
-cart.forEach(i=>{
+cart.forEach((i,index)=>{
 t+=i.p;
-box.innerHTML+=`<p>${i.n} - R$ ${i.p}</p>`;
+
+box.innerHTML+=`
+<p>
+${i.n} - R$ ${i.p}
+<button onclick="removeItem(${index})"
+style="margin-left:10px;background:red;color:white;border:none;padding:3px;">
+X
+</button>
+</p>`;
 });
 
 document.getElementById("total").innerText=t;
+}
+
+/* REMOVE ITEM */
+function removeItem(index){
+cart.splice(index,1);
+update();
 }
 
 /* CHECKOUT */
@@ -237,7 +251,7 @@ function fecharCheckout(){
 document.getElementById("checkoutBox").style.display="none";
 }
 
-/* PAGSEGURO LINK */
+/* PAGSEGURO */
 function gerarPagamento(){
 
 if(cart.length===0){
@@ -249,7 +263,6 @@ let total = cart.reduce((a,b)=>a + b.p, 0);
 
 alert("Total: R$ " + total);
 
-/* LINK FIXO PAGSEGURO */
 window.open("https://pag.ae/81R2Yyh2N", "_blank");
 }
 
