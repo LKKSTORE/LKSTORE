@@ -1,831 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>LKSTORE PRO</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:#0b0b0b;
-color:white;
-min-height:100vh;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0b0b0b;color:white;}
 
 /* HEADER */
-
 header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px;
-background:#111;
-border-bottom:1px solid #222;
-position:sticky;
-top:0;
-z-index:1000;
+display:flex;justify-content:space-between;
+padding:15px;background:#111;
 }
 
-.logo{
-font-size:24px;
-font-weight:900;
-color:#ff3b3b;
-}
+.logo{color:#ff3b3b;font-weight:bold;font-size:22px;}
 
-/* ICONES */
-
-.topIcons{
-display:flex;
-gap:10px;
-}
+.topIcons{display:flex;gap:10px;}
 
 .icon{
-width:42px;
-height:42px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-background:#222;
-position:relative;
-transition:.3s;
+width:40px;height:40px;
+background:#222;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;position:relative;
 }
 
-.icon:hover{
-transform:scale(1.05);
-}
-
-.cart{
-background:#ff3b3b;
-}
+.cart{background:#ff3b3b;}
 
 #cartCount{
-position:absolute;
-top:-5px;
-right:-5px;
-background:white;
-color:black;
-width:18px;
-height:18px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:12px;
-font-weight:bold;
-}
-
-/* BUSCA */
-
-.searchBox{
-padding:20px;
-text-align:center;
-}
-
-.searchBox input{
-width:90%;
-max-width:500px;
-padding:12px;
-border:none;
-border-radius:10px;
-outline:none;
+position:absolute;top:-5px;right:-5px;
+background:white;color:black;
+width:18px;height:18px;border-radius:50%;
+font-size:12px;display:flex;align-items:center;justify-content:center;
 }
 
 /* PRODUTOS */
-
 .products{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-padding:25px;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;padding:20px;
 }
 
 .card{
 background:#151515;
-border:1px solid #222;
-padding:20px;
-border-radius:12px;
+padding:15px;border-radius:10px;
 text-align:center;
-transition:.3s;
 }
 
-.card:hover{
-transform:translateY(-5px);
-border-color:#ff3b3b;
-}
-
-.card h3{
-color:#ff3b3b;
-margin-bottom:10px;
-}
-
-.card p{
-margin-bottom:10px;
-}
-
-.card button{
-width:100%;
+button{
 padding:10px;
-border:none;
 background:#ff3b3b;
+border:none;
 color:white;
 border-radius:8px;
 cursor:pointer;
 }
 
-button{
-cursor:pointer;
-}
-
-/* CARRINHO */
-
-#cartBox{
-position:fixed;
-right:-320px;
-top:70px;
-width:300px;
-height:500px;
-background:#111;
-border-left:2px solid #ff3b3b;
-padding:15px;
-transition:.4s;
-overflow:auto;
-z-index:999;
-}
-
-#cartBox h3{
-color:#ff3b3b;
-margin-bottom:10px;
-}
-
-#cartItems p{
-display:flex;
-justify-content:space-between;
-margin:8px 0;
-}
-
-/* CHECKOUT */
-
-#checkoutBox{
-display:none;
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:white;
-color:black;
-padding:20px;
-border-radius:12px;
-width:320px;
-z-index:9999;
-}
-
 /* LOGIN */
-
 #authBox{
-display:flex;
 position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.95);
-justify-content:center;
+top:0;left:0;
+width:100%;height:100%;
+background:#000;
+display:flex;
 align-items:center;
-z-index:99999;
+justify-content:center;
 }
 
 .authCard{
 background:#111;
-padding:25px;
-border-radius:12px;
-width:320px;
-border:1px solid #ff3b3b;
+padding:20px;
+width:300px;
+border-radius:10px;
 }
 
-.authCard h2{
-text-align:center;
-margin-bottom:15px;
-color:#ff3b3b;
-}
-
-.authCard input{
+input{
 width:100%;
 padding:10px;
 margin-bottom:10px;
-border:none;
-border-radius:8px;
 }
-
-.authCard button{
-width:100%;
-padding:10px;
-background:#ff3b3b;
-color:white;
-border:none;
-border-radius:8px;
-}
-
-/* PERFIL TELA CHEIA */
-
-#perfilBox{
-position:fixed;
-top:0;
-right:-100%;
-width:100%;
-height:100%;
-background:linear-gradient(
-180deg,
-#ff1a1a,
-#b30000,
-#1a0000,
-#0b0b0b
-);
-transition:.4s ease;
-z-index:99999;
-padding:25px;
-overflow:auto;
-}
-
-#afiliadoBox{
-display:none;
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:#111;
-padding:20px;
-border-radius:12px;
-width:320px;
-border:1px solid #ff3b3b;
-z-index:99999;
-}
-
-.whats{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#25D366;
-padding:14px;
-border-radius:50px;
-text-decoration:none;
-color:white;
-font-size:22px;
-}
-
 </style>
 </head>
 
 <body>
 
 <header>
-
 <div class="logo">LKSTORE</div>
 
 <div class="topIcons">
-
-<div class="icon" onclick="abrirPerfil()">
-👤
-</div>
-
+<div class="icon" onclick="abrirPerfil()">👤</div>
 <div class="icon cart" onclick="toggleCart()">
-🛒
-<span id="cartCount">0</span>
+🛒 <span id="cartCount">0</span>
 </div>
-
 </div>
-
 </header>
 
-<div class="searchBox">
-
-<input
-id="search"
-placeholder="Buscar produtos..."
-onkeyup="filtrar()">
-
-</div>
-
-<section class="products">
-
-<div class="card item">
-
+<!-- PRODUTOS -->
+<div class="products">
+<div class="card">
 <h3>Premium 1</h3>
-
-<p>Produto Premium</p>
-
-<button onclick="addToCart('Premium 1',6)">
-Comprar R$ 6
-</button>
-
+<button onclick="addToCart('Premium 1',6)">Comprar R$6</button>
 </div>
 
-<div class="card item">
-
+<div class="card">
 <h3>Premium 2</h3>
-
-<p>Produto Premium</p>
-
-<button onclick="addToCart('Premium 2',4)">
-Comprar R$ 4
-</button>
-
+<button onclick="addToCart('Premium 2',4)">Comprar R$4</button>
 </div>
-
-<div class="card item">
-
-<h3>Premium 3</h3>
-
-<p>Produto Premium</p>
-
-<button onclick="addToCart('Premium 3',7)">
-Comprar R$ 7
-</button>
-
-</div>
-
-</section>
-
-<!-- CARRINHO -->
-
-<div id="cartBox">
-
-<h3>Carrinho</h3>
-
-<div id="cartItems"></div>
-
-<p style="margin-top:10px;">
-Total: R$ <span id="total">0</span>
-</p>
-
-<button
-onclick="finalizarCompraDireto()"
-style="
-width:100%;
-padding:12px;
-background:#00c853;
-color:white;
-border:none;
-border-radius:8px;
-margin-top:10px;
-font-weight:bold;">
-💳 Finalizar Compra
-</button>
-
-</div>
-
-<!-- CHECKOUT -->
-
-<div id="checkoutBox">
-
-<h2>Checkout</h2>
-
-<div id="checkoutItems"></div>
-
-<br>
-
-<h3>
-Total: R$ <span id="checkoutTotal">0</span>
-</h3>
-
-<br>
-
-<button
-onclick="fecharCheckout()"
-style="
-width:100%;
-padding:10px;
-background:#ff3b3b;
-color:white;
-border:none;
-border-radius:8px;">
-Fechar
-</button>
-
 </div>
 
 <!-- LOGIN -->
-
 <div id="authBox">
-
 <div class="authCard">
+<h2>Login</h2>
 
-<h2>LKSTORE</h2>
+<input id="loginUser" placeholder="Usuário">
+<input id="loginPass" type="password" placeholder="Senha">
 
-<input
-id="loginUser"
-placeholder="Usuário">
-
-<input
-id="loginPass"
-type="password"
-placeholder="Senha">
-
-<button onclick="login()">
-Entrar
-</button>
-
-<br><br>
-
-<button onclick="register()">
-Criar Conta
-</button>
-
+<button onclick="login()">Entrar</button>
+<button onclick="register()">Criar conta</button>
+</div>
 </div>
 
-</div>
-
-<!-- PERFIL -->
-
-<div id="perfilBox">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-">
-
-<h1 style="
-font-size:30px;
-color:white;
-">
-👤 Meu Perfil
-</h1>
-
-<button
-onclick="fecharPerfil()"
-style="
-background:none;
-border:none;
-color:white;
-font-size:30px;
-cursor:pointer;
-">
-✕
-</button>
-
-</div>
-
-<div style="text-align:center;">
-
-<div style="
-width:120px;
-height:120px;
-border-radius:50%;
-background:white;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:50px;
-color:#ff1a1a;
-font-weight:bold;
-">
-👤
-</div>
-
-<h2 id="perfilNome" style="margin-top:15px;">
-Usuário
-</h2>
-
-<p style="opacity:.8;">
-Membro LKSTORE
-</p>
-
-</div>
-
-<hr style="
-margin:25px 0;
-border:1px solid rgba(255,255,255,.2);
-">
-
-<button
-onclick="abrirCompras()"
-style="
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-margin-bottom:10px;
-background:white;
-color:black;
-font-weight:bold;">
-📦 Minhas Compras
-</button>
-
-<button
-onclick="abrirAfiliado()"
-style="
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-margin-bottom:10px;
-background:white;
-color:black;
-font-weight:bold;">
-💰 Virar Afiliado
-</button>
-
-<button
-onclick="window.open('https://wa.me/5582991585655')"
-style="
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-margin-bottom:10px;
-background:white;
-color:black;
-font-weight:bold;">
-💬 Suporte
-</button>
-
-<button
-onclick="logout()"
-style="
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-margin-bottom:10px;
-background:#000;
-color:white;
-font-weight:bold;">
-🚪 Sair da Conta
-</button>
-
-</div>
-
-<!-- AFILIADO -->
-
-<div id="afiliadoBox">
-
-<h2 style="
-color:#ff3b3b;
-margin-bottom:15px;
-">
-Programa de Afiliados
-</h2>
-
-<p>
-Ganhe 10% de comissão por venda.
-</p>
-
-<br>
-
-<input
-id="linkAfiliado"
-value="https://lkstore.com/ref123"
-readonly
-style="
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-">
-
-<br><br>
-
-<button
-onclick="copiarLinkAfiliado()"
-style="
-width:100%;
-padding:12px;
-background:#00c853;
-color:white;
-border:none;
-border-radius:8px;">
-📋 Copiar Link
-</button>
-
-<br><br>
-
-<button
-onclick="fecharAfiliado()"
-style="
-width:100%;
-padding:12px;
-background:#ff3b3b;
-color:white;
-border:none;
-border-radius:8px;">
-Fechar
-</button>
-
-</div>
-
-<!-- WHATSAPP -->
-
-<a
-class="whats"
-href="https://wa.me/5582991585655"
-target="_blank">
-💬
-</a>
-
-<script>
-
-let cart = [];
-
-/* LOGIN + AUTO LOGIN */
-
-window.onload = function () {
-let user = localStorage.getItem("lk_user");
-
-if (user) {
-document.getElementById("authBox").style.display = "none";
-document.getElementById("perfilNome").innerText = user;
-}
-};
-
-/* LOGIN */
-
-function login() {
-let user = document.getElementById("loginUser").value;
-let pass = document.getElementById("loginPass").value;
-
-let savedUser = localStorage.getItem("lk_user");
-let savedPass = localStorage.getItem("lk_pass");
-
-if (user === savedUser && pass === savedPass) {
-document.getElementById("authBox").style.display = "none";
-document.getElementById("perfilNome").innerText = user;
-alert("Login realizado!");
-} else {
-alert("Usuário ou senha inválidos");
-}
-}
-
-/* REGISTER */
-
-function register() {
-let user = document.getElementById("loginUser").value;
-let pass = document.getElementById("loginPass").value;
-
-if (user === "" || pass === "") {
-alert("Preencha usuário e senha");
-return;
-}
-
-localStorage.setItem("lk_user", user);
-localStorage.setItem("lk_pass", pass);
-
-alert("Conta criada! Agora faça login.");
-}
-
-/* PERFIL */
-
-function abrirPerfil() {
-document.getElementById("perfilBox").style.right = "0";
-}
-
-function fecharPerfil() {
-document.getElementById("perfilBox").style.right = "-100%";
-}
-
-/* AFILIADO */
-
-function abrirAfiliado() {
-document.getElementById("afiliadoBox").style.display = "block";
-}
-
-function fecharAfiliado() {
-document.getElementById("afiliadoBox").style.display = "none";
-}
-
-function copiarLinkAfiliado() {
-let link = document.getElementById("linkAfiliado").value;
-navigator.clipboard.writeText(link);
-alert("Link copiado!");
-}
-
-/* LOGOUT */
-
-function logout() {
-localStorage.removeItem("lk_user");
-localStorage.removeItem("lk_pass");
-alert("Você saiu da conta!");
-location.reload();
-}
-
-/* CARRINHO */
-
-function addToCart(name, price) {
-cart.push({ name, price });
-updateCart();
-}
-
-function toggleCart() {
-let box = document.getElementById("cartBox");
-
-if (box.style.right === "0px") {
-box.style.right = "-320px";
-} else {
-box.style.right = "0px";
-}
-}
-
-function updateCart() {
-let box = document.getElementById("cartItems");
-box.innerHTML = "";
-
-let total = 0;
-
-cart.forEach((item, index) => {
-total += item.price;
-
-box.innerHTML += `
-<p>
-${item.name} - R$ ${item.price}
-<span onclick="removeItem(${index})" style="color:red;cursor:pointer;">✖</span>
-</p>
-`;
-});
-
-document.getElementById("total").innerText = total;
-document.getElementById("cartCount").innerText = cart.length;
-}
-
-function removeItem(index) {
-cart.splice(index, 1);
-updateCart();
-}
-
-/* FINALIZAR COMPRA */
-
-function finalizarCompraDireto() {
-if (cart.length === 0) {
-alert("Carrinho vazio");
-return;
-}
-
-let total = cart.reduce((sum, item) => sum + item.price, 0);
-
-alert("Redirecionando para pagamento... Total: R$ " + total);
-
-// AQUI DEPOIS você coloca PIX ou link de pagamento
-window.open("https://seu-link-de-pagamento.com", "_blank");
-}
-/* BUSCA */
-function filtrar() {
-let input = document.getElementById("search").value.toLowerCase();
-let items = document.querySelectorAll(".item");
-
-items.forEach(item => {
-let text = item.innerText.toLowerCase();
-
-if (text.includes(input)) {
-item.style.display = "block";
-} else {
-item.style.display = "none";
-}
-});
-}
-</script>
-
-<!-- 🔥 FIREBASE (COLE AQUI NO FINAL MESMO) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-
-<script>
-
-<!-- ================= FIREBASE ================= -->
-
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 
 <script>
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_STORAGE_BUCKET",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId: "SEU_APP_ID"
+apiKey: "SUA_API_KEY",
+authDomain: "SEU_AUTH_DOMAIN",
+projectId: "SEU_PROJECT_ID",
+storageBucket: "SEU_STORAGE_BUCKET",
+messagingSenderId: "SEU_SENDER_ID",
+appId: "SEU_APP_ID"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-</script>
 
-<!-- ================= LOGIN COM BANCO ================= -->
-
-<script>
+/* LOGIN */
 function register(){
 let user=document.getElementById("loginUser").value;
 let pass=document.getElementById("loginPass").value;
@@ -835,7 +149,7 @@ email:user,
 password:pass
 });
 
-alert("Conta criada no Firebase!");
+alert("Conta criada!");
 }
 
 function login(){
@@ -846,19 +160,28 @@ db.collection("users")
 .where("email","==",user)
 .where("password","==",pass)
 .get()
-.then((snap)=>{
+.then(snap=>{
 if(!snap.empty){
 document.getElementById("authBox").style.display="none";
-document.getElementById("perfilNome").innerText=user;
 alert("Login OK!");
 }else{
-alert("Usuário ou senha inválidos");
+alert("Erro no login");
 }
 });
 }
-</script>
 
-<!-- ================= FIM ================= -->
+/* CARRINHO */
+let cart=[];
+
+function addToCart(name,price){
+cart.push({name,price});
+document.getElementById("cartCount").innerText=cart.length;
+}
+
+function toggleCart(){
+alert("Carrinho: "+cart.length+" itens");
+}
+</script>
 
 </body>
 </html>
