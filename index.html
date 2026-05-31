@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>LKSTORE PRO</title>
 
 <style>
@@ -93,7 +96,7 @@ text-align:center;
 
 .searchBox input{
 width:90%;
-max-width:450px;
+max-width:500px;
 padding:12px;
 border:none;
 border-radius:10px;
@@ -119,8 +122,8 @@ transition:.3s;
 }
 
 .card:hover{
-border-color:#ff3b3b;
 transform:translateY(-5px);
+border-color:#ff3b3b;
 }
 
 .card h3{
@@ -144,18 +147,20 @@ cursor:pointer;
 
 button{
 cursor:pointer;
-  /* CARRINHO */
+}
+
+/* CARRINHO */
 
 #cartBox{
 position:fixed;
-right:-300px;
+right:-320px;
 top:70px;
-width:280px;
-height:450px;
+width:300px;
+height:500px;
 background:#111;
 border-left:2px solid #ff3b3b;
 padding:15px;
-transition:.3s;
+transition:.4s;
 overflow:auto;
 z-index:999;
 }
@@ -233,6 +238,53 @@ border:none;
 border-radius:8px;
 }
 
+/* PERFIL TELA CHEIA */
+
+#perfilBox{
+position:fixed;
+top:0;
+right:-100%;
+width:100%;
+height:100%;
+background:linear-gradient(
+180deg,
+#ff1a1a,
+#b30000,
+#1a0000,
+#0b0b0b
+);
+transition:.4s ease;
+z-index:99999;
+padding:25px;
+overflow:auto;
+}
+
+#afiliadoBox{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#111;
+padding:20px;
+border-radius:12px;
+width:320px;
+border:1px solid #ff3b3b;
+z-index:99999;
+}
+
+.whats{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#25D366;
+padding:14px;
+border-radius:50px;
+text-decoration:none;
+color:white;
+font-size:22px;
+}
+
 </style>
 </head>
 
@@ -258,36 +310,50 @@ border-radius:8px;
 </header>
 
 <div class="searchBox">
+
 <input
 id="search"
 placeholder="Buscar produtos..."
 onkeyup="filtrar()">
+
 </div>
 
 <section class="products">
 
 <div class="card item">
+
 <h3>Premium 1</h3>
+
 <p>Produto Premium</p>
+
 <button onclick="addToCart('Premium 1',6)">
 Comprar R$ 6
 </button>
+
 </div>
 
 <div class="card item">
+
 <h3>Premium 2</h3>
+
 <p>Produto Premium</p>
+
 <button onclick="addToCart('Premium 2',4)">
 Comprar R$ 4
 </button>
+
 </div>
 
 <div class="card item">
+
 <h3>Premium 3</h3>
+
 <p>Produto Premium</p>
+
 <button onclick="addToCart('Premium 3',7)">
 Comprar R$ 7
 </button>
+
 </div>
 
 </section>
@@ -300,9 +366,8 @@ Comprar R$ 7
 
 <div id="cartItems"></div>
 
-<p>
-Total: R$
-<span id="total">0</span>
+<p style="margin-top:10px;">
+Total: R$ <span id="total">0</span>
 </p>
 
 <button
@@ -314,7 +379,8 @@ background:#00c853;
 color:white;
 border:none;
 border-radius:8px;
-margin-top:10px;">
+margin-top:10px;
+font-weight:bold;">
 💳 Finalizar Compra
 </button>
 
@@ -328,12 +394,23 @@ margin-top:10px;">
 
 <div id="checkoutItems"></div>
 
+<br>
+
 <h3>
-Total: R$
-<span id="checkoutTotal"></span>
+Total: R$ <span id="checkoutTotal">0</span>
 </h3>
 
-<button onclick="fecharCheckout()">
+<br>
+
+<button
+onclick="fecharCheckout()"
+style="
+width:100%;
+padding:10px;
+background:#ff3b3b;
+color:white;
+border:none;
+border-radius:8px;">
 Fechar
 </button>
 
@@ -369,7 +446,8 @@ Criar Conta
 </div>
 
 </div>
-  <!-- PERFIL TELA CHEIA -->
+
+<!-- PERFIL -->
 
 <div id="perfilBox">
 
@@ -401,8 +479,6 @@ cursor:pointer;
 
 </div>
 
-<!-- FOTO -->
-
 <div style="text-align:center;">
 
 <div style="
@@ -421,9 +497,7 @@ font-weight:bold;
 👤
 </div>
 
-<h2
-id="perfilNome"
-style="margin-top:15px;">
+<h2 id="perfilNome" style="margin-top:15px;">
 Usuário
 </h2>
 
@@ -558,328 +632,173 @@ Fechar
 
 <a
 class="whats"
-href="https://wa.me/5582991585655">
+href="https://wa.me/5582991585655"
+target="_blank">
 💬
-</a><script>
+</a>
 
-let cart=[];
+<script>
+
+let cart = [];
+
+/* LOGIN + AUTO LOGIN */
+
+window.onload = function () {
+let user = localStorage.getItem("lk_user");
+
+if (user) {
+document.getElementById("authBox").style.display = "none";
+document.getElementById("perfilNome").innerText = user;
+}
+};
 
 /* LOGIN */
 
-window.onload=function(){
+function login() {
+let user = document.getElementById("loginUser").value;
+let pass = document.getElementById("loginPass").value;
 
-let user=localStorage.getItem("lk_user");
+let savedUser = localStorage.getItem("lk_user");
+let savedPass = localStorage.getItem("lk_pass");
 
-if(user){
-
-document.getElementById("authBox").style.display="none";
-
-document.getElementById("perfilNome").innerText=
-user;
-
-}
-
-}
-
-function login(){
-
-let user=document.getElementById("loginUser").value;
-let pass=document.getElementById("loginPass").value;
-
-let savedUser=localStorage.getItem("lk_user");
-let savedPass=localStorage.getItem("lk_pass");
-
-if(user===savedUser && pass===savedPass){
-
-document.getElementById("authBox").style.display="none";
-
-document.getElementById("perfilNome").innerText=user;
-
+if (user === savedUser && pass === savedPass) {
+document.getElementById("authBox").style.display = "none";
+document.getElementById("perfilNome").innerText = user;
 alert("Login realizado!");
-
-}else{
-
+} else {
 alert("Usuário ou senha inválidos");
-
+}
 }
 
-}
+/* REGISTER */
 
-function register(){
+function register() {
+let user = document.getElementById("loginUser").value;
+let pass = document.getElementById("loginPass").value;
 
-let user=document.getElementById("loginUser").value;
-let pass=document.getElementById("loginPass").value;
-
-if(user==="" || pass===""){
+if (user === "" || pass === "") {
 alert("Preencha usuário e senha");
 return;
 }
 
-localStorage.setItem("lk_user",user);
-localStorage.setItem("lk_pass",pass);
+localStorage.setItem("lk_user", user);
+localStorage.setItem("lk_pass", pass);
 
 alert("Conta criada! Agora faça login.");
-
 }
 
 /* PERFIL */
 
-function abrirPerfil(){
-
-document.getElementById("perfilBox").style.display="block";
-
+function abrirPerfil() {
+document.getElementById("perfilBox").style.right = "0";
 }
 
-function fecharPerfil(){
-
-document.getElementById("perfilBox").style.display="none";
-
-}
-
-/* COMPRAS */
-
-function abrirCompras(){
-
-alert("Nenhuma compra encontrada.");
-
+function fecharPerfil() {
+document.getElementById("perfilBox").style.right = "-100%";
 }
 
 /* AFILIADO */
 
-function abrirAfiliado(){
-
-document.getElementById("afiliadoBox").style.display="block";
-
+function abrirAfiliado() {
+document.getElementById("afiliadoBox").style.display = "block";
 }
 
-function fecharAfiliado(){
-
-document.getElementById("afiliadoBox").style.display="none";
-
+function fecharAfiliado() {
+document.getElementById("afiliadoBox").style.display = "none";
 }
 
-function copiarLinkAfiliado(){
-
-let link=document.getElementById("linkAfiliado").value;
-
+function copiarLinkAfiliado() {
+let link = document.getElementById("linkAfiliado").value;
 navigator.clipboard.writeText(link);
-
 alert("Link copiado!");
-
 }
 
 /* LOGOUT */
 
-function logout(){
-
+function logout() {
 localStorage.removeItem("lk_user");
 localStorage.removeItem("lk_pass");
-
 alert("Você saiu da conta!");
-
 location.reload();
-
 }
 
 /* CARRINHO */
 
-function addToCart(n,p){
-
-cart.push({n,p});
-
-update();
-
+function addToCart(name, price) {
+cart.push({ name, price });
+updateCart();
 }
 
-function toggleCart(){
+function toggleCart() {
+let box = document.getElementById("cartBox");
 
-let box=document.getElementById("cartBox");
-
-if(box.style.right==="0px"){
-
-box.style.right="-300px";
-
-}else{
-
-box.style.right="0px";
-
+if (box.style.right === "0px") {
+box.style.right = "-320px";
+} else {
+box.style.right = "0px";
+}
 }
 
-}
+function updateCart() {
+let box = document.getElementById("cartItems");
+box.innerHTML = "";
 
-function update(){
+let total = 0;
 
-let box=document.getElementById("cartItems");
+cart.forEach((item, index) => {
+total += item.price;
 
-box.innerHTML="";
-
-let total=0;
-
-cart.forEach((i,index)=>{
-
-total+=i.p;
-
-box.innerHTML+=`
+box.innerHTML += `
 <p>
-${i.n} - R$ ${i.p}
-<span
-onclick="removeItem(${index})"
-style="color:red;cursor:pointer;">
-✖
-</span>
+${item.name} - R$ ${item.price}
+<span onclick="removeItem(${index})" style="color:red;cursor:pointer;">✖</span>
 </p>
 `;
-
 });
 
-document.getElementById("total").innerText=total;
-document.getElementById("cartCount").innerText=cart.length;
-
+document.getElementById("total").innerText = total;
+document.getElementById("cartCount").innerText = cart.length;
 }
 
-function removeItem(index){
-
-cart.splice(index,1);
-
-update();
-
+function removeItem(index) {
+cart.splice(index, 1);
+updateCart();
 }
 
-/* CHECKOUT */
+/* FINALIZAR COMPRA */
 
-function abrirCheckout(){
-
-if(cart.length===0){
-
+function finalizarCompraDireto() {
+if (cart.length === 0) {
 alert("Carrinho vazio");
-
 return;
-
 }
 
-document.getElementById("checkoutBox").style.display="block";
+let total = cart.reduce((sum, item) => sum + item.price, 0);
 
-let box=document.getElementById("checkoutItems");
+alert("Redirecionando para pagamento... Total: R$ " + total);
 
-box.innerHTML="";
-
-let total=0;
-
-cart.forEach(item=>{
-
-box.innerHTML+=`
-<p>${item.n} - R$ ${item.p}</p>
-`;
-
-total+=item.p
-  <script>
-
-let cart=[];
-
-/* LOGIN */
-
-window.onload=function(){
-
-let user=localStorage.getItem("lk_user");
-
-if(user){
-
-document.getElementById("authBox").style.display="none";
-
-document.getElementById("perfilNome").innerText=user;
-
+// AQUI DEPOIS você coloca PIX ou link de pagamento
+window.open("https://seu-link-de-pagamento.com", "_blank");
 }
 
+/* BUSCA */
+
+function filtrar() {
+let input = document.getElementById("search").value.toLowerCase();
+let items = document.querySelectorAll(".item");
+
+items.forEach(item => {
+let text = item.innerText.toLowerCase();
+
+if (text.includes(input)) {
+item.style.display = "block";
+} else {
+item.style.display = "none";
+}
+});
 }
 
-function login(){
+</script>
 
-let user=document.getElementById("loginUser").value;
-let pass=document.getElementById("loginPass").value;
-
-let savedUser=localStorage.getItem("lk_user");
-let savedPass=localStorage.getItem("lk_pass");
-
-if(user===savedUser && pass===savedPass){
-
-document.getElementById("authBox").style.display="none";
-
-document.getElementById("perfilNome").innerText=user;
-
-alert("Login realizado!");
-
-}else{
-
-alert("Usuário ou senha inválidos");
-
-}
-
-}
-
-function register(){
-
-let user=document.getElementById("loginUser").value;
-let pass=document.getElementById("loginPass").value;
-
-if(user==="" || pass===""){
-
-alert("Preencha usuário e senha");
-return;
-
-}
-
-localStorage.setItem("lk_user",user);
-localStorage.setItem("lk_pass",pass);
-
-alert("Conta criada! Agora faça login.");
-
-}
-
-/* PERFIL COM ANIMAÇÃO */
-
-function abrirPerfil(){
-
-document.getElementById("perfilBox").style.right="0";
-
-}
-
-function fecharPerfil(){
-
-document.getElementById("perfilBox").style.right="-100%";
-
-}
-
-/* COMPRAS */
-
-function abrirCompras(){
-
-alert("Nenhuma compra encontrada.");
-
-}
-
-/* AFILIADO */
-
-function abrirAfiliado(){
-
-document.getElementById("afiliadoBox").style.display="block";
-
-}
-
-function fecharAfiliado(){
-
-document.getElementById("afiliadoBox").style.display="none";
-
-}
-
-function copiarLinkAfiliado(){
-
-let link=document.getElementById("linkAfiliado").value;
-
-navigator.clipboard.writeText(link);
-
-alert("Link copiado!");
-
-}
-
-/* SA
-}
+</body>
+</html>
