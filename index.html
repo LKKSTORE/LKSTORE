@@ -24,17 +24,13 @@ color:white;
 header{
 display:flex;
 justify-content:space-between;
-padding:18px 40px;
+padding:18px;
 background:rgba(0,0,0,0.7);
 position:sticky;
 top:0;
 }
 
-.logo{
-color:red;
-font-size:26px;
-font-weight:900;
-}
+.logo{color:red;font-size:26px;font-weight:900;}
 
 .products{
 display:grid;
@@ -83,12 +79,48 @@ width:320px;
 z-index:9999;
 }
 
+/* LOGIN */
+#authBox{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:99999;
+}
+
 button{cursor:pointer;}
 
 </style>
 </head>
 
 <body>
+
+<!-- LOGIN / CADASTRO -->
+<div id="authBox">
+
+<h2 style="color:red;">LKSTORE</h2>
+
+<div id="loginBox">
+<h3>Login</h3>
+<input id="loginUser" placeholder="Usuário" style="padding:10px;margin:5px;">
+<input id="loginPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
+<button onclick="login()" style="width:100%;padding:10px;background:red;color:white;">Entrar</button>
+<p onclick="showRegister()" style="cursor:pointer;color:gray;">Criar conta</p>
+</div>
+
+<div id="registerBox" style="display:none;">
+<h3>Cadastro</h3>
+<input id="regUser" placeholder="Usuário" style="padding:10px;margin:5px;">
+<input id="regPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
+<button onclick="register()" style="width:100%;padding:10px;background:red;color:white;">Cadastrar</button>
+<p onclick="showLogin()" style="cursor:pointer;color:gray;">Já tenho conta</p>
+</div>
+
+</div>
 
 <header>
 <div class="logo">LKSTORE</div>
@@ -115,17 +147,15 @@ button{cursor:pointer;}
 
 <!-- CARRINHO -->
 <div id="cartBox">
-
 <h3 style="color:red;">Carrinho</h3>
 
 <div id="cartItems"></div>
 
 <p>Total: R$ <span id="total">0</span></p>
 
-<button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;color:black;border:none;font-weight:bold;">
+<button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;color:black;font-weight:bold;">
 Checkout
 </button>
-
 </div>
 
 <!-- CHECKOUT -->
@@ -137,140 +167,146 @@ Checkout
 
 <h4>Total: R$ <span id="checkoutTotal"></span></h4>
 
-<hr>
-
-<h3>📧 Seu E-mail</h3>
-<input id="clientEmail" placeholder="Digite seu e-mail"
-style="width:100%;padding:8px;margin-bottom:10px;">
+<h3>📧 E-mail</h3>
+<input id="email" placeholder="Seu e-mail" style="width:100%;padding:8px;margin-bottom:10px;">
 
 <h3>💳 PIX COPIA E COLA</h3>
-
 <textarea id="pixCode" style="width:100%;height:80px;"></textarea>
 
 <img id="pixQR" style="width:100%;margin-top:10px;">
 
-<br><br>
-
-<button onclick="copiarPix()" style="width:100%;padding:8px;background:red;color:white;border:none;">
+<button onclick="copiarPix()" style="width:100%;padding:8px;background:red;color:white;">
 Copiar Pix
 </button>
 
-<button onclick="confirmarCompra()" style="width:100%;padding:10px;background:green;color:white;border:none;margin-top:10px;">
+<button onclick="confirmarCompra()" style="width:100%;padding:10px;background:green;color:white;margin-top:10px;">
 Confirmar Compra
 </button>
 
-<button onclick="fecharCheckout()" style="width:100%;padding:10px;background:red;color:white;border:none;margin-top:5px;">
+<button onclick="fecharCheckout()" style="width:100%;padding:10px;background:red;color:white;margin-top:5px;">
 Fechar
 </button>
 
 </div>
 
+<!-- SUPORTE -->
+<a href="https://wa.me/5582991585655?text=Suporte LKSTORE" 
+style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:14px;border-radius:50px;color:white;text-decoration:none;">
+💬 Suporte
+</a>
+
 <script>
 
-let cart = [];
-let total = 0;
+let cart=[];
+
+/* LOGIN */
+function showRegister(){
+document.getElementById("loginBox").style.display="none";
+document.getElementById("registerBox").style.display="block";
+}
+
+function showLogin(){
+document.getElementById("loginBox").style.display="block";
+document.getElementById("registerBox").style.display="none";
+}
+
+function register(){
+let u=document.getElementById("regUser").value;
+let p=document.getElementById("regPass").value;
+
+let users=JSON.parse(localStorage.getItem("users")||"[]");
+users.push({u,p});
+localStorage.setItem("users",JSON.stringify(users));
+
+alert("Conta criada!");
+showLogin();
+}
+
+function login(){
+let u=document.getElementById("loginUser").value;
+let p=document.getElementById("loginPass").value;
+
+let users=JSON.parse(localStorage.getItem("users")||"[]");
+
+let ok=users.find(x=>x.u===u && x.p===p);
+
+if(ok){
+localStorage.setItem("logado","1");
+document.getElementById("authBox").style.display="none";
+}else{
+alert("Erro login!");
+}
+}
+
+window.onload=function(){
+if(localStorage.getItem("logado")==="1"){
+document.getElementById("authBox").style.display="none";
+}
+}
 
 /* CARRINHO */
-function addToCart(name,price){
-cart.push({name,price});
-updateCart();
+function addToCart(n,p){
+cart.push({n,p});
+update();
 }
 
-function updateCart(){
+function update(){
 let box=document.getElementById("cartItems");
 box.innerHTML="";
-total=0;
+let t=0;
 
-cart.forEach((item,i)=>{
-total+=item.price;
-
-box.innerHTML+=`
-<p>
-${item.name} - R$ ${item.price}
-<button onclick="removeItem(${i})">X</button>
-</p>
-`;
+cart.forEach(i=>{
+t+=i.p;
+box.innerHTML+=`<p>${i.n} - R$ ${i.p}</p>`;
 });
 
-document.getElementById("total").innerText=total;
-}
-
-function removeItem(i){
-cart.splice(i,1);
-updateCart();
+document.getElementById("total").innerText=t;
 }
 
 /* CHECKOUT */
 function abrirCheckout(){
-
-if(cart.length===0){
-alert("Carrinho vazio!");
-return;
-}
+document.getElementById("checkoutBox").style.display="block";
 
 let box=document.getElementById("checkoutItems");
 box.innerHTML="";
+let t=0;
 
-let total=0;
-
-cart.forEach(item=>{
-box.innerHTML+=`<p>${item.name} - R$ ${item.price}</p>`;
-total+=item.price;
+cart.forEach(i=>{
+box.innerHTML+=`<p>${i.n} - R$ ${i.p}</p>`;
+t+=i.p;
 });
 
-document.getElementById("checkoutTotal").innerText=total;
+document.getElementById("checkoutTotal").innerText=t;
 
-// PIX automático
-gerarPix(total);
+let pix=`PIX-LKSTORE-${t}`;
+document.getElementById("pixCode").value=pix;
 
-document.getElementById("checkoutBox").style.display="block";
+document.getElementById("pixQR").src=
+"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+pix;
 }
 
 function fecharCheckout(){
 document.getElementById("checkoutBox").style.display="none";
 }
 
-/* PIX */
-function gerarPix(total){
-
-let pix = `00020126360014BR.GOV.BCB.PIX0114+55829915856552040000530398654${total}5802BR5925LKSTORE6009BRASIL62070503***6304ABCD`;
-
-document.getElementById("pixCode").value = pix;
-
-document.getElementById("pixQR").src =
-"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+pix;
-}
-
 function copiarPix(){
 navigator.clipboard.writeText(document.getElementById("pixCode").value);
-alert("Pix copiado!");
+alert("Copiado!");
 }
 
-/* FINALIZAR */
+/* FINAL */
 function confirmarCompra(){
-
-let email=document.getElementById("clientEmail").value;
+let email=document.getElementById("email").value;
 
 if(!email){
-alert("Digite seu e-mail!");
+alert("Digite e-mail!");
 return;
 }
-
-let pedidos=JSON.parse(localStorage.getItem("pedidos")||"[]");
-
-pedidos.push({
-items:cart,
-total:cart.reduce((a,b)=>a+b.price,0),
-email:email,
-date:new Date().toLocaleString()
-});
-
-localStorage.setItem("pedidos",JSON.stringify(pedidos));
 
 alert("Compra registrada!");
 
 cart=[];
-updateCart();
+update();
 fecharCheckout();
 }
 
