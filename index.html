@@ -9,23 +9,15 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
 
 body{
-background:linear-gradient(120deg,#2b0000,#8b0000,#000);
-background-size:200% 200%;
-animation:bgMove 8s ease infinite;
+background:linear-gradient(120deg,#2b0000,#000);
 color:white;
-}
-
-@keyframes bgMove{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
 }
 
 header{
 display:flex;
 justify-content:space-between;
 padding:18px;
-background:rgba(0,0,0,0.7);
+background:#111;
 position:sticky;
 top:0;
 }
@@ -79,17 +71,18 @@ width:320px;
 z-index:9999;
 }
 
-/* LOGIN */
+/* LOGIN MODAL */
 #authBox{
+display:none;
 position:fixed;
 top:0;left:0;
 width:100%;height:100%;
-background:black;
-display:flex;
+background:rgba(0,0,0,0.9);
 justify-content:center;
 align-items:center;
 flex-direction:column;
-z-index:9999;
+z-index:99999;
+color:white;
 }
 
 button{cursor:pointer;}
@@ -99,35 +92,11 @@ button{cursor:pointer;}
 
 <body>
 
-<!-- LOGIN -->
-<div id="authBox">
-
-<h2 style="color:red;">LKSTORE</h2>
-
-<div id="loginBox">
-<h3>Login</h3>
-<input id="loginUser" placeholder="Usuário" style="padding:10px;margin:5px;">
-<input id="loginPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-<button onclick="login()" style="width:100%;padding:10px;background:red;color:white;">Entrar</button>
-
-<p onclick="showRegister()" style="cursor:pointer;color:gray;">Criar conta</p>
-</div>
-
-<div id="registerBox" style="display:none;">
-<h3>Cadastro</h3>
-<input id="regUser" placeholder="Usuário" style="padding:10px;margin:5px;">
-<input id="regPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-<button onclick="register()" style="width:100%;padding:10px;background:red;color:white;">Cadastrar</button>
-
-<p onclick="showLogin()" style="cursor:pointer;color:gray;">Já tenho conta</p>
-</div>
-
-</div>
-
 <header>
 <div class="logo">LKSTORE</div>
 </header>
 
+<!-- PRODUTOS -->
 <section class="products">
 
 <div class="card">
@@ -156,7 +125,7 @@ button{cursor:pointer;}
 
 <p>Total: R$ <span id="total">0</span></p>
 
-<button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;color:black;font-weight:bold;">
+<button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;">
 Checkout
 </button>
 
@@ -165,34 +134,57 @@ Checkout
 <!-- CHECKOUT -->
 <div id="checkoutBox">
 
-<h3>🧾 Checkout</h3>
+<h3>Checkout</h3>
 
 <div id="checkoutItems"></div>
 
 <h4>Total: R$ <span id="checkoutTotal"></span></h4>
 
-<h3>💳 PIX COPIA E COLA</h3>
+<h3>PIX</h3>
 
 <textarea id="pixCode" style="width:100%;height:80px;"></textarea>
 
 <img id="pixQR" style="width:100%;margin-top:10px;">
 
-<button onclick="copiarPix()" style="width:100%;padding:8px;background:red;color:white;">
+<button onclick="copiarPix()" style="width:100%;padding:10px;background:red;color:white;">
 Copiar Pix
 </button>
 
-<button onclick="confirmarCompra()" style="width:100%;padding:10px;background:green;color:white;margin-top:10px;">
-Confirmar Compra
+<button onclick="confirmarCompra()" style="width:100%;padding:10px;background:green;color:white;">
+Confirmar
 </button>
 
-<button onclick="fecharCheckout()" style="width:100%;padding:10px;background:red;color:white;margin-top:5px;">
+<button onclick="fecharCheckout()" style="width:100%;padding:10px;background:red;color:white;">
 Fechar
 </button>
 
 </div>
 
+<!-- LOGIN / CADASTRO -->
+<div id="authBox">
+
+<h2 style="color:red;">LOGIN</h2>
+
+<div id="loginBox">
+<h3>Entrar</h3>
+<input id="loginUser" placeholder="Usuário" style="padding:10px;margin:5px;">
+<input id="loginPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
+<button onclick="login()" style="padding:10px;background:red;color:white;">Entrar</button>
+<p onclick="showRegister()" style="cursor:pointer;">Criar conta</p>
+</div>
+
+<div id="registerBox" style="display:none;">
+<h3>Criar conta</h3>
+<input id="regUser" placeholder="Usuário" style="padding:10px;margin:5px;">
+<input id="regPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
+<button onclick="register()" style="padding:10px;background:red;color:white;">Cadastrar</button>
+<p onclick="showLogin()" style="cursor:pointer;">Voltar login</p>
+</div>
+
+</div>
+
 <!-- SUPORTE -->
-<a href="https://wa.me/5582991585655?text=Suporte LKSTORE"
+<a href="https://wa.me/5582991585655"
 style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:14px;border-radius:50px;color:white;text-decoration:none;">
 💬 Suporte
 </a>
@@ -200,6 +192,7 @@ style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:14px;bor
 <script>
 
 let cart=[];
+let pending=null;
 
 /* LOGIN */
 function showRegister(){
@@ -235,20 +228,29 @@ let ok=users.find(x=>x.u===u && x.p===p);
 if(ok){
 localStorage.setItem("logado","1");
 document.getElementById("authBox").style.display="none";
-}else{
-alert("Login inválido!");
-}
+
+if(pending){
+cart.push(pending);
+pending=null;
+update();
 }
 
-window.onload=function(){
-if(localStorage.getItem("logado")==="1"){
-document.getElementById("authBox").style.display="none";
+}else{
+alert("Erro login!");
 }
 }
 
 /* CARRINHO */
-function addToCart(n,p){
-cart.push({n,p});
+function addToCart(name,price){
+
+if(localStorage.getItem("logado")!=="1"){
+pending={name,price};
+document.getElementById("authBox").style.display="flex";
+showLogin();
+return;
+}
+
+cart.push({name,price});
 update();
 }
 
@@ -258,8 +260,8 @@ box.innerHTML="";
 let t=0;
 
 cart.forEach(i=>{
-t+=i.p;
-box.innerHTML+=`<p>${i.n} - R$ ${i.p}</p>`;
+t+=i.price;
+box.innerHTML+=`<p>${i.name} - R$ ${i.price}</p>`;
 });
 
 document.getElementById("total").innerText=t;
@@ -274,8 +276,8 @@ box.innerHTML="";
 let t=0;
 
 cart.forEach(i=>{
-box.innerHTML+=`<p>${i.n} - R$ ${i.p}</p>`;
-t+=i.p;
+box.innerHTML+=`<p>${i.name} - R$ ${i.price}</p>`;
+t+=i.price;
 });
 
 document.getElementById("checkoutTotal").innerText=t;
@@ -294,12 +296,11 @@ document.getElementById("checkoutBox").style.display="none";
 
 function copiarPix(){
 navigator.clipboard.writeText(document.getElementById("pixCode").value);
-alert("Pix copiado!");
+alert("Copiado!");
 }
 
 function confirmarCompra(){
-alert("Compra realizada!");
-
+alert("Compra concluída!");
 cart=[];
 update();
 fecharCheckout();
