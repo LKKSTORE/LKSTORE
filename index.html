@@ -297,5 +297,51 @@ function showLogin(){
   document.getElementById("registerForm").style.display = "none";
 }
 </script>
+<div id="cartBox" style="position:fixed;right:20px;top:20px;background:#111;color:white;padding:15px;border-radius:10px;width:250px;">
+  
+  <h3 style="color:red;">Carrinho</h3>
+  
+  <div id="cartItems"></div>
+  
+  <p>Total: R$ <span id="total">0</span></p>
+  
+</div>
+
+<script>
+let cart = [];
+let total = 0;
+
+// adicionar produto
+function addToCart(name, price){
+  cart.push({name, price});
+  updateCart();
+}
+
+// atualizar carrinho
+function updateCart(){
+  let box = document.getElementById("cartItems");
+  box.innerHTML = "";
+  total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price;
+
+    box.innerHTML += `
+      <p>
+        ${item.name} - R$ ${item.price}
+        <button onclick="removeItem(${index})">X</button>
+      </p>
+    `;
+  });
+
+  document.getElementById("total").innerText = total;
+}
+
+// remover item
+function removeItem(index){
+  cart.splice(index, 1);
+  updateCart();
+}
+</script>
 </body>
 </html>
