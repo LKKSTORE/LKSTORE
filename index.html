@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LKSTORE</title>
+<title>LKSTORE PRO</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
@@ -35,6 +35,217 @@ color:red;
 font-size:26px;
 font-weight:900;
 }
+
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:40px;
+}
+
+.card{
+background:rgba(0,0,0,0.85);
+padding:20px;
+border-radius:12px;
+text-align:center;
+border:1px solid red;
+}
+
+.card button{
+background:red;
+color:white;
+padding:10px;
+border:none;
+margin-top:10px;
+cursor:pointer;
+border-radius:8px;
+}
+
+#cartBox{
+position:fixed;
+right:20px;
+top:20px;
+background:black;
+padding:15px;
+border-radius:10px;
+width:260px;
+border:1px solid red;
+}
+
+#checkoutBox{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+width:320px;
+z-index:9999;
+}
+
+button{cursor:pointer;}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">LKSTORE PRO</div>
+</header>
+
+<!-- PRODUTOS -->
+<section class="products">
+
+<div class="card">
+<h3>Premium 1</h3>
+<button onclick="addToCart('Premium 1',6)">Comprar R$6</button>
+</div>
+
+<div class="card">
+<h3>Premium 2</h3>
+<button onclick="addToCart('Premium 2',4)">Comprar R$4</button>
+</div>
+
+<div class="card">
+<h3>Premium 3</h3>
+<button onclick="addToCart('Premium 3',7)">Comprar R$7</button>
+</div>
+
+</section>
+
+<!-- CARRINHO -->
+<div id="cartBox">
+
+<h3 style="color:red;">Carrinho</h3>
+
+<div id="cartItems"></div>
+
+<p>Total: R$ <span id="total">0</span></p>
+
+<button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;">
+Checkout
+</button>
+
+<button onclick="pagarPix()" style="width:100%;padding:10px;background:green;color:white;">
+Pagar Pix
+</button>
+
+</div>
+
+<!-- CHECKOUT -->
+<div id="checkoutBox">
+
+<h3>Checkout</h3>
+
+<div id="checkoutItems"></div>
+
+<h4>Total: R$ <span id="checkoutTotal"></span></h4>
+
+<button onclick="fecharCheckout()" style="padding:10px;background:red;color:white;">
+Fechar
+</button>
+
+</div>
+
+<!-- SUPORTE -->
+<a href="https://wa.me/5582991585655"
+style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:14px;border-radius:50px;color:white;text-decoration:none;">
+💬 Suporte
+</a>
+
+<script>
+
+let cart=[];
+
+/* ADD */
+function addToCart(n,p){
+cart.push({n,p});
+update();
+}
+
+/* UPDATE */
+function update(){
+let box=document.getElementById("cartItems");
+box.innerHTML="";
+let t=0;
+
+cart.forEach((i,index)=>{
+t+=i.p;
+
+box.innerHTML+=`
+<p>
+${i.n} - R$ ${i.p}
+<button onclick="removeItem(${index})"
+style="margin-left:10px;background:red;color:white;border:none;padding:3px;">
+X
+</button>
+</p>`;
+});
+
+document.getElementById("total").innerText=t;
+}
+
+/* REMOVE */
+function removeItem(index){
+cart.splice(index,1);
+update();
+}
+
+/* CHECKOUT */
+function abrirCheckout(){
+document.getElementById("checkoutBox").style.display="block";
+
+let box=document.getElementById("checkoutItems");
+box.innerHTML="";
+let t=0;
+
+cart.forEach(i=>{
+box.innerHTML+=`<p>${i.n} - R$ ${i.p}</p>`;
+t+=i.p;
+});
+
+document.getElementById("checkoutTotal").innerText=t;
+}
+
+function fecharCheckout(){
+document.getElementById("checkoutBox").style.display="none";
+}
+
+/* 💳 PIX DINÂMICO (PRONTO PRA BACKEND) */
+async function pagarPix(){
+
+if(cart.length===0){
+alert("Carrinho vazio");
+return;
+}
+
+let total = cart.reduce((a,b)=>a + b.p, 0);
+
+// 🔥 FUTURO BACKEND (PIX DINÂMICO REAL)
+let res = await fetch("https://seu-backend.com/pix", {
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+amount: total,
+items: cart
+})
+});
+
+let data = await res.json();
+
+// abre QR ou link retornado
+window.location.href = data.qrUrl;
+
+}
+
+</script>
+
+</body>
+</html>}
 
 .products{
 display:grid;
