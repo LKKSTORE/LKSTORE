@@ -22,7 +22,8 @@ color:white;
 header{
 display:flex;
 justify-content:space-between;
-padding:16px 20px;
+align-items:center;
+padding:14px 18px;
 background:#111;
 border-bottom:1px solid #222;
 position:sticky;
@@ -31,8 +32,47 @@ top:0;
 
 .logo{
 color:#ff3b3b;
-font-size:24px;
+font-size:22px;
 font-weight:900;
+}
+
+/* ICONS */
+.topIcons{
+display:flex;
+gap:12px;
+align-items:center;
+}
+
+.icon{
+width:38px;
+height:38px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+background:#222;
+position:relative;
+}
+
+.icon.cart{
+background:#ff3b3b;
+}
+
+/* contador */
+#cartCount{
+position:absolute;
+top:-5px;
+right:-5px;
+background:white;
+color:black;
+font-size:12px;
+width:18px;
+height:18px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 /* SEARCH */
@@ -47,9 +87,10 @@ width:80%;
 max-width:400px;
 border-radius:8px;
 border:none;
+outline:none;
 }
 
-/* PRODUTOS */
+/* PRODUCTS */
 .products{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -87,20 +128,19 @@ border-radius:8px;
 width:100%;
 }
 
-.card button:hover{
-background:#cc2f2f;
-}
-
-/* CARRINHO */
+/* CART */
 #cartBox{
 position:fixed;
-right:15px;
-top:80px;
-background:#111;
-padding:15px;
-border-radius:12px;
+right:-300px;
+top:70px;
 width:260px;
-border:1px solid #222;
+height:420px;
+background:#111;
+border-left:2px solid #ff3b3b;
+padding:15px;
+transition:0.3s;
+overflow:auto;
+z-index:999;
 }
 
 #cartBox h3{
@@ -109,6 +149,8 @@ margin-bottom:10px;
 }
 
 #cartItems p{
+display:flex;
+justify-content:space-between;
 font-size:14px;
 margin:6px 0;
 }
@@ -138,6 +180,19 @@ cursor:pointer;
 
 <header>
 <div class="logo">LKSTORE</div>
+
+<div class="topIcons">
+
+<!-- PERFIL -->
+<div class="icon" onclick="alert('Perfil em breve')">👤</div>
+
+<!-- CARRINHO -->
+<div class="icon cart" onclick="toggleCart()">
+🛒
+<span id="cartCount">0</span>
+</div>
+
+</div>
 </header>
 
 <!-- SEARCH -->
@@ -145,41 +200,39 @@ cursor:pointer;
 <input id="search" onkeyup="filtrar()" placeholder="Buscar produtos...">
 </div>
 
-<!-- PRODUTOS -->
+<!-- PRODUCTS -->
 <section class="products">
 
 <div class="card item">
 <h3>Premium 1</h3>
-<button onclick="addToCart('Premium 1',6)">Comprar - R$ 6</button>
+<button onclick="addToCart('Premium 1',6)">Comprar R$6</button>
 </div>
 
 <div class="card item">
 <h3>Premium 2</h3>
-<button onclick="addToCart('Premium 2',4)">Comprar - R$ 4</button>
+<button onclick="addToCart('Premium 2',4)">Comprar R$4</button>
 </div>
 
 <div class="card item">
 <h3>Premium 3</h3>
-<button onclick="addToCart('Premium 3',7)">Comprar - R$ 7</button>
+<button onclick="addToCart('Premium 3',7)">Comprar R$7</button>
 </div>
 
 </section>
 
-<!-- CARRINHO -->
+<!-- CART -->
 <div id="cartBox">
 
 <h3>Carrinho</h3>
 
 <div id="cartItems"></div>
 
-<p>Total: R$ <span id="total">0</span></p>
+<p style="margin-top:10px;">
+Total: R$ <span id="total">0</span>
+</p>
 
-<button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;">
-Checkout
-</button>
-
-<button onclick="gerarPagamento()" style="width:100%;padding:10px;background:green;color:white;">
-Pagar
+<button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;margin-top:10px;">
+Finalizar
 </button>
 
 </div>
@@ -215,6 +268,17 @@ cart.push({n,p});
 update();
 }
 
+/* TOGGLE CART */
+function toggleCart(){
+let box=document.getElementById("cartBox");
+
+if(box.style.right==="0px"){
+box.style.right="-300px";
+}else{
+box.style.right="0px";
+}
+}
+
 /* UPDATE */
 function update(){
 let box=document.getElementById("cartItems");
@@ -227,14 +291,12 @@ t+=i.p;
 box.innerHTML+=`
 <p>
 ${i.n} - R$ ${i.p}
-<button onclick="removeItem(${index})"
-style="margin-left:10px;background:red;color:white;border:none;padding:3px;">
-X
-</button>
+<span onclick="removeItem(${index})" style="color:red;cursor:pointer;">✖</span>
 </p>`;
 });
 
 document.getElementById("total").innerText=t;
+document.getElementById("cartCount").innerText=cart.length;
 }
 
 /* REMOVE */
@@ -263,40 +325,7 @@ function fecharCheckout(){
 document.getElementById("checkoutBox").style.display="none";
 }
 
-/* PAGAMENTO */
-function gerarPagamento(){
-
-if(cart.length===0){
-alert("Carrinho vazio");
-return;
-}
-
-let total = cart.reduce((a,b)=>a + b.p, 0);
-
-const links = [
-"https://pag.ae/81R2Yyh2N",
-"https://pag.ae/81R2Yyh2N",
-"https://pag.ae/81R2Yyh2N"
-];
-
-let index = 0;
-
-if(total <= 4){
-index = 0;
-}
-else if(total <= 6){
-index = 1;
-}
-else{
-index = 2;
-}
-
-alert("Total: R$ " + total);
-
-window.open(links[index], "_blank");
-}
-
-/* BUSCA */
+/* SEARCH */
 function filtrar(){
 let input=document.getElementById("search").value.toLowerCase();
 let items=document.querySelectorAll(".item");
@@ -315,4 +344,4 @@ item.style.display="none";
 </script>
 
 </body>
-</html>
+                                                </html>
