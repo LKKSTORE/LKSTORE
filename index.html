@@ -1,344 +1,133 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LKSTORE</title>
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LKSTORE</title>
 
-    body{
-      background: radial-gradient(circle at top, #1a0000, #000000);
-      color:white;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:radial-gradient(circle at top,#1a0000,#000);color:white;}
 
-    /* NAVBAR */
-    header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:18px 40px;
-      background: rgba(0,0,0,0.7);
-      border-bottom: 1px solid #ff1a1a33;
-      position: sticky;
-      top:0;
-      backdrop-filter: blur(10px);
-    }
+header{
+display:flex;justify-content:space-between;
+padding:18px 40px;background:rgba(0,0,0,0.7);
+position:sticky;top:0;
+}
 
-    .logo{
-      font-size:26px;
-      font-weight:900;
-      color:#ff1a1a;
-      letter-spacing:2px;
-    }
+.logo{color:red;font-size:26px;font-weight:900;}
 
-    nav a{
-      color:#fff;
-      margin-left:20px;
-      text-decoration:none;
-      font-weight:600;
-      transition:0.3s;
-    }
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;padding:40px;}
 
-    nav a:hover{
-      color:#ff1a1a;
-    }
+.card{background:#111;padding:20px;border-radius:10px;text-align:center;}
 
-    /* HERO */
-    .hero{
-      padding:100px 20px;
-      text-align:center;
-    }
+.card button{background:red;color:white;padding:10px;border:none;margin-top:10px;cursor:pointer}
 
-    .hero h1{
-      font-size:60px;
-      color:#ff1a1a;
-      text-shadow:0 0 20px #ff1a1a55;
-    }
-
-    .hero p{
-      margin-top:15px;
-      font-size:18px;
-      color:#cccccc;
-    }
-
-    .btn{
-      margin-top:25px;
-      padding:14px 30px;
-      background: linear-gradient(90deg,#ff1a1a,#b30000);
-      border:none;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-      border-radius:10px;
-      transition:0.3s;
-    }
-
-    .btn:hover{
-      transform: scale(1.05);
-      box-shadow:0 0 20px #ff1a1a55;
-    }
-
-    /* PRODUCTS */
-    .products{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:25px;
-      padding:50px;
-    }
-
-    .card{
-      background: rgba(20,20,20,0.9);
-      border:1px solid #ff1a1a33;
-      padding:20px;
-      border-radius:15px;
-      text-align:center;
-      transition:0.3s;
-      box-shadow:0 0 10px #000;
-    }
-
-    .card:hover{
-      transform: translateY(-8px);
-      border-color:#ff1a1a;
-      box-shadow:0 0 25px #ff1a1a33;
-    }
-
-    .card h3{
-      color:#ff1a1a;
-      margin-bottom:10px;
-    }
-
-    .card p{
-      color:#ccc;
-      font-size:14px;
-    }
-
-    .card button{
-      margin-top:15px;
-      padding:10px 20px;
-      background:#ff1a1a;
-      border:none;
-      color:white;
-      border-radius:8px;
-      cursor:pointer;
-      transition:0.3s;
-    }
-
-    .card button:hover{
-      background:#b30000;
-      transform:scale(1.05);
-    }
-
-    /* FOOTER */
-    footer{
-      text-align:center;
-      padding:25px;
-      color:#777;
-      border-top:1px solid #ff1a1a22;
-      margin-top:40px;
-    }
-
-  </style>
+#cartBox{
+position:fixed;right:20px;top:20px;
+background:#111;padding:15px;
+border-radius:10px;width:220px;
+}
+</style>
 </head>
+
 <body>
 
 <header>
-  <div class="logo">LKSTORE</div>
-  <nav>
-    <a href="#">Início</a>
-    <a href="#">Produtos</a>
-    <a href="#">Login</a>
-  </nav>
+<div class="logo">LKSTORE</div>
 </header>
-
-<section class="hero">
-  <h1>LKSTORE</h1>
-  <p>Streaming • Conteúdos • Experiência Premium</p>
-  <button class="btn">Explorar Agora</button>
-</section>
 
 <section class="products">
 
-<button onclick="addToCart('Premium 2', 49)">Comprar</button>
-<button onclick="addToCart('Premium 3', 99)">Comprar</button>
-  </div>
+<div class="card">
+<h3>Premium 1</h3>
+<p>Streaming</p>
+<button onclick="addToCart('Premium 1', 29)">Comprar</button>
+</div>
 
+<div class="card">
+<h3>Premium 2</h3>
+<p>Streaming</p>
 <button onclick="addToCart('Premium 2', 49)">Comprar</button>
-<button onclick="addToCart('Premium 3', 99)">Comprar</button>
+</div>
 
-<button onclick="addToCart('Premium 2', 49)">Comprar</button>
+<div class="card">
+<h3>Premium 3</h3>
+<p>Streaming</p>
 <button onclick="addToCart('Premium 3', 99)">Comprar</button>
+</div>
 
 </section>
 
-<footer>
-  © 2026 LKSTORE - Todos os direitos reservados
-</footer>
-<div id="loginBox" style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999;">
+<!-- CARRINHO -->
+<div id="cartBox">
+<h3 style="color:red;">Carrinho</h3>
+<div id="cartItems"></div>
+<p>Total: R$ <span id="total">0</span></p>
+</div>
 
-<script>
-function login(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
+<!-- LOGIN (SIMPLES) -->
+<div id="loginBox" style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;">
+<h2 style="color:red;">LKSTORE LOGIN</h2>
 
-  if(u && p){
-    localStorage.setItem("logado", "sim");
-    document.getElementById("loginBox").style.display = "none";
-  } else {
-    document.getElementById("msg").innerText = "Preencha tudo!";
-  }
-}
+<input id="user" placeholder="Usuário" style="padding:10px;margin:5px;">
+<input id="pass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
 
-window.onload = function(){
-  if(localStorage.getItem("logado") === "sim"){
-    document.getElementById("loginBox").style.display = "none";
-  }
-}
-<script src="firebase.js"></script>
+<button onclick="login()" style="padding:10px 20px;background:red;color:white;border:none;">
+Entrar
+</button>
 
-<script>
-// login aqui
-function login(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
-
-  if(u && p){
-    alert("Login OK");
-  } else {
-    alert("Preencha tudo");
-  }
-}
-</script>
-<div id="loginBox" style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999;">
-  
-  <h2 style="color:red;">LKSTORE LOGIN</h2>
-
-  <input id="user" placeholder="Usuário" style="padding:10px;margin:5px;">
-  <input id="pass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-
-  <button onclick="login()" style="padding:10px 20px;background:red;color:white;border:none;">
-    Entrar
-  </button>
-
-  <p id="msg" style="color:white;"></p>
+<p id="msg" style="color:white;"></p>
 </div>
 
 <script>
-function login(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
 
-  if(u && p){
-    localStorage.setItem("logado", "sim");
-    document.getElementById("loginBox").style.display = "none";
-  } else {
-    document.getElementById("msg").innerText = "Preencha tudo!";
-  }
-}
-
-window.onload = function(){
-  if(localStorage.getItem("logado") === "sim"){
-    document.getElementById("loginBox").style.display = "none";
-  }
-}
-</script>
-  <!-- LOGIN + CADASTRO AQUI -->
-  <div id="authBox" style="position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999;color:white;">
-
-  <h2 style="color:red;">LKSTORE</h2>
-
-  <div id="loginForm">
-    <h3>Login</h3>
-    <input id="loginUser" placeholder="Usuário" style="padding:10px;margin:5px;">
-    <input id="loginPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-    <button onclick="login()" style="padding:10px 20px;background:red;color:white;">Entrar</button>
-
-    <p onclick="showRegister()" style="cursor:pointer;color:gray;margin-top:10px;">
-      Criar conta
-    </p>
-  </div>
-
-  <div id="registerForm" style="display:none;">
-    <h3>Cadastro</h3>
-    <input id="regUser" placeholder="Usuário" style="padding:10px;margin:5px;">
-    <input id="regPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-    <button onclick="register()" style="padding:10px 20px;background:red;color:white;">Cadastrar</button>
-
-    <p onclick="showLogin()" style="cursor:pointer;color:gray;margin-top:10px;">
-      Já tenho conta
-    </p>
-  </div>
-
-</div>
-
-<script>
-// mostrar telas
-function showRegister(){
-  document.getElementById("loginForm").style.display = "none";
-  document.getElementById("registerForm").style.display = "block";
-}
-
-function showLogin(){
-  document.getElementById("loginForm").style.display = "block";
-  document.getElementById("registerForm").style.display = "none";
-}
-</script>
-<div id="cartBox" style="position:fixed;right:20px;top:20px;background:#111;color:white;padding:15px;border-radius:10px;width:250px;">
-  
-  <h3 style="color:red;">Carrinho</h3>
-  
-  <div id="cartItems"></div>
-  
-  <p>Total: R$ <span id="total">0</span></p>
-  
-</div>
-
-<script>
 let cart = [];
 let total = 0;
 
-// adicionar produto
+// LOGIN
+function login(){
+let u = document.getElementById("user").value;
+let p = document.getElementById("pass").value;
+
+if(u && p){
+document.getElementById("loginBox").style.display = "none";
+} else {
+document.getElementById("msg").innerText = "Preencha tudo!";
+}
+}
+
+// CARRINHO
 function addToCart(name, price){
-  cart.push({name, price});
-  updateCart();
+cart.push({name,price});
+updateCart();
 }
 
-// atualizar carrinho
 function updateCart(){
-  let box = document.getElementById("cartItems");
-  box.innerHTML = "";
-  total = 0;
+let box = document.getElementById("cartItems");
+box.innerHTML = "";
+total = 0;
 
-  cart.forEach((item, index) => {
-    total += item.price;
+cart.forEach((item,index)=>{
+total += item.price;
 
-    box.innerHTML += `
-      <p>
-        ${item.name} - R$ ${item.price}
-        <button onclick="removeItem(${index})">X</button>
-      </p>
-    `;
-  });
+box.innerHTML += `
+<p>
+${item.name} - R$ ${item.price}
+<button onclick="removeItem(${index})">X</button>
+</p>
+`;
+});
 
-  document.getElementById("total").innerText = total;
+document.getElementById("total").innerText = total;
 }
 
-// remover item
 function removeItem(index){
-  cart.splice(index, 1);
-  updateCart();
-<div id="cartBox" style="position:fixed;right:20px;top:20px;background:#111;color:white;padding:10px;border-radius:10px;width:220px;">
-  <h3>Carrinho</h3>
-  <div id="cartItems"></div>
-  <p>Total: R$ <span id="total">0</span></p>
-</div>
+cart.splice(index,1);
+updateCart();
+}
+
 </script>
-  
-</body>  
+
+</body>
 </html>
