@@ -6,19 +6,44 @@
 <title>LKSTORE</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
-body{background:radial-gradient(circle at top,#1a0000,#000);color:white;}
+
+/* RESET */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+/* FUNDO BONITO */
+body{
+background: linear-gradient(135deg,#0a0000,#1a0000,#000);
+background-size:400% 400%;
+animation:bgMove 10s ease infinite;
+color:white;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
 
 /* HEADER */
 header{
-display:flex;justify-content:space-between;
+display:flex;
+justify-content:space-between;
 padding:18px 40px;
 background:rgba(0,0,0,0.7);
 position:sticky;
 top:0;
 }
 
-.logo{color:red;font-size:26px;font-weight:900;}
+.logo{
+color:red;
+font-size:26px;
+font-weight:900;
+}
 
 /* PRODUTOS */
 .products{
@@ -55,30 +80,35 @@ border-radius:10px;
 width:240px;
 }
 
-#cartBox button{
-cursor:pointer;
-}
-</style>
-</head>
-
-<body>
-<a href="https://wa.me/5582991585655?text=Olá! Preciso de suporte na LKSTORE" 
-target="_blank"
-style="
+/* BOTÃO SUporte */
+.support{
 position:fixed;
 bottom:20px;
 right:20px;
 background:#25D366;
-color:white;
 padding:14px 18px;
 border-radius:50px;
+color:white;
 text-decoration:none;
 font-weight:bold;
-box-shadow:0 0 15px rgba(0,0,0,0.3);
-z-index:9999;
-">
-💬 Suporte
-</a>
+}
+
+/* PIX BOX */
+#pixBox{
+position:fixed;
+bottom:90px;
+right:20px;
+background:#111;
+padding:15px;
+border-radius:10px;
+width:220px;
+}
+
+</style>
+</head>
+
+<body>
+
 <header>
 <div class="logo">LKSTORE</div>
 </header>
@@ -88,118 +118,122 @@ z-index:9999;
 <div class="card">
 <h3>Premium 1</h3>
 <p>Streaming</p>
-<button onclick="addToCart('Premium 1', 29)">Comprar</button>
+<button onclick="addToCart('Premium 1',29)">Comprar</button>
 </div>
 
 <div class="card">
 <h3>Premium 2</h3>
 <p>Streaming</p>
-<button onclick="addToCart('Premium 2', 49)">Comprar</button>
+<button onclick="addToCart('Premium 2',49)">Comprar</button>
 </div>
 
 <div class="card">
 <h3>Premium 3</h3>
 <p>Streaming</p>
-<button onclick="addToCart('Premium 3', 99)">Comprar</button>
+<button onclick="addToCart('Premium 3',99)">Comprar</button>
 </div>
 
 </section>
 
 <!-- CARRINHO -->
 <div id="cartBox">
+
 <h3 style="color:red;">Carrinho</h3>
 
 <div id="cartItems"></div>
 
 <p>Total: R$ <span id="total">0</span></p>
 
-<button onclick="finalizarWhatsApp()" style="margin-top:10px;padding:10px;background:green;color:white;border:none;width:100%;">
+<button onclick="finalizarWhatsApp()" style="margin-top:10px;width:100%;padding:10px;background:green;color:white;border:none;">
 Finalizar no WhatsApp
 </button>
 
-<button onclick="mostrarPix()" style="margin-top:8px;padding:10px;background:#ff1a1a;color:white;border:none;width:100%;">
+<button onclick="mostrarPix()" style="margin-top:8px;width:100%;padding:10px;background:#ff1a1a;color:white;border:none;">
 Ver Pix
 </button>
 
-<div id="pixBox" style="display:none;margin-top:10px;background:#222;padding:10px;border-radius:8px;">
-<p>📌 PIX:</p>
-<p id="pixKey" style="color:#00ff99;">SUA-CHAVE-PIX-AQUI</p>
-<button onclick="copiarPix()" style="margin-top:5px;padding:5px;background:#444;color:white;border:none;width:100%;">
-Copiar Pix
+</div>
+
+<!-- PIX -->
+<div id="pixBox" style="display:none;">
+<h3 style="color:#ff1a1a;">PIX</h3>
+<p id="pixKey" style="color:#00ff99;">82991585655</p>
+
+<button onclick="copiarPix()" style="margin-top:5px;width:100%;padding:8px;background:#444;color:white;border:none;">
+Copiar PIX
 </button>
 </div>
 
-</div>
+<!-- SUPORTE -->
+<a class="support" href="https://wa.me/5582991585655?text=Olá! Preciso de suporte na LKSTORE" target="_blank">
+💬 Suporte
+</a>
 
 <script>
 
 let cart = [];
 let total = 0;
 
-// adicionar produto
-function addToCart(name, price){
-cart.push({name, price});
+/* CARRINHO */
+function addToCart(name,price){
+cart.push({name,price});
 updateCart();
 }
 
-// atualizar carrinho
 function updateCart(){
 let box = document.getElementById("cartItems");
-box.innerHTML = "";
-total = 0;
+box.innerHTML="";
+total=0;
 
-cart.forEach((item,index)=>{
-total += item.price;
+cart.forEach((item,i)=>{
+total+=item.price;
 
-box.innerHTML += `
+box.innerHTML+=`
 <p>
 ${item.name} - R$ ${item.price}
-<button onclick="removeItem(${index})">X</button>
+<button onclick="removeItem(${i})">X</button>
 </p>
 `;
 });
 
-document.getElementById("total").innerText = total;
+document.getElementById("total").innerText=total;
 }
 
-// remover item
-function removeItem(index){
-cart.splice(index,1);
+function removeItem(i){
+cart.splice(i,1);
 updateCart();
 }
 
-// WHATSAPP
+/* WHATSAPP */
 function finalizarWhatsApp(){
-if(cart.length === 0){
+if(cart.length===0){
 alert("Carrinho vazio!");
 return;
 }
 
-let msg = "Olá! Quero comprar:%0A";
-let total = 0;
+let msg="Olá! Quero comprar:%0A";
+let total=0;
 
 cart.forEach(item=>{
-msg += `- ${item.name} R$ ${item.price}%0A`;
-total += item.price;
+msg+=`- ${item.name} R$ ${item.price}%0A`;
+total+=item.price;
 });
 
-msg += `%0ATotal: R$ ${total}`;
+msg+=`%0ATotal: R$ ${total}`;
 
-let numero = "5581999999999"; // TROCA SEU NÚMERO
+let numero="5582991585655";
 
-let url = `https://wa.me/${numero}?text=${msg}`;
-window.open(url,"_blank");
+window.open(`https://wa.me/${numero}?text=${msg}`,"_blank");
 }
 
-// PIX
+/* PIX */
 function mostrarPix(){
-let box = document.getElementById("pixBox");
-box.style.display = box.style.display === "none" ? "block" : "none";
+let box=document.getElementById("pixBox");
+box.style.display=box.style.display==="none"?"block":"none";
 }
 
 function copiarPix(){
-let pix = document.getElementById("pixKey").innerText;
-navigator.clipboard.writeText(pix);
+navigator.clipboard.writeText(document.getElementById("pixKey").innerText);
 alert("PIX copiado!");
 }
 
