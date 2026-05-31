@@ -780,9 +780,7 @@ alert("Redirecionando para pagamento... Total: R$ " + total);
 // AQUI DEPOIS você coloca PIX ou link de pagamento
 window.open("https://seu-link-de-pagamento.com", "_blank");
 }
-
 /* BUSCA */
-
 function filtrar() {
 let input = document.getElementById("search").value.toLowerCase();
 let items = document.querySelectorAll(".item");
@@ -797,7 +795,27 @@ item.style.display = "none";
 }
 });
 }
+</script>
 
+<!-- 🔥 FIREBASE (COLE AQUI NO FINAL MESMO) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_AUTH_DOMAIN",
+  projectId: "SEU_PROJECT_ID",
+  storageBucket: "SEU_STORAGE_BUCKET",
+  messagingSenderId: "SEU_SENDER_ID",
+  appId: "SEU_APP_ID",
+  measurementId: "SEU_MEASUREMENT_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const analytics = firebase.analytics();
 </script>
 
 </body>
