@@ -9,32 +9,20 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
 
 body{
-background:linear-gradient(-45deg,#2b0000,#ff0000,#000);
-background-size:400% 400%;
-animation:bg 6s ease infinite;
+background:linear-gradient(120deg,#2b0000,#000);
 color:white;
-}
-
-@keyframes bg{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
 }
 
 header{
 display:flex;
 justify-content:space-between;
 padding:18px;
-background:rgba(0,0,0,0.7);
+background:#111;
 position:sticky;
 top:0;
 }
 
-.logo{
-color:red;
-font-size:26px;
-font-weight:900;
-}
+.logo{color:red;font-size:26px;font-weight:900;}
 
 .products{
 display:grid;
@@ -44,17 +32,10 @@ padding:40px;
 }
 
 .card{
-background:rgba(0,0,0,0.8);
+background:#111;
 padding:20px;
-border-radius:12px;
+border-radius:10px;
 text-align:center;
-border:1px solid red;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
-box-shadow:0 0 20px red;
 }
 
 .card button{
@@ -64,18 +45,16 @@ padding:10px;
 border:none;
 margin-top:10px;
 cursor:pointer;
-border-radius:8px;
 }
 
 #cartBox{
 position:fixed;
 right:20px;
 top:20px;
-background:black;
+background:#111;
 padding:15px;
 border-radius:10px;
-width:250px;
-border:1px solid red;
+width:240px;
 }
 
 #checkoutBox{
@@ -92,13 +71,13 @@ width:320px;
 z-index:9999;
 }
 
-/* LOGIN */
+/* LOGIN MODAL */
 #authBox{
 display:none;
 position:fixed;
 top:0;left:0;
 width:100%;height:100%;
-background:rgba(0,0,0,0.95);
+background:rgba(0,0,0,0.9);
 justify-content:center;
 align-items:center;
 flex-direction:column;
@@ -149,6 +128,10 @@ button{cursor:pointer;}
 Checkout
 </button>
 
+<button onclick="gerarPagamento()" style="width:100%;padding:10px;background:green;color:white;">
+Pagar PagSeguro
+</button>
+
 </div>
 
 <!-- CHECKOUT -->
@@ -160,21 +143,7 @@ Checkout
 
 <h4>Total: R$ <span id="checkoutTotal"></span></h4>
 
-<h3>PIX COPIA E COLA</h3>
-
-<textarea id="pixCode" style="width:100%;height:80px;"></textarea>
-
-<img id="pixQR" style="width:100%;margin-top:10px;">
-
-<button onclick="copiarPix()" style="width:100%;padding:10px;background:red;color:white;">
-Copiar Pix
-</button>
-
-<button onclick="confirmarCompra()" style="width:100%;padding:10px;background:green;color:white;">
-Confirmar
-</button>
-
-<button onclick="fecharCheckout()" style="width:100%;padding:10px;background:red;color:white;">
+<button onclick="fecharCheckout()" style="padding:10px;background:red;color:white;">
 Fechar
 </button>
 
@@ -185,21 +154,12 @@ Fechar
 
 <h2 style="color:red;">LOGIN</h2>
 
-<div id="loginBox">
-<h3>Entrar</h3>
 <input id="loginUser" placeholder="Usuário" style="padding:10px;margin:5px;">
 <input id="loginPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-<button onclick="login()" style="padding:10px;background:red;color:white;">Entrar</button>
-<p onclick="showRegister()" style="cursor:pointer;">Criar conta</p>
-</div>
 
-<div id="registerBox" style="display:none;">
-<h3>Criar conta</h3>
-<input id="regUser" placeholder="Usuário" style="padding:10px;margin:5px;">
-<input id="regPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
-<button onclick="register()" style="padding:10px;background:red;color:white;">Cadastrar</button>
-<p onclick="showLogin()" style="cursor:pointer;">Voltar login</p>
-</div>
+<button onclick="login()" style="padding:10px;background:red;color:white;width:100%;">
+Entrar
+</button>
 
 </div>
 
@@ -212,65 +172,22 @@ style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:14px;bor
 <script>
 
 let cart=[];
-let pending=null;
 
-/* LOGIN */
-function showRegister(){
-document.getElementById("loginBox").style.display="none";
-document.getElementById("registerBox").style.display="block";
-}
-
-function showLogin(){
-document.getElementById("loginBox").style.display="block";
-document.getElementById("registerBox").style.display="none";
-}
-
-function register(){
-let u=document.getElementById("regUser").value;
-let p=document.getElementById("regPass").value;
-
-let users=JSON.parse(localStorage.getItem("users")||"[]");
-users.push({u,p});
-localStorage.setItem("users",JSON.stringify(users));
-
-alert("Conta criada!");
-showLogin();
-}
-
+/* LOGIN SIMPLES */
 function login(){
 let u=document.getElementById("loginUser").value;
 let p=document.getElementById("loginPass").value;
 
-let users=JSON.parse(localStorage.getItem("users")||"[]");
-
-let ok=users.find(x=>x.u===u && x.p===p);
-
-if(ok){
+if(u && p){
 localStorage.setItem("logado","1");
 document.getElementById("authBox").style.display="none";
-
-if(pending){
-cart.push(pending);
-pending=null;
-update();
-}
-
-}else{
-alert("Login inválido!");
+alert("Login OK");
 }
 }
 
 /* CARRINHO */
-function addToCart(name,price){
-
-if(localStorage.getItem("logado")!=="1"){
-pending={name,price};
-document.getElementById("authBox").style.display="flex";
-showLogin();
-return;
-}
-
-cart.push({name,price});
+function addToCart(n,p){
+cart.push({n,p});
 update();
 }
 
@@ -280,8 +197,8 @@ box.innerHTML="";
 let t=0;
 
 cart.forEach(i=>{
-t+=i.price;
-box.innerHTML+=`<p>${i.name} - R$ ${i.price}</p>`;
+t+=i.p;
+box.innerHTML+=<p>${i.n} - R$ ${i.p}</p>;
 });
 
 document.getElementById("total").innerText=t;
@@ -296,34 +213,28 @@ box.innerHTML="";
 let t=0;
 
 cart.forEach(i=>{
-box.innerHTML+=`<p>${i.name} - R$ ${i.price}</p>`;
-t+=i.price;
+box.innerHTML+=<p>${i.n} - R$ ${i.p}</p>;
+t+=i.p;
 });
 
 document.getElementById("checkoutTotal").innerText=t;
-
-let pix=`00020126360014BR.GOV.BCB.PIX0114+558299158565520400005303986540${t}5802BR5925LKSTORE6009BRASIL62070503***6304ABCD`;
-
-document.getElementById("pixCode").value=pix;
-
-document.getElementById("pixQR").src=
-"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+pix;
 }
 
 function fecharCheckout(){
 document.getElementById("checkoutBox").style.display="none";
 }
 
-function copiarPix(){
-navigator.clipboard.writeText(document.getElementById("pixCode").value);
-alert("Copiado!");
+/* PAGSEGURO LINK */
+function gerarPagamento(){
+
+if(cart.length===0){
+alert("Carrinho vazio");
+return;
 }
 
-function confirmarCompra(){
-alert("Compra concluída!");
-cart=[];
-update();
-fecharCheckout();
+let baseLink="https://pag.ae/81R2Yyh2N";
+
+window.open(baseLink,"_blank");
 }
 
 </script>
