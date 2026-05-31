@@ -7,27 +7,13 @@
 
 <style>
 
-/* RESET */
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
 
-/* FUNDO BONITO */
 body{
-background: linear-gradient(120deg, #2b0000, #8b0000, #000000);
+background:linear-gradient(120deg,#2b0000,#8b0000,#000);
 background-size:200% 200%;
 animation:bgMove 8s ease infinite;
 color:white;
-}
-
-@keyframes bgMove{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
 }
 
 @keyframes bgMove{
@@ -46,11 +32,7 @@ position:sticky;
 top:0;
 }
 
-.logo{
-color:red;
-font-size:26px;
-font-weight:900;
-}
+.logo{color:red;font-size:26px;font-weight:900;}
 
 /* PRODUTOS */
 .products{
@@ -87,29 +69,22 @@ border-radius:10px;
 width:240px;
 }
 
-/* BOTÃO SUporte */
-.support{
+/* CHECKOUT */
+#checkoutBox{
+display:none;
 position:fixed;
-bottom:20px;
-right:20px;
-background:#25D366;
-padding:14px 18px;
-border-radius:50px;
-color:white;
-text-decoration:none;
-font-weight:bold;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+width:320px;
+z-index:9999;
 }
 
-/* PIX BOX */
-#pixBox{
-position:fixed;
-bottom:90px;
-right:20px;
-background:#111;
-padding:15px;
-border-radius:10px;
-width:220px;
-}
+button{cursor:pointer;}
 
 </style>
 </head>
@@ -144,37 +119,51 @@ width:220px;
 
 <!-- CARRINHO -->
 <div id="cartBox">
-
 <h3 style="color:red;">Carrinho</h3>
 
 <div id="cartItems"></div>
 
 <p>Total: R$ <span id="total">0</span></p>
 
-<button onclick="finalizarWhatsApp()" style="margin-top:10px;width:100%;padding:10px;background:green;color:white;border:none;">
-Finalizar no WhatsApp
-</button>
-
-<button onclick="mostrarPix()" style="margin-top:8px;width:100%;padding:10px;background:#ff1a1a;color:white;border:none;">
-Ver Pix
+<button onclick="abrirCheckout()" style="margin-top:10px;width:100%;padding:10px;background:gold;color:black;border:none;font-weight:bold;">
+Checkout
 </button>
 
 </div>
 
-<!-- PIX -->
-<div id="pixBox" style="display:none;">
-<h3 style="color:#ff1a1a;">PIX</h3>
-<p id="pixKey" style="color:#00ff99;">82991585655</p>
+<!-- CHECKOUT -->
+<div id="checkoutBox">
 
-<button onclick="copiarPix()" style="margin-top:5px;width:100%;padding:8px;background:#444;color:white;border:none;">
-Copiar PIX
+<h3>🧾 Checkout</h3>
+
+<div id="checkoutItems"></div>
+
+<h4>Total: R$ <span id="checkoutTotal">0</span></h4>
+
+<hr>
+
+<h3>💳 PIX</h3>
+
+<p id="pixKey">82991585655</p>
+
+<button onclick="copiarPix()" style="width:100%;padding:8px;background:#ff1a1a;color:white;border:none;">
+Copiar Pix
 </button>
-</div>
 
-<!-- SUPORTE -->
-<a class="support" href="https://wa.me/5582991585655?text=Olá! Preciso de suporte na LKSTORE" target="_blank">
-💬 Suporte
-</a>
+<img id="qr" style="width:100%;margin-top:10px;"
+src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PIX-82991585655">
+
+<br><br>
+
+<button onclick="confirmarCompra()" style="width:100%;padding:10px;background:green;color:white;border:none;">
+Confirmar Pedido
+</button>
+
+<button onclick="fecharCheckout()" style="width:100%;padding:10px;background:red;color:white;border:none;margin-top:5px;">
+Fechar
+</button>
+
+</div>
 
 <script>
 
@@ -188,7 +177,7 @@ updateCart();
 }
 
 function updateCart(){
-let box = document.getElementById("cartItems");
+let box=document.getElementById("cartItems");
 box.innerHTML="";
 total=0;
 
@@ -211,37 +200,40 @@ cart.splice(i,1);
 updateCart();
 }
 
-/* WHATSAPP */
-function finalizarWhatsApp(){
+/* CHECKOUT */
+function abrirCheckout(){
+
 if(cart.length===0){
 alert("Carrinho vazio!");
 return;
 }
 
-let msg="Olá! Quero comprar:%0A";
+let box=document.getElementById("checkoutItems");
+box.innerHTML="";
 let total=0;
 
 cart.forEach(item=>{
-msg+=`- ${item.name} R$ ${item.price}%0A`;
+box.innerHTML+=`<p>${item.name} - R$ ${item.price}</p>`;
 total+=item.price;
 });
 
-msg+=`%0ATotal: R$ ${total}`;
+document.getElementById("checkoutTotal").innerText=total;
+document.getElementById("checkoutBox").style.display="block";
+}
 
-let numero="5582991585655";
-
-window.open(`https://wa.me/${numero}?text=${msg}`,"_blank");
+function fecharCheckout(){
+document.getElementById("checkoutBox").style.display="none";
 }
 
 /* PIX */
-function mostrarPix(){
-let box=document.getElementById("pixBox");
-box.style.display=box.style.display==="none"?"block":"none";
+function copiarPix(){
+navigator.clipboard.writeText("82991585655");
+alert("PIX copiado!");
 }
 
-function copiarPix(){
-navigator.clipboard.writeText(document.getElementById("pixKey").innerText);
-alert("PIX copiado!");
+/* FINALIZAR */
+function confirmarCompra(){
+alert("Pedido confirmado! Envie o Pix e aguarde.");
 }
 
 </script>
