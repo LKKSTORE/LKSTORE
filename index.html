@@ -89,7 +89,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-z-index:99999;
+z-index:9999;
 }
 
 button{cursor:pointer;}
@@ -99,7 +99,7 @@ button{cursor:pointer;}
 
 <body>
 
-<!-- LOGIN / CADASTRO -->
+<!-- LOGIN -->
 <div id="authBox">
 
 <h2 style="color:red;">LKSTORE</h2>
@@ -109,6 +109,7 @@ button{cursor:pointer;}
 <input id="loginUser" placeholder="Usuário" style="padding:10px;margin:5px;">
 <input id="loginPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
 <button onclick="login()" style="width:100%;padding:10px;background:red;color:white;">Entrar</button>
+
 <p onclick="showRegister()" style="cursor:pointer;color:gray;">Criar conta</p>
 </div>
 
@@ -117,6 +118,7 @@ button{cursor:pointer;}
 <input id="regUser" placeholder="Usuário" style="padding:10px;margin:5px;">
 <input id="regPass" type="password" placeholder="Senha" style="padding:10px;margin:5px;">
 <button onclick="register()" style="width:100%;padding:10px;background:red;color:white;">Cadastrar</button>
+
 <p onclick="showLogin()" style="cursor:pointer;color:gray;">Já tenho conta</p>
 </div>
 
@@ -147,6 +149,7 @@ button{cursor:pointer;}
 
 <!-- CARRINHO -->
 <div id="cartBox">
+
 <h3 style="color:red;">Carrinho</h3>
 
 <div id="cartItems"></div>
@@ -156,6 +159,7 @@ button{cursor:pointer;}
 <button onclick="abrirCheckout()" style="width:100%;padding:10px;background:gold;color:black;font-weight:bold;">
 Checkout
 </button>
+
 </div>
 
 <!-- CHECKOUT -->
@@ -167,10 +171,8 @@ Checkout
 
 <h4>Total: R$ <span id="checkoutTotal"></span></h4>
 
-<h3>📧 E-mail</h3>
-<input id="email" placeholder="Seu e-mail" style="width:100%;padding:8px;margin-bottom:10px;">
-
 <h3>💳 PIX COPIA E COLA</h3>
+
 <textarea id="pixCode" style="width:100%;height:80px;"></textarea>
 
 <img id="pixQR" style="width:100%;margin-top:10px;">
@@ -190,7 +192,7 @@ Fechar
 </div>
 
 <!-- SUPORTE -->
-<a href="https://wa.me/5582991585655?text=Suporte LKSTORE" 
+<a href="https://wa.me/5582991585655?text=Suporte LKSTORE"
 style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:14px;border-radius:50px;color:white;text-decoration:none;">
 💬 Suporte
 </a>
@@ -234,7 +236,7 @@ if(ok){
 localStorage.setItem("logado","1");
 document.getElementById("authBox").style.display="none";
 }else{
-alert("Erro login!");
+alert("Login inválido!");
 }
 }
 
@@ -278,7 +280,8 @@ t+=i.p;
 
 document.getElementById("checkoutTotal").innerText=t;
 
-let pix=`PIX-LKSTORE-${t}`;
+let pix=`00020126360014BR.GOV.BCB.PIX0114+558299158565520400005303986540${t}5802BR5925LKSTORE6009BRASIL62070503***6304ABCD`;
+
 document.getElementById("pixCode").value=pix;
 
 document.getElementById("pixQR").src=
@@ -291,19 +294,11 @@ document.getElementById("checkoutBox").style.display="none";
 
 function copiarPix(){
 navigator.clipboard.writeText(document.getElementById("pixCode").value);
-alert("Copiado!");
+alert("Pix copiado!");
 }
 
-/* FINAL */
 function confirmarCompra(){
-let email=document.getElementById("email").value;
-
-if(!email){
-alert("Digite e-mail!");
-return;
-}
-
-alert("Compra registrada!");
+alert("Compra realizada!");
 
 cart=[];
 update();
