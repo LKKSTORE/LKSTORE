@@ -77,8 +77,8 @@ header {
   padding: 10px;
   width: 100%;
   border-radius: 8px;
-  cursor: pointer;
   font-weight: bold;
+  cursor: pointer;
 }
 
 /* BANNERS */
@@ -88,6 +88,49 @@ header {
   padding: 15px;
   border-radius: 12px;
   text-align: center;
+}
+
+/* TAMANHOS DOS TEXTOS */
+.grande {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.medio {
+  font-size: 18px;
+}
+
+.pequeno {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* LOGIN */
+#authBox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.authCard {
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.authCard input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
 }
 
 /* CARRINHO */
@@ -105,18 +148,6 @@ header {
   z-index: 2000;
 }
 
-/* OVERLAY */
-#overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  z-index: 1500;
-}
-
 button {
   margin-top: 10px;
   width: 100%;
@@ -131,13 +162,25 @@ button {
 
 <body>
 
-<div id="overlay" onclick="fecharCart()"></div>
+<!-- LOGIN -->
+<div id="authBox">
+  <div class="authCard">
+    <h2>LKSTORE LOGIN</h2>
+
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
+
+    <button onclick="login()">Entrar</button>
+    <button onclick="register()">Criar Conta</button>
+
+    <p id="msg"></p>
+  </div>
+</div>
 
 <header>
   <div class="logo">LKSTORE</div>
-
   <div class="topIcons">
-    <div onclick="abrirCart()">🛒 <span id="count">0</span></div>
+    <div>🛒 <span id="count">0</span></div>
   </div>
 </header>
 
@@ -147,69 +190,61 @@ button {
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
     <h3>Netflix</h3>
-    <button onclick="adicionar('Netflix', 19.90)">Comprar</button>
+    <button onclick="add('Netflix', 19.90)">Comprar</button>
   </div>
 
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
     <h3>Disney+</h3>
-    <button onclick="adicionar('Disney+', 15.90)">Comprar</button>
-  </div>
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
-    <h3>Prime Video</h3>
-    <button onclick="adicionar('Prime Video', 14.90)">Comprar</button>
+    <button onclick="add('Disney+', 15.90)">Comprar</button>
   </div>
 
 </div>
 
-<!-- AVISOS MAIS PRA BAIXO -->
+<!-- AVISOS COM TAMANHO -->
 <div style="margin-top:40px;">
-  <div class="bannerLK">🔒 PAGAMENTO 100% SEGURO</div>
-  <div class="bannerLK">⚡ ENTREGA AUTOMÁTICA</div>
-  <div class="bannerLK">💬 SUPORTE VIA WHATSAPP</div>
-</div>
 
-<!-- CARRINHO -->
-<div id="cartBox">
-  <h3>Carrinho</h3>
-  <div id="itens"></div>
-  <p>Total: R$ <span id="total">0</span></p>
-  <button onclick="fecharCart()">Fechar</button>
+  <div class="bannerLK grande">🔒 PAGAMENTO 100% SEGURO</div>
+
+  <div class="bannerLK medio">⚡ ENTREGA IMEDIATA APÓS CONFIRMAÇÃO</div>
+
+  <div class="bannerLK pequeno">💬 SUPORTE VIA WHATSAPP</div>
+
 </div>
 
 <script>
 let carrinho = [];
+let logado = false;
 
-function adicionar(nome, preco) {
+/* LOGIN */
+function register() {
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+  localStorage.setItem("user_"+u, p);
+  alert("Conta criada!");
+}
+
+function login() {
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if(localStorage.getItem("user_"+u) === p) {
+    logado = true;
+    document.getElementById("authBox").style.display = "none";
+  } else {
+    document.getElementById("msg").innerText = "Login inválido";
+  }
+}
+
+/* CARRINHO */
+function add(nome, preco) {
+  if(!logado) {
+    alert("Faça login primeiro!");
+    return;
+  }
+
   carrinho.push({nome, preco});
   document.getElementById("count").innerText = carrinho.length;
-  atualizar();
-}
-
-function atualizar() {
-  let box = document.getElementById("itens");
-  let total = 0;
-
-  box.innerHTML = "";
-
-  carrinho.forEach(item => {
-    total += item.preco;
-    box.innerHTML += `<p>${item.nome} - R$ ${item.preco}</p>`;
-  });
-
-  document.getElementById("total").innerText = total.toFixed(2);
-}
-
-function abrirCart() {
-  document.getElementById("cartBox").style.display = "block";
-  document.getElementById("overlay").style.display = "block";
-}
-
-function fecharCart() {
-  document.getElementById("cartBox").style.display = "none";
-  document.getElementById("overlay").style.display = "none";
 }
 </script>
 
