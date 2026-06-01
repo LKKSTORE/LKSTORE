@@ -34,9 +34,8 @@ header{
 }
 
 .topIcons{
-  display:flex;
-  gap:15px;
   cursor:pointer;
+  font-size:18px;
 }
 
 /* PRODUTOS */
@@ -45,7 +44,7 @@ header{
   flex-wrap:wrap;
   justify-content:center;
   gap:20px;
-  margin-top:20px;
+  padding:20px;
 }
 
 .card{
@@ -54,6 +53,7 @@ header{
   border-radius:15px;
   padding:15px;
   text-align:center;
+  border:1px solid #222;
 }
 
 .card img{
@@ -68,31 +68,7 @@ header{
   color:white;
   font-weight:bold;
   border-radius:8px;
-}
-
-/* LOGIN */
-#authBox{
-  display:flex;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
-.authCard{
-  background:#111;
-  padding:20px;
-  border-radius:12px;
-  width:300px;
-  border:1px solid red;
-}
-
-.authCard input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
+  cursor:pointer;
 }
 
 /* CARRINHO */
@@ -107,17 +83,81 @@ header{
   width:320px;
   border-radius:12px;
   border:1px solid red;
+  z-index:2000;
 }
 
+.cartItem{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+}
+
+.remove{
+  color:red;
+  cursor:pointer;
+}
+
+/* LOGIN */
+#authBox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.authCard{
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  width:320px;
+  border:1px solid red;
+}
+
+.authCard input{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:8px;
+  border:none;
+}
+
+.authCard button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  background:red;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+/* BOTÕES */
 .finalizar{
   width:100%;
   padding:10px;
+  margin-top:10px;
   background:red;
   border:none;
   color:white;
   font-weight:bold;
   border-radius:8px;
-  margin-top:10px;
+}
+
+footer{
+  margin-top:40px;
+  text-align:center;
+  padding:20px;
+}
+
+.banner{
+  margin:8px;
+  padding:12px;
+  background:#111;
+  border-left:4px solid red;
 }
 </style>
 </head>
@@ -127,42 +167,53 @@ header{
 <!-- LOGIN -->
 <div id="authBox">
   <div class="authCard">
-    <h2 style="color:red;">LKSTORE</h2>
+    <h2 style="color:red;">LKSTORE LOGIN</h2>
 
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
-
     <p id="msg"></p>
   </div>
 </div>
 
 <header>
   <div class="logo">LKSTORE</div>
-  <div onclick="toggleCart()">🛒 <span id="count">0</span></div>
+
+  <div class="topIcons">
+    🛒 <span id="count">0</span>
+    <button onclick="toggleCart()" style="background:red;color:white;border:none;padding:5px 10px;border-radius:6px;">
+      Carrinho
+    </button>
+  </div>
 </header>
 
-<!-- PRODUTOS -->
+<!-- PRODUTOS (TELA INICIAL SEM LOGIN) -->
 <div class="products">
 
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
     <h3>Netflix</h3>
-    <button onclick="tryBuy('Netflix')">Comprar</button>
+    <button onclick="add('Netflix')">Comprar</button>
   </div>
 
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
     <h3>Disney+</h3>
-    <button onclick="tryBuy('Disney+')">Comprar</button>
+    <button onclick="add('Disney+')">Comprar</button>
   </div>
 
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
     <h3>Prime Video</h3>
-    <button onclick="tryBuy('Prime Video')">Comprar</button>
+    <button onclick="add('Prime Video')">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
+    <h3>Spotify</h3>
+    <button onclick="add('Spotify')">Comprar</button>
   </div>
 
 </div>
@@ -171,35 +222,40 @@ header{
 <div id="cartBox">
   <h3>Carrinho</h3>
   <div id="cartItems"></div>
+
   <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
 </div>
 
-<script>
+<!-- AVISOS FINAL -->
+<footer>
+  <div class="banner">🔒 PAGAMENTO 100% SEGURO</div>
+  <div class="banner">⚡ ENTREGA AUTOMÁTICA</div>
+  <div class="banner">💬 SUPORTE VIA WHATSAPP</div>
+</footer>
 
+<script>
 let carrinho = [];
 let logado = false;
-let produtoTemp = "";
 
-/* TENTAR COMPRAR */
-function tryBuy(prod){
-  if(!logado){
-    alert("Crie uma conta para comprar!");
-    return;
-  }
+/* abrir login automático */
+window.onload = () => {
+  document.getElementById("authBox").style.display = "flex";
+};
 
-  carrinho.push(prod);
-  atualizar();
-}
-
-/* REGISTRO */
+/* criar conta */
 function register(){
-  localStorage.setItem("user_"+user.value, pass.value);
-  alert("Conta criada!");
+  let u = user.value;
+  let p = pass.value;
+  localStorage.setItem("user_"+u,p);
+  msg.innerText = "Conta criada!";
 }
 
-/* LOGIN */
+/* login */
 function login(){
-  if(localStorage.getItem("user_"+user.value) === pass.value){
+  let u = user.value;
+  let p = pass.value;
+
+  if(localStorage.getItem("user_"+u) === p){
     logado = true;
     authBox.style.display = "none";
   } else {
@@ -207,29 +263,50 @@ function login(){
   }
 }
 
-/* CARRINHO */
-function toggleCart(){
-  cartBox.style.display =
-    cartBox.style.display === "block" ? "none" : "block";
-}
+/* comprar */
+function add(prod){
+  if(!logado){
+    alert("Você precisa criar conta e entrar antes de comprar!");
+    authBox.style.display = "flex";
+    return;
+  }
 
-/* ATUALIZAR */
-function atualizar(){
+  carrinho.push(prod);
   count.innerText = carrinho.length;
-  cartItems.innerHTML = "";
+  renderCart();
+}
 
-  carrinho.forEach(item=>{
-    cartItems.innerHTML += `<div>${item}</div>`;
+/* carrinho */
+function renderCart(){
+  let html = "";
+  carrinho.forEach((item,i)=>{
+    html += `<div class="cartItem">
+      ${item}
+      <span class="remove" onclick="removeItem(${i})">X</span>
+    </div>`;
   });
+  cartItems.innerHTML = html;
 }
 
-/* FINALIZAR */
+/* remover */
+function removeItem(i){
+  carrinho.splice(i,1);
+  count.innerText = carrinho.length;
+  renderCart();
+}
+
+/* abrir carrinho */
+function toggleCart(){
+  cartBox.style.display = cartBox.style.display === "block" ? "none" : "block";
+}
+
+/* finalizar */
 function finalizar(){
-  alert("Compra finalizada!");
+  alert("Compra finalizada com sucesso!");
   carrinho = [];
-  atualizar();
+  count.innerText = 0;
+  renderCart();
 }
-
 </script>
 
 </body>
