@@ -3,130 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LKSTORE</title>
+<title>LKSTORE PRO</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#0b0b0b;
-  color:white;
+:root{
+  --vermelho:#e50914;
+  --preto:#000;
 }
 
-/* TOP BAR NETFLIX STYLE */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial;
+}
+
+body{
+  background:var(--preto);
+  color:white;
+  padding-top:80px;
+}
+
+/* HEADER */
 header{
   position:fixed;
   top:0;
   width:100%;
-  background:rgba(0,0,0,0.9);
+  background:#111;
   display:flex;
   justify-content:space-between;
-  padding:15px 30px;
+  padding:15px;
+  border-bottom:1px solid var(--vermelho);
   z-index:1000;
-  border-bottom:1px solid #222;
 }
 
 .logo{
-  color:#00ff88;
-  font-size:22px;
+  color:var(--vermelho);
   font-weight:bold;
+  font-size:20px;
 }
 
-/* HERO */
-.hero{
-  margin-top:70px;
-  padding:30px;
-  background:linear-gradient(to right,#111,#000);
-}
-
-.hero h1{
-  font-size:28px;
-}
-
-.hero p{
-  opacity:0.8;
-}
-
-/* CATEGORIAS */
-.section{
-  padding:20px;
-}
-
-.section h2{
-  margin-bottom:15px;
-}
-
-/* CARDS NETFLIX STYLE */
-.row{
+/* PRODUTOS */
+.products{
   display:flex;
-  gap:15px;
-  overflow-x:auto;
-  padding-bottom:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
+  margin-top:20px;
 }
 
 .card{
-  min-width:180px;
   background:#111;
-  border-radius:12px;
-  padding:10px;
-  transition:0.3s;
-  flex-shrink:0;
+  width:220px;
+  border-radius:15px;
+  padding:15px;
+  text-align:center;
+  border:1px solid #222;
+  transition:0.2s;
 }
 
 .card:hover{
   transform:scale(1.05);
+  border:1px solid var(--vermelho);
 }
 
 .card img{
-  width:100%;
-  height:90px;
-  object-fit:contain;
-}
-
-.card h3{
-  font-size:14px;
+  height:70px;
+  margin-bottom:10px;
 }
 
 .card button{
   width:100%;
-  padding:8px;
+  padding:10px;
+  background:var(--vermelho);
   border:none;
-  border-radius:6px;
-  background:#00ff88;
+  border-radius:8px;
   font-weight:bold;
+  color:white;
   cursor:pointer;
 }
 
-/* SIDEBAR CARRINHO HOTMART STYLE */
-#cart{
-  position:fixed;
-  right:0;
-  top:0;
-  height:100%;
-  width:260px;
-  background:#111;
-  padding:15px;
-  border-left:1px solid #222;
-  overflow:auto;
-}
-
-.item{
-  font-size:13px;
-  margin:5px 0;
-  opacity:0.9;
-}
-
-.total{
-  margin-top:10px;
-  color:#00ff88;
-  font-weight:bold;
-}
-
-/* LOGIN FULLSCREEN */
+/* LOGIN */
 #login{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
+  background:black;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -137,25 +98,38 @@ header{
   padding:20px;
   border-radius:12px;
   width:300px;
+  border:1px solid var(--vermelho);
 }
 
 input{
   width:100%;
-  margin:5px 0;
   padding:10px;
+  margin:5px 0;
   border-radius:8px;
   border:none;
 }
 
-button{
-  margin-top:8px;
+/* CARRINHO */
+#cart{
+  position:fixed;
+  right:0;
+  top:80px;
+  width:260px;
+  height:100%;
+  background:#111;
+  border-left:1px solid var(--vermelho);
+  padding:10px;
 }
 
-/* MOBILE */
-@media(max-width:768px){
-  #cart{
-    width:200px;
-  }
+.item{
+  font-size:13px;
+  margin:5px 0;
+}
+
+.total{
+  margin-top:10px;
+  color:var(--vermelho);
+  font-weight:bold;
 }
 </style>
 </head>
@@ -165,11 +139,14 @@ button{
 <!-- LOGIN -->
 <div id="login">
   <div class="box">
-    <h2>LKSTORE</h2>
+    <h2 style="color:#e50914">LKSTORE LOGIN</h2>
+
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
+
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
+
     <p id="msg"></p>
   </div>
 </div>
@@ -179,51 +156,6 @@ button{
   <div>🛒 <span id="count">0</span></div>
 </header>
 
-<div class="hero">
-  <h1>Bem-vindo à LKSTORE</h1>
-  <p>Streaming e produtos digitais instantâneos</p>
-</div>
-
-<!-- CATEGORIA 1 -->
-<div class="section">
-  <h2>🔥 Mais populares</h2>
-  <div class="row">
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
-      <h3>Netflix</h3>
-      <button onclick="add('Netflix',19.90)">Comprar</button>
-    </div>
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
-      <h3>Disney+</h3>
-      <button onclick="add('Disney+',15.90)">Comprar</button>
-    </div>
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
-      <h3>Prime Video</h3>
-      <button onclick="add('Prime Video',14.90)">Comprar</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- CATEGORIA 2 -->
-<div class="section">
-  <h2>🎵 Música</h2>
-  <div class="row">
-
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
-      <h3>Spotify</h3>
-      <button onclick="add('Spotify',9.90)">Comprar</button>
-    </div>
-
-  </div>
-</div>
-
 <!-- CARRINHO -->
 <div id="cart">
   <h3>Carrinho</h3>
@@ -231,31 +163,68 @@ button{
   <div class="total">Total: R$ <span id="total">0</span></div>
 </div>
 
-<script>
-let carrinho=[];
-let total=0;
+<!-- PRODUTOS -->
+<div class="products">
 
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
+    <h3>Netflix</h3>
+    <button onclick="add('Netflix',19.90)">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
+    <h3>Disney+</h3>
+    <button onclick="add('Disney+',15.90)">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
+    <h3>Prime Video</h3>
+    <button onclick="add('Prime Video',14.90)">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Paramount%2B_logo.svg">
+    <h3>Premiere</h3>
+    <button onclick="add('Premiere',19.90)">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
+    <h3>Spotify</h3>
+    <button onclick="add('Spotify',9.90)">Comprar</button>
+  </div>
+
+</div>
+
+<script>
+let carrinho = [];
+let total = 0;
+
+/* LOGIN */
 function register(){
-  localStorage.setItem(user.value,pass.value);
-  alert("Conta criada");
+  localStorage.setItem(user.value, pass.value);
+  alert("Conta criada!");
 }
 
 function login(){
-  if(localStorage.getItem(user.value)===pass.value){
-    login.style.display="none";
-  }else{
-    msg.innerText="Erro login";
+  if(localStorage.getItem(user.value) === pass.value){
+    document.getElementById("login").style.display = "none";
+  } else {
+    msg.innerText = "Login inválido";
   }
 }
 
-function add(nome,preco){
+/* CARRINHO */
+function add(nome, preco){
   carrinho.push(nome);
-  total+=preco;
+  total += preco;
 
-  count.innerText=carrinho.length;
+  count.innerText = carrinho.length;
 
   items.innerHTML += `<div class="item">${nome} - R$ ${preco}</div>`;
-  document.getElementById("total").innerText=total.toFixed(2);
+  document.getElementById("total").innerText = total.toFixed(2);
 }
 </script>
 
