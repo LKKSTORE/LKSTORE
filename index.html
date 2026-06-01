@@ -27,18 +27,9 @@ header{
   z-index:1000;
 }
 
-.logo{
-  color:red;
-  font-weight:bold;
-  font-size:22px;
-}
+.logo{color:red;font-weight:bold;font-size:22px;}
 
-.topIcons{
-  display:flex;
-  gap:15px;
-  align-items:center;
-  cursor:pointer;
-}
+.topIcons{display:flex;gap:15px;cursor:pointer;}
 
 /* PRODUTOS */
 .products{
@@ -55,18 +46,10 @@ header{
   border-radius:15px;
   padding:15px;
   text-align:center;
-  transition:0.3s;
   border:1px solid #222;
 }
 
-.card:hover{
-  transform:scale(1.05);
-  border:1px solid red;
-}
-
-.card img{
-  height:70px;
-}
+.card img{height:70px;}
 
 .card button{
   width:100%;
@@ -77,44 +60,6 @@ header{
   font-weight:bold;
   border-radius:8px;
   cursor:pointer;
-}
-
-/* LOGIN */
-#authBox{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.95);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
-.authCard{
-  background:#111;
-  padding:20px;
-  border-radius:12px;
-  width:320px;
-  border:1px solid red;
-}
-
-.authCard input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border-radius:8px;
-  border:none;
-}
-
-.authCard button{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  background:red;
-  color:white;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
 }
 
 /* CARRINHO */
@@ -129,84 +74,75 @@ header{
   width:320px;
   border-radius:12px;
   border:1px solid red;
-  z-index:9999;
 }
 
-.cartItem{
-  display:flex;
-  justify-content:space-between;
+/* LOGIN POPUP */
+#authBox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+}
+
+.authCard{
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  width:300px;
+  border:1px solid red;
+}
+
+.authCard input{
+  width:100%;
+  padding:10px;
   margin:5px 0;
-  border-bottom:1px solid #222;
-  padding-bottom:5px;
 }
 
-.remove{
-  color:red;
+/* BOTÕES */
+button{
   cursor:pointer;
 }
 
 .finalizar{
   width:100%;
   padding:10px;
-  margin-top:10px;
   background:red;
-  border:none;
   color:white;
-  font-weight:bold;
+  border:none;
   border-radius:8px;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="authBox">
-  <div class="authCard">
-    <h2 style="color:red;">LKSTORE LOGIN</h2>
-
-    <input id="user" placeholder="Usuário">
-    <input id="pass" type="password" placeholder="Senha">
-
-    <button onclick="login()">Entrar</button>
-    <button onclick="register()">Criar conta</button>
-    <p id="msg"></p>
-  </div>
-</div>
-
 <header>
   <div class="logo">LKSTORE</div>
-
-  <div class="topIcons">
-    <div onclick="toggleCart()">🛒 <span id="count">0</span></div>
-  </div>
+  <div onclick="toggleCart()">🛒 <span id="count">0</span></div>
 </header>
 
-<!-- PRODUTOS -->
+<!-- PRODUTOS (VISÍVEL SEM LOGIN) -->
 <div class="products">
 
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
     <h3>Netflix</h3>
-    <button onclick="add('Netflix')">Comprar</button>
+    <button onclick="tryBuy('Netflix')">Comprar</button>
   </div>
 
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
     <h3>Disney+</h3>
-    <button onclick="add('Disney+')">Comprar</button>
+    <button onclick="tryBuy('Disney+')">Comprar</button>
   </div>
 
   <div class="card">
     <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
     <h3>Prime Video</h3>
-    <button onclick="add('Prime Video')">Comprar</button>
-  </div>
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
-    <h3>Spotify</h3>
-    <button onclick="add('Spotify')">Comprar</button>
+    <button onclick="tryBuy('Prime Video')">Comprar</button>
   </div>
 
 </div>
@@ -215,49 +151,70 @@ header{
 <div id="cartBox">
   <h3>Carrinho</h3>
   <div id="cartItems"></div>
-
   <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
 </div>
 
-<!-- AVISOS -->
-<footer style="margin-top:50px; padding:20px; text-align:center;">
-  <div style="margin:10px;">🔒 PAGAMENTO 100% SEGURO</div>
-  <div style="margin:10px;">⚡ ENTREGA AUTOMÁTICA</div>
-  <div style="margin:10px;">💬 SUPORTE VIA WHATSAPP</div>
-</footer>
+<!-- LOGIN / CRIAR CONTA -->
+<div id="authBox">
+  <div class="authCard">
+    <h2 style="color:red;">Criar Conta</h2>
+
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
+
+    <button onclick="register()">Criar conta</button>
+    <button onclick="login()">Entrar</button>
+
+    <p id="msg"></p>
+  </div>
+</div>
 
 <script>
 
 let carrinho = [];
 let logado = false;
+let produtoTemp = "";
 
-/* LOGIN */
+/* TENTAR COMPRAR */
+function tryBuy(prod){
+  if(!logado){
+    produtoTemp = prod;
+    authBox.style.display = "flex";
+    return;
+  }
+
+  add(prod);
+}
+
+/* CRIAR CONTA */
 function register(){
   localStorage.setItem("user_"+user.value, pass.value);
   alert("Conta criada!");
 }
 
+/* LOGIN */
 function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
     logado = true;
     authBox.style.display = "none";
+
+    if(produtoTemp){
+      add(produtoTemp);
+      produtoTemp = "";
+    }
+
   } else {
     msg.innerText = "Login inválido";
   }
 }
 
-/* CARRINHO */
+/* ADD CARRINHO */
 function add(prod){
-  if(!logado){
-    alert("Faça login primeiro!");
-    return;
-  }
-
   carrinho.push(prod);
   atualizar();
 }
 
-/* ABRIR CARRINHO */
+/* CARRINHO */
 function toggleCart(){
   cartBox.style.display =
     cartBox.style.display === "block" ? "none" : "block";
@@ -266,23 +223,15 @@ function toggleCart(){
 /* ATUALIZAR */
 function atualizar(){
   count.innerText = carrinho.length;
-
   cartItems.innerHTML = "";
 
-  carrinho.forEach((item, i)=>{
+  carrinho.forEach((item,i)=>{
     cartItems.innerHTML += `
-      <div class="cartItem">
-        <span>${item}</span>
-        <span class="remove" onclick="remover(${i})">X</span>
+      <div>
+        ${item}
       </div>
     `;
   });
-}
-
-/* REMOVER */
-function remover(i){
-  carrinho.splice(i,1);
-  atualizar();
 }
 
 /* FINALIZAR */
