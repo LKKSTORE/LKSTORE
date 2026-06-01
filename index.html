@@ -25,12 +25,13 @@ header{
   align-items:center;
   padding:15px;
   border-bottom:2px solid red;
+  z-index:1000;
 }
 
 .logo{
   color:red;
-  font-weight:bold;
   font-size:22px;
+  font-weight:bold;
 }
 
 .cartBtn{
@@ -39,7 +40,6 @@ header{
   padding:6px 10px;
   border-radius:8px;
   cursor:pointer;
-  color:white;
 }
 
 /* PRODUTOS */
@@ -73,6 +73,19 @@ header{
   border-radius:8px;
 }
 
+/* AVISOS */
+.banner{
+  margin:10px;
+  padding:12px;
+  background:#111;
+  border-left:4px solid red;
+  border-radius:10px;
+}
+
+.grande{font-size:20px;font-weight:bold;}
+.medio{font-size:16px;}
+.pequeno{font-size:14px;opacity:0.8;}
+
 /* CARRINHO */
 #cartBox{
   display:none;
@@ -85,6 +98,7 @@ header{
   width:320px;
   border-radius:12px;
   border:1px solid red;
+  z-index:2000;
 }
 
 .cartItem{
@@ -106,13 +120,14 @@ header{
   background:rgba(0,0,0,0.95);
   justify-content:center;
   align-items:center;
+  z-index:9999;
 }
 
 .authCard{
   background:#111;
   padding:20px;
   border-radius:12px;
-  width:300px;
+  width:320px;
   border:1px solid red;
 }
 
@@ -143,8 +158,8 @@ header{
   <div class="authCard">
     <h2 style="color:red;">LOGIN LKSTORE</h2>
 
-    <input id="user">
-    <input id="pass" type="password">
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
 
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
@@ -162,8 +177,39 @@ header{
   </div>
 </header>
 
-<!-- PRODUTOS -->
-<div class="products" id="products"></div>
+<!-- AVISOS (ANTES DO LOGIN) -->
+<div class="banner grande">🔒 PAGAMENTO 100% SEGURO</div>
+<div class="banner medio">⚡ ENTREGA AUTOMÁTICA NA HORA</div>
+<div class="banner pequeno">💬 SUPORTE VIA WHATSAPP 24H</div>
+
+<!-- PRODUTOS (VISÍVEIS SEM LOGIN) -->
+<div class="products">
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
+    <h3>Netflix</h3>
+    <button onclick="add('Netflix')">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
+    <h3>Disney+</h3>
+    <button onclick="add('Disney+')">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
+    <h3>Prime Video</h3>
+    <button onclick="add('Prime Video')">Comprar</button>
+  </div>
+
+  <div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
+    <h3>Spotify</h3>
+    <button onclick="add('Spotify')">Comprar</button>
+  </div>
+
+</div>
 
 <!-- CARRINHO -->
 <div id="cartBox">
@@ -179,36 +225,18 @@ header{
 let carrinho = [];
 let logado = false;
 
-/* PRODUTOS */
-const produtos = [
-  {nome:"Netflix", img:"https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
-  {nome:"Disney+", img:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
-  {nome:"Prime Video", img:"https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png"},
-  {nome:"Spotify", img:"https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"}
-];
-
-/* render produtos */
-function loadProducts(){
-  let box = document.getElementById("products");
-
-  produtos.forEach(p=>{
-    box.innerHTML += `
-      <div class="card">
-        <img src="${p.img}">
-        <h3>${p.nome}</h3>
-        <button onclick="add('${p.nome}')">Comprar</button>
-      </div>
-    `;
-  });
+/* abrir login só quando precisar */
+function abrirLogin(){
+  authBox.style.display = "flex";
 }
-loadProducts();
 
-/* login */
+/* register */
 function register(){
   localStorage.setItem("user_"+user.value, pass.value);
   msg.innerText = "Conta criada!";
 }
 
+/* login */
 function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
     logado = true;
@@ -218,26 +246,21 @@ function login(){
   }
 }
 
-/* abrir login automático */
-window.onload = ()=>{
-  authBox.style.display = "flex";
-};
-
-/* add carrinho */
-function add(nome){
+/* comprar */
+function add(prod){
   if(!logado){
-    authBox.style.display = "flex";
-    alert("Faça login primeiro");
+    abrirLogin();
+    alert("Crie conta para comprar!");
     return;
   }
 
-  carrinho.push(nome);
+  carrinho.push(prod);
   count.innerText = carrinho.length;
-  renderCart();
+  render();
 }
 
 /* carrinho */
-function renderCart(){
+function render(){
   cartItems.innerHTML = "";
 
   carrinho.forEach((item,i)=>{
@@ -254,10 +277,10 @@ function renderCart(){
 function removeItem(i){
   carrinho.splice(i,1);
   count.innerText = carrinho.length;
-  renderCart();
+  render();
 }
 
-/* toggle carrinho */
+/* abrir carrinho */
 function toggleCart(){
   cartBox.style.display =
     cartBox.style.display === "block" ? "none" : "block";
@@ -268,7 +291,7 @@ function finalizar(){
   alert("Compra finalizada!");
   carrinho = [];
   count.innerText = 0;
-  renderCart();
+  render();
 }
 </script>
 
