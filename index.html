@@ -95,6 +95,53 @@ img {
   height: auto;
   display: block;
 }
+.topIcons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.icon {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+#cartBox, #authBox, #perfilBox {
+  display: none;
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  z-index: 2000;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #00ff88;
+  color: black;
+  font-weight: bold;
+}
+
+.whats {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25d366;
+  color: white;
+  font-size: 24px;
+  padding: 12px;
+  border-radius: 50%;
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
