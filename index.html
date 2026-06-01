@@ -27,9 +27,17 @@ header{
   z-index:1000;
 }
 
-.logo{color:red;font-weight:bold;font-size:22px;}
+.logo{
+  color:red;
+  font-weight:bold;
+  font-size:22px;
+}
 
-.topIcons{display:flex;gap:15px;cursor:pointer;}
+.topIcons{
+  display:flex;
+  gap:15px;
+  cursor:pointer;
+}
 
 /* PRODUTOS */
 .products{
@@ -46,10 +54,11 @@ header{
   border-radius:15px;
   padding:15px;
   text-align:center;
-  border:1px solid #222;
 }
 
-.card img{height:70px;}
+.card img{
+  height:70px;
+}
 
 .card button{
   width:100%;
@@ -59,31 +68,17 @@ header{
   color:white;
   font-weight:bold;
   border-radius:8px;
-  cursor:pointer;
 }
 
-/* CARRINHO */
-#cartBox{
-  display:none;
-  position:fixed;
-  top:20%;
-  left:50%;
-  transform:translateX(-50%);
-  background:#111;
-  padding:20px;
-  width:320px;
-  border-radius:12px;
-  border:1px solid red;
-}
-
-/* LOGIN POPUP */
+/* LOGIN */
 #authBox{
-  display:none;
+  display:flex;
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.9);
   justify-content:center;
   align-items:center;
+  z-index:9999;
 }
 
 .authCard{
@@ -100,17 +95,27 @@ header{
   margin:5px 0;
 }
 
-/* BOTÕES */
-button{
-  cursor:pointer;
+/* CARRINHO */
+#cartBox{
+  display:none;
+  position:fixed;
+  top:20%;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111;
+  padding:20px;
+  width:320px;
+  border-radius:12px;
+  border:1px solid red;
 }
 
 .finalizar{
   width:100%;
   padding:10px;
   background:red;
-  color:white;
   border:none;
+  color:white;
+  font-weight:bold;
   border-radius:8px;
   margin-top:10px;
 }
@@ -119,12 +124,27 @@ button{
 
 <body>
 
+<!-- LOGIN -->
+<div id="authBox">
+  <div class="authCard">
+    <h2 style="color:red;">LKSTORE</h2>
+
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
+
+    <button onclick="login()">Entrar</button>
+    <button onclick="register()">Criar conta</button>
+
+    <p id="msg"></p>
+  </div>
+</div>
+
 <header>
   <div class="logo">LKSTORE</div>
   <div onclick="toggleCart()">🛒 <span id="count">0</span></div>
 </header>
 
-<!-- PRODUTOS (VISÍVEL SEM LOGIN) -->
+<!-- PRODUTOS -->
 <div class="products">
 
   <div class="card">
@@ -154,21 +174,6 @@ button{
   <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
 </div>
 
-<!-- LOGIN / CRIAR CONTA -->
-<div id="authBox">
-  <div class="authCard">
-    <h2 style="color:red;">Criar Conta</h2>
-
-    <input id="user" placeholder="Usuário">
-    <input id="pass" type="password" placeholder="Senha">
-
-    <button onclick="register()">Criar conta</button>
-    <button onclick="login()">Entrar</button>
-
-    <p id="msg"></p>
-  </div>
-</div>
-
 <script>
 
 let carrinho = [];
@@ -178,15 +183,15 @@ let produtoTemp = "";
 /* TENTAR COMPRAR */
 function tryBuy(prod){
   if(!logado){
-    produtoTemp = prod;
-    authBox.style.display = "flex";
+    alert("Crie uma conta para comprar!");
     return;
   }
 
-  add(prod);
+  carrinho.push(prod);
+  atualizar();
 }
 
-/* CRIAR CONTA */
+/* REGISTRO */
 function register(){
   localStorage.setItem("user_"+user.value, pass.value);
   alert("Conta criada!");
@@ -197,21 +202,9 @@ function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
     logado = true;
     authBox.style.display = "none";
-
-    if(produtoTemp){
-      add(produtoTemp);
-      produtoTemp = "";
-    }
-
   } else {
     msg.innerText = "Login inválido";
   }
-}
-
-/* ADD CARRINHO */
-function add(prod){
-  carrinho.push(prod);
-  atualizar();
 }
 
 /* CARRINHO */
@@ -225,12 +218,8 @@ function atualizar(){
   count.innerText = carrinho.length;
   cartItems.innerHTML = "";
 
-  carrinho.forEach((item,i)=>{
-    cartItems.innerHTML += `
-      <div>
-        ${item}
-      </div>
-    `;
+  carrinho.forEach(item=>{
+    cartItems.innerHTML += `<div>${item}</div>`;
   });
 }
 
