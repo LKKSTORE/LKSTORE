@@ -6,130 +6,95 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LKSTORE PRO</title>
 <style>
-*{
- .logosLK{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:15px;
-  margin-top:10px;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  max-width: 100%;
+  background: #0b0b0b;
+  color: white;
   overflow-x: hidden;
+  padding-top: 80px;
 }
 
-/* deixa tudo responsivo */
+/* HEADER FIXO */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #111;
+  border-bottom: 1px solid #222;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* LOGOS */
+.logosLK {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.logosLK img {
+  height: 40px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* BANNERS */
+.bannerLK {
+  background: linear-gradient(135deg, #111, #222);
+  color: #fff;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* SEARCH */
+.searchBox {
+  text-align: center;
+  margin: 10px;
+}
+
+.searchBox input {
+  padding: 10px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* BOTÃO */
+.btnLK {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #00ff88;
+  color: #000;
+  border-radius: 10px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+/* IMAGENS RESPONSIVAS */
 img {
   max-width: 100%;
   height: auto;
   display: block;
 }
-
-/* evita texto gigante fora de controle */
-h1, h2, h3, p {
-  word-wrap: break-word;
-}
-
-/* containers organizados */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: auto;
-  padding: 10px;
-}
-
-/* botões mais controlados */
-button {
-  max-width: 100%;
-}
-
-/* evita banners gigantes */
-.bannerLK {
-  width: 100%;
-  max-width: 100%;
-  padding: 10px;
-}
- 
-.logosLK img{
-  height:40px;
-  max-width:100%;
-  object-fit:contain;
-}
-
-.bannerLK{
-  max-width:600px;
-  margin:10px auto;
-}
-
-.searchBox{
-  text-align:center;
-  margin:10px;
-}
-
-.searchBox input{
-  padding:10px;
-  width:90%;
-  max-width:400px;
-  border-radius:8px;
-  border:none;
-  }
-  
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
-}
-
-body{
-  background:#0b0b0b;
-  color:white;
-  margin:0;
-  padding-top:80px;
-}
-
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  background:#111;
-  border-bottom:1px solid #222;
-
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  z-index:1000;
-}
-
-.bannerLK{
-  background: linear-gradient(135deg,#111,#222);
-  color:#fff;
-  padding:20px;
-  margin:10px;
-  border-radius:15px;
-  text-align:center;
-}
-
-.btnLK{
-  display:inline-block;
-  padding:10px 20px;
-  background:#00ff88;
-  color:#000;
-  border-radius:10px;
-  text-decoration:none;
-  margin-top:10px;
-  } 
 </style>
 </head>
 <body>
