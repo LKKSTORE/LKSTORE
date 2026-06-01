@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LKSTORE PRO</title>
+
 <style>
 * {
   margin: 0;
@@ -16,16 +17,24 @@
 body {
   background: #0b0b0b;
   color: white;
-  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.4;
+  display: flex;
+  justify-content: center;
+}
+
+main {
+  width: 100%;
+  max-width: 1100px;
   padding-top: 80px;
 }
 
-/* HEADER FIXO */
+/* HEADER */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  padding: 12px 15px;
   background: #111;
   border-bottom: 1px solid #222;
   position: fixed;
@@ -35,33 +44,20 @@ header {
   z-index: 1000;
 }
 
-/* LOGOS */
-.logosLK {
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00ff88;
+}
+
+.topIcons {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 12px;
 }
 
-.logosLK img {
-  height: 40px;
-  max-width: 100%;
-  object-fit: contain;
-}
-
-/* BANNERS */
-.bannerLK {
-  background: linear-gradient(135deg, #111, #222);
-  color: #fff;
-  padding: 15px;
-  margin: 10px;
-  border-radius: 15px;
-  text-align: center;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+.icon {
+  font-size: 22px;
+  cursor: pointer;
 }
 
 /* SEARCH */
@@ -78,158 +74,18 @@ header {
   border: none;
 }
 
-/* BOTÃO */
-.btnLK {
-  display: inline-block;
-  padding: 10px 20px;
-  background: #00ff88;
-  color: #000;
-  border-radius: 10px;
-  text-decoration: none;
-  margin-top: 10px;
-}
-
-/* IMAGENS RESPONSIVAS */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-.topIcons {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.icon {
-  font-size: 22px;
-  cursor: pointer;
-}
-
-#cartBox, #authBox, #perfilBox {
-  display: none;
-  position: fixed;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #111;
-  padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 400px;
-  z-index: 2000;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 8px;
-  background: #00ff88;
-  color: black;
-  font-weight: bold;
-}
-
-.whats {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25d366;
-  color: white;
-  font-size: 24px;
-  padding: 12px;
-  border-radius: 50%;
-  text-decoration: none;
-}
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: #00ff88;
-}
-
-.authCard {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.authCard input {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-}
-
-#cartBox, #authBox, #perfilBox {
-  box-shadow: 0 0 20px rgba(0,0,0,0.6);
-}
-#cartBox, #authBox, #perfilBox {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #111;
-  padding: 20px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 400px;
-  z-index: 2000;
-}
-
-/* fundo escuro quando abre popup */
-.popupOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  z-index: 1500;
-}
-  header {
-  padding: 12px 15px;
-}
-
-.topIcons {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.icon {
-  font-size: 22px;
-  cursor: pointer;
-}
-
-/* melhora texto e evita sensação de “tudo grande” */
-body {
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-/* evita popup ocupar tela toda sem scroll */
-#cartBox, #authBox, #perfilBox {
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-/* melhora títulos */
-h1, h2, h3 {
-  font-size: 18px;
-}
-  .products {
+/* PRODUTOS */
+.products {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
+  gap: 20px;
   margin-top: 15px;
 }
 
 .card {
+  width: 200px;
   background: #111;
-  width: 150px;
   border-radius: 15px;
   padding: 15px;
   text-align: center;
@@ -258,9 +114,36 @@ h1, h2, h3 {
   width: 100%;
   border-radius: 8px;
   font-weight: bold;
-  cursor: pointer;
 }
-  #overlay {
+
+/* BANNERS */
+.bannerLK {
+  background: linear-gradient(135deg, #111, #222);
+  margin: 10px;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+/* POPUPS */
+#cartBox, #authBox, #perfilBox {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #111;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  z-index: 2000;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* OVERLAY */
+#overlay {
   display: none;
   position: fixed;
   top: 0;
@@ -270,208 +153,92 @@ h1, h2, h3 {
   background: rgba(0,0,0,0.7);
   z-index: 1500;
 }
-  .marquee {
-  overflow: hidden;
-  white-space: nowrap;
-}
 
-.marquee {
-  display: inline-block;
-  animation: mover 10s linear infinite;
-}
-
-@keyframes mover {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-  body {
-  display: flex;
-  justify-content: center;
-}
-
-main {
-  width: 100%;
-  max-width: 1100px;
-}
-  .products {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-.card {
-  width: 200px;
-}
-  @media (max-width: 768px) {
-  .card {
-    width: 150px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .card {
-    width: 220px;
-  }
+/* BOTÃO WHATS */
+.whats {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25d366;
+  color: white;
+  font-size: 24px;
+  padding: 12px;
+  border-radius: 50%;
+  text-decoration: none;
 }
 </style>
+
 </head>
+
 <body>
-<div id="overlay" class="popupOverlay" onclick="fecharTudo()"></div>
+
+<div id="overlay" onclick="fecharTudo()"></div>
+
+<main>
+
 <header>
   <div class="logo">LKSTORE</div>
 
   <div class="topIcons">
-    <div class="icon" onclick="abrirPerfil()">👤</div>
-    <div class="icon cart" onclick="toggleCart()">🛒 <span id="cartCount">0</span></div>
+    <div class="icon">👤</div>
+    <div class="icon">🛒</div>
   </div>
 </header>
 
 <!-- SEARCH -->
 <div class="searchBox">
-  <input id="search" placeholder="Buscar produtos..." onkeyup="filtrar()">
+  <input placeholder="Buscar produtos...">
 </div>
 
-<!-- BANNER PRINCIPAL -->
+<!-- PRODUTOS -->
 <div class="bannerLK">
 
   <h2>🎬 Plataformas disponíveis</h2>
 
- <div class="products">
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
-    <h3>Netflix</h3>
-    <button>Comprar</button>
-  </div>
+  <div class="products">
 
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
-    <h3>Disney+</h3>
-    <button>Comprar</button>
-  </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
+      <h3>Netflix</h3>
+      <button>Comprar</button>
+    </div>
 
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
-    <h3>Prime Video</h3>
-    <button>Comprar</button>
-  </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
+      <h3>Disney+</h3>
+      <button>Comprar</button>
+    </div>
 
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
-    <h3>Spotify</h3>
-    <button>Comprar</button>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
+      <h3>Prime Video</h3>
+      <button>Comprar</button>
+    </div>
+
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
+      <h3>Spotify</h3>
+      <button>Comprar</button>
+    </div>
+
   </div>
-</div>
 
   <p>🔥 Acesso rápido e digital</p>
 
 </div>
 
-<!-- BANNERS INFO -->
-<!-- BANNERS INFO -->
+<!-- BANNERS -->
+<div class="bannerLK">🔥 OFERTAS DO DIA</div>
+<div class="bannerLK">⚡ ENTREGA AUTOMÁTICA</div>
+<div class="bannerLK">🔒 PAGAMENTO 100% SEGURO</div>
 
-<div class="bannerLK blink">
-🔥 OFERTAS DO DIA COM DESCONTO ESPECIAL 🔥
-</div>
+<!-- CONFIANÇA FINAL -->
+<div class="bannerLK">💬 SUPORTE RÁPIDO VIA WHATSAPP</div>
 
-<div class="bannerLK slide">
-⚡ ENTREGA AUTOMÁTICA APÓS PAGAMENTO • 100% DIGITAL • RÁPIDO E SEGURO ⚡
-</div>
+</main>
 
-<div class="bannerLK marquee strong">
-💰 PROGRAMA DE AFILIADOS LKSTORE • GANHE INDICANDO • PAGAMENTO RÁPIDO
-</div>
-
-<div class="bannerLK">
-🔒 PAGAMENTO 100% SEGURO
-</div>
-
-<!-- CARRINHO -->
-<div id="cartBox">
-  <h3>Carrinho</h3>
-  <div id="cartItems"></div>
-  <p>Total: R$ <span id="total">0</span></p>
-
-  <button onclick="finalizarCompraDireto()">Finalizar Compra</button>
-</div>
-
-<!-- LOGIN -->
-<div id="authBox">
-  <div class="authCard">
-    <h2>LKSTORE</h2>
-
-    <input id="loginUser" placeholder="Usuário">
-    <input id="loginPass" type="password" placeholder="Senha">
-
-    <button onclick="login()">Entrar</button>
-    <button onclick="register()">Criar Conta</button>
-  </div>
-</div>
-
-<!-- PERFIL -->
-<div id="perfilBox">
-  <h1>Meu Perfil</h1>
-  <h2 id="perfilNome">Usuário</h2>
-  <button onclick="logout()">Sair</button>
-</div>
-
-  <!-- BANNERS DE CONFIANÇA -->
-
-<div class="securityBox">🔒 PAGAMENTO 100% SEGURO</div>
-
-<div class="securityBox">⚡ ENTREGA IMEDIATA APÓS CONFIRMAÇÃO</div>
-
-<div class="securityBox">💬 SUPORTE RÁPIDO VIA WHATSAPP</div>
-
-
-  
+<!-- WHATSAPP -->
 <a class="whats" href="https://wa.me/5582991585655">💬</a>
 
-<body>
-
-<div id="overlay" class="popupOverlay" onclick="fecharTudo()"></div>
-
-<main>
-
-<header>
-  ...
-</header>
-
-<!-- SEARCH -->
-<div class="searchBox">
-  ...
-</div>
-
-<!-- PRODUTOS -->
-<div class="bannerLK">
-  <div class="products">
-    ...
-  </div>
-</div>
-
-<!-- BANNERS -->
-<div class="bannerLK">...</div>
-
-<!-- CARRINHO -->
-<div id="cartBox">...</div>
-
-<!-- LOGIN -->
-<div id="authBox">...</div>
-
-<!-- PERFIL -->
-<div id="perfilBox">...</div>
-
-<a class="whats" href="...">💬</a>
-
-
 </body>
-</main>
-  
-      </body>
-
-  
 </html>
