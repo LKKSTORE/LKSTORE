@@ -61,16 +61,22 @@ min-height:100vh;
 }
 
 header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px;
-background:#111;
-border-bottom:1px solid #222;
-position:sticky;
-top:0;
-z-index:1000;
-}
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  background:#111;
+  border-bottom:1px solid #222;
+
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  }
+  body{
+  padding-top:70px;
+  }
 
 .logo{font-size:24px;font-weight:900;color:#ff3b3b;}
 
