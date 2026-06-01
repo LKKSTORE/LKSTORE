@@ -37,9 +37,10 @@ header{
   display:flex;
   gap:15px;
   align-items:center;
+  cursor:pointer;
 }
 
-/* PRODUTOS estilo Netflix */
+/* PRODUTOS */
 .products{
   display:flex;
   flex-wrap:wrap;
@@ -78,19 +79,6 @@ header{
   cursor:pointer;
 }
 
-/* BANNERS */
-.banner{
-  background:#111;
-  margin:10px;
-  padding:15px;
-  border-left:4px solid red;
-  border-radius:10px;
-}
-
-.grande{font-size:20px;font-weight:bold;}
-.medio{font-size:16px;}
-.pequeno{font-size:14px;opacity:0.8;}
-
 /* LOGIN */
 #authBox{
   position:fixed;
@@ -99,6 +87,7 @@ header{
   display:flex;
   justify-content:center;
   align-items:center;
+  z-index:9999;
 }
 
 .authCard{
@@ -140,6 +129,7 @@ header{
   width:320px;
   border-radius:12px;
   border:1px solid red;
+  z-index:9999;
 }
 
 .cartItem{
@@ -155,7 +145,6 @@ header{
   cursor:pointer;
 }
 
-/* BOTÃO FINALIZAR */
 .finalizar{
   width:100%;
   padding:10px;
@@ -170,8 +159,6 @@ header{
 </head>
 
 <body>
-
-  <body>
 
 <!-- LOGIN -->
 <div id="authBox">
@@ -196,8 +183,6 @@ header{
 </header>
 
 <!-- PRODUTOS -->
-<main>
-
 <div class="products">
 
   <div class="card">
@@ -226,24 +211,88 @@ header{
 
 </div>
 
-</main>
-
 <!-- CARRINHO -->
 <div id="cartBox">
   <h3>Carrinho</h3>
   <div id="cartItems"></div>
 
-  <button onclick="finalizar()" class="finalizar">Finalizar Compra</button>
+  <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
 </div>
 
-<!-- AVISOS NO FINAL -->
+<!-- AVISOS -->
 <footer style="margin-top:50px; padding:20px; text-align:center;">
-
-  <div class="banner grande">🔒 PAGAMENTO 100% SEGURO</div>
-  <div class="banner medio">⚡ ENTREGA AUTOMÁTICA NA HORA</div>
-  <div class="banner pequeno">💬 SUPORTE VIA WHATSAPP 24H</div>
-
+  <div style="margin:10px;">🔒 PAGAMENTO 100% SEGURO</div>
+  <div style="margin:10px;">⚡ ENTREGA AUTOMÁTICA</div>
+  <div style="margin:10px;">💬 SUPORTE VIA WHATSAPP</div>
 </footer>
-  
+
+<script>
+
+let carrinho = [];
+let logado = false;
+
+/* LOGIN */
+function register(){
+  localStorage.setItem("user_"+user.value, pass.value);
+  alert("Conta criada!");
+}
+
+function login(){
+  if(localStorage.getItem("user_"+user.value) === pass.value){
+    logado = true;
+    authBox.style.display = "none";
+  } else {
+    msg.innerText = "Login inválido";
+  }
+}
+
+/* CARRINHO */
+function add(prod){
+  if(!logado){
+    alert("Faça login primeiro!");
+    return;
+  }
+
+  carrinho.push(prod);
+  atualizar();
+}
+
+/* ABRIR CARRINHO */
+function toggleCart(){
+  cartBox.style.display =
+    cartBox.style.display === "block" ? "none" : "block";
+}
+
+/* ATUALIZAR */
+function atualizar(){
+  count.innerText = carrinho.length;
+
+  cartItems.innerHTML = "";
+
+  carrinho.forEach((item, i)=>{
+    cartItems.innerHTML += `
+      <div class="cartItem">
+        <span>${item}</span>
+        <span class="remove" onclick="remover(${i})">X</span>
+      </div>
+    `;
+  });
+}
+
+/* REMOVER */
+function remover(i){
+  carrinho.splice(i,1);
+  atualizar();
+}
+
+/* FINALIZAR */
+function finalizar(){
+  alert("Compra finalizada!");
+  carrinho = [];
+  atualizar();
+}
+
+</script>
+
 </body>
 </html>
