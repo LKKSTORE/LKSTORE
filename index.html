@@ -22,6 +22,7 @@ header{
   background:#000;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   padding:15px;
   border-bottom:2px solid red;
   z-index:1000;
@@ -34,8 +35,21 @@ header{
 }
 
 .topIcons{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.cartBtn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#111;
+  padding:6px 10px;
+  border:1px solid red;
+  border-radius:8px;
   cursor:pointer;
-  font-size:18px;
+  color:white;
 }
 
 /* PRODUTOS */
@@ -75,7 +89,7 @@ header{
 #cartBox{
   display:none;
   position:fixed;
-  top:20%;
+  top:15%;
   left:50%;
   transform:translateX(-50%);
   background:#111;
@@ -135,7 +149,7 @@ header{
   font-weight:bold;
 }
 
-/* BOTÕES */
+/* BOTÃO FINALIZAR */
 .finalizar{
   width:100%;
   padding:10px;
@@ -145,19 +159,7 @@ header{
   color:white;
   font-weight:bold;
   border-radius:8px;
-}
-
-footer{
-  margin-top:40px;
-  text-align:center;
-  padding:20px;
-}
-
-.banner{
-  margin:8px;
-  padding:12px;
-  background:#111;
-  border-left:4px solid red;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -178,18 +180,20 @@ footer{
   </div>
 </div>
 
+<!-- HEADER -->
 <header>
   <div class="logo">LKSTORE</div>
 
   <div class="topIcons">
-    🛒 <span id="count">0</span>
-    <button onclick="toggleCart()" style="background:red;color:white;border:none;padding:5px 10px;border-radius:6px;">
-      Carrinho
-    </button>
+
+    <div class="cartBtn" onclick="toggleCart()">
+      🛒 <span id="count">0</span>
+    </div>
+
   </div>
 </header>
 
-<!-- PRODUTOS (TELA INICIAL SEM LOGIN) -->
+<!-- PRODUTOS -->
 <div class="products">
 
   <div class="card">
@@ -226,36 +230,19 @@ footer{
   <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
 </div>
 
-<!-- AVISOS FINAL -->
-<footer>
-  <div class="banner">🔒 PAGAMENTO 100% SEGURO</div>
-  <div class="banner">⚡ ENTREGA AUTOMÁTICA</div>
-  <div class="banner">💬 SUPORTE VIA WHATSAPP</div>
-</footer>
-
 <script>
 let carrinho = [];
 let logado = false;
 
-/* abrir login automático */
-window.onload = () => {
-  document.getElementById("authBox").style.display = "flex";
-};
-
 /* criar conta */
 function register(){
-  let u = user.value;
-  let p = pass.value;
-  localStorage.setItem("user_"+u,p);
+  localStorage.setItem("user_"+user.value, pass.value);
   msg.innerText = "Conta criada!";
 }
 
 /* login */
 function login(){
-  let u = user.value;
-  let p = pass.value;
-
-  if(localStorage.getItem("user_"+u) === p){
+  if(localStorage.getItem("user_"+user.value) === pass.value){
     logado = true;
     authBox.style.display = "none";
   } else {
@@ -263,49 +250,52 @@ function login(){
   }
 }
 
-/* comprar */
+/* adicionar carrinho */
 function add(prod){
   if(!logado){
-    alert("Você precisa criar conta e entrar antes de comprar!");
+    alert("Crie conta e faça login primeiro!");
     authBox.style.display = "flex";
     return;
   }
 
   carrinho.push(prod);
   count.innerText = carrinho.length;
-  renderCart();
+  render();
 }
 
-/* carrinho */
-function renderCart(){
-  let html = "";
+/* render carrinho */
+function render(){
+  cartItems.innerHTML = "";
   carrinho.forEach((item,i)=>{
-    html += `<div class="cartItem">
-      ${item}
-      <span class="remove" onclick="removeItem(${i})">X</span>
-    </div>`;
+    cartItems.innerHTML += `
+      <div class="cartItem">
+        ${item}
+        <span class="remove" onclick="removeItem(${i})">X</span>
+      </div>
+    `;
   });
-  cartItems.innerHTML = html;
 }
 
-/* remover */
+/* remover item */
 function removeItem(i){
   carrinho.splice(i,1);
   count.innerText = carrinho.length;
-  renderCart();
+  render();
 }
 
 /* abrir carrinho */
 function toggleCart(){
-  cartBox.style.display = cartBox.style.display === "block" ? "none" : "block";
+  cartBox.style.display =
+    cartBox.style.display === "block" ? "none" : "block";
 }
 
 /* finalizar */
 function finalizar(){
-  alert("Compra finalizada com sucesso!");
+  alert("Compra finalizada!");
   carrinho = [];
   count.innerText = 0;
-  renderCart();
+  render();
+  cartBox.style.display = "none";
 }
 </script>
 
