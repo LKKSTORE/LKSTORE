@@ -188,10 +188,41 @@ button {
   background: rgba(0,0,0,0.7);
   z-index: 1500;
 }
+  header {
+  padding: 12px 15px;
+}
+
+.topIcons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.icon {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* melhora texto e evita sensação de “tudo grande” */
+body {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* evita popup ocupar tela toda sem scroll */
+#cartBox, #authBox, #perfilBox {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* melhora títulos */
+h1, h2, h3 {
+  font-size: 18px;
+}
 </style>
 </head>
 <body>
-
+<div id="overlay" class="popupOverlay" onclick="fecharTudo()"></div>
 <header>
   <div class="logo">LKSTORE</div>
 
