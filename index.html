@@ -55,12 +55,24 @@ header{
   } 
 </style>
 </head>
-
 <body>
-<!-- CARRINHO -->
-<div id="cartBox">
-  
-  <div class="bannerLK logos">
+
+<header>
+  <div class="logo">LKSTORE</div>
+
+  <div class="topIcons">
+    <div class="icon" onclick="abrirPerfil()">👤</div>
+    <div class="icon cart" onclick="toggleCart()">🛒 <span id="cartCount">0</span></div>
+  </div>
+</header>
+
+<!-- SEARCH -->
+<div class="searchBox">
+  <input id="search" placeholder="Buscar produtos..." onkeyup="filtrar()">
+</div>
+
+<!-- BANNER PRINCIPAL -->
+<div class="bannerLK">
 
   <h2>🎬 Plataformas disponíveis</h2>
 
@@ -75,163 +87,47 @@ header{
 
 </div>
 
-<div class="bannerLK promo">
-  <h2>🔥 OFERTAS DO DIA</h2>
-  <p>Descontos especiais por tempo limitado</p>
-  <span>Garanta já antes que acabe</span>
-</div>
-<div class="bannerLK info">
-  <h2>⚡ Compra segura</h2>
-  <p>Entrega automática e suporte rápido</p>
-  <span>100% digital e instantâneo</span>
-</div>  
-  
-<header>
-<div class="logo">LKSTORE</div>
+<!-- BANNERS INFO -->
+<div class="bannerLK">🔥 DESCONTOS EXCLUSIVOS PARA VOCÊ</div>
+<div class="bannerLK">⚡ ENTREGA IMEDIATA APÓS A CONFIRMAÇÃO</div>
+<div class="bannerLK">🔒 PAGAMENTO 100% SEGURO</div>
+<div class="bannerLK">💰 PROGRAMA DE AFILIADOS LKSTORE</div>
+<div class="bannerLK">📞 SUPORTE VIA WHATSAPP</div>
 
-<div class="topIcons">
-<div class="icon" onclick="abrirPerfil()">👤</div>
-<div class="icon cart" onclick="toggleCart()">🛒 <span id="cartCount">0</span></div>
-</div>
-</header>
-
-<div class="searchBox">
-<input id="search" placeholder="Buscar produtos..." onkeyup="filtrar()">
-</div>
-
-<section
-
-</section>
-
-<!-- COLE OS BANNERS AQUI -->
-
-<div class="bannerLK">
-🔥 DESCONTOS EXCLUSIVOS PARA VOCÊ
-</div>
-
-<div class="bannerLK">
-⚡ ENTREGA IMEDIATA APÓS A CONFIRMAÇÃO
-</div>
-
-<div class="bannerLK">
-🔒 PAGAMENTO 100% SEGURO
-</div>
-
-<div class="bannerLK">
-💰 PROGRAMA DE AFILIADOS LKSTORE
-</div>
-
-<div class="bannerLK">
-📞 SUPORTE VIA WHATSAPP
-</div>
-
-  
-<!-- CART -->
+<!-- CARRINHO -->
 <div id="cartBox">
-<h3>Carrinho</h3>
-<div id="cartItems"></div>
-<p>Total: R$ <span id="total">0</span></p>
+  <h3>Carrinho</h3>
+  <div id="cartItems"></div>
+  <p>Total: R$ <span id="total">0</span></p>
 
-<button onclick="finalizarCompraDireto()">Finalizar Compra</button>
+  <button onclick="finalizarCompraDireto()">Finalizar Compra</button>
 </div>
 
 <!-- LOGIN -->
 <div id="authBox">
-<div class="authCard">
-<h2>LKSTORE</h2>
+  <div class="authCard">
+    <h2>LKSTORE</h2>
 
-<input id="loginUser" placeholder="Usuário">
-<input id="loginPass" type="password" placeholder="Senha">
+    <input id="loginUser" placeholder="Usuário">
+    <input id="loginPass" type="password" placeholder="Senha">
 
-<button onclick="login()">Entrar</button>
-<button onclick="register()">Criar Conta</button>
-</div>
+    <button onclick="login()">Entrar</button>
+    <button onclick="register()">Criar Conta</button>
+  </div>
 </div>
 
 <!-- PERFIL -->
 <div id="perfilBox">
-<h1>Meu Perfil</h1>
-<h2 id="perfilNome">Usuário</h2>
-<button onclick="logout()">Sair</button>
+  <h1>Meu Perfil</h1>
+  <h2 id="perfilNome">Usuário</h2>
+  <button onclick="logout()">Sair</button>
 </div>
 
 <a class="whats" href="https://wa.me/5582991585655">💬</a>
 
-<script>
-/* ===== SEU JS ORIGINAL ===== */
-let cart = [];
-
-function addToCart(name, price){
-cart.push({name,price});
-document.getElementById("cartCount").innerText = cart.length;
-}
-
-function toggleCart(){
-let box=document.getElementById("cartBox");
-box.style.right = box.style.right==="0px"?"-320px":"0px";
-}
-
-function filtrar(){
-let input=document.getElementById("search").value.toLowerCase();
-document.querySelectorAll(".item").forEach(i=>{
-i.style.display=i.innerText.toLowerCase().includes(input)?"block":"none";
-});
-}
-</script>
-
-<!-- 🔥 FIREBASE (CORRIGIDO, SEM DUPLICAÇÃO) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
-<script>
-const firebaseConfig = {
-apiKey: "SUA_API_KEY",
-authDomain: "SEU_AUTH_DOMAIN",
-projectId: "SEU_PROJECT_ID",
-storageBucket: "SEU_STORAGE_BUCKET",
-messagingSenderId: "SEU_SENDER_ID",
-appId: "SEU_APP_ID"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-/* ===== LOGIN CORRIGIDO ===== */
-function register(){
-let user=document.getElementById("loginUser").value;
-let pass=document.getElementById("loginPass").value;
-
-db.collection("users").add({
-email:user,
-password:pass
-});
-
-alert("Conta criada!");
-}
-
-function login(){
-let user=document.getElementById("loginUser").value;
-let pass=document.getElementById("loginPass").value;
-
-db.collection("users")
-.where("email","==",user)
-.where("password","==",pass)
-.get()
-.then(snap=>{
-if(!snap.empty){
-document.getElementById("authBox").style.display="none";
-document.getElementById("perfilNome").innerText=user;
-alert("Login OK!");
-}else{
-alert("Erro no login");
-}
-});
-}
-
-function logout(){
-location.reload();
-}
-</script>
 <h1 style="color:red">TESTE OK</h1>
-</body>
+
+      </body>
+
+  
 </html>
