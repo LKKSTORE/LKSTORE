@@ -171,10 +171,13 @@ header{
 
 <body>
 
+  <body>
+
 <!-- LOGIN -->
 <div id="authBox">
   <div class="authCard">
     <h2 style="color:red;">LKSTORE LOGIN</h2>
+
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
@@ -186,10 +189,15 @@ header{
 
 <header>
   <div class="logo">LKSTORE</div>
-  <div>🛒 <span id="count">0</span></div>
+
+  <div class="topIcons">
+    <div onclick="toggleCart()">🛒 <span id="count">0</span></div>
+  </div>
 </header>
 
 <!-- PRODUTOS -->
+<main>
+
 <div class="products">
 
   <div class="card">
@@ -218,84 +226,24 @@ header{
 
 </div>
 
-<!-- AVISOS -->
-<div class="banner grande">🔒 PAGAMENTO 100% SEGURO</div>
-<div class="banner medio">⚡ ENTREGA IMEDIATA AUTOMÁTICA</div>
-<div class="banner pequeno">💬 SUPORTE VIA WHATSAPP</div>
+</main>
 
 <!-- CARRINHO -->
 <div id="cartBox">
   <h3>Carrinho</h3>
   <div id="cartItems"></div>
 
-  <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
+  <button onclick="finalizar()" class="finalizar">Finalizar Compra</button>
 </div>
 
-<script>
+<!-- AVISOS NO FINAL -->
+<footer style="margin-top:50px; padding:20px; text-align:center;">
 
-let carrinho = [];
-let logado = false;
+  <div class="banner grande">🔒 PAGAMENTO 100% SEGURO</div>
+  <div class="banner medio">⚡ ENTREGA AUTOMÁTICA NA HORA</div>
+  <div class="banner pequeno">💬 SUPORTE VIA WHATSAPP 24H</div>
 
-/* LOGIN */
-function register(){
-  localStorage.setItem("user_"+user.value, pass.value);
-  alert("Conta criada!");
-}
-
-function login(){
-  if(localStorage.getItem("user_"+user.value) === pass.value){
-    logado = true;
-    authBox.style.display = "none";
-  } else {
-    msg.innerText = "Login inválido";
-  }
-}
-
-/* CARRINHO */
-function add(prod){
-  if(!logado){
-    alert("Faça login primeiro!");
-    return;
-  }
-
-  carrinho.push(prod);
-  atualizar();
-}
-
-/* ATUALIZAR CARRINHO */
-function atualizar(){
-  count.innerText = carrinho.length;
-
-  cartItems.innerHTML = "";
-
-  carrinho.forEach((item, i)=>{
-    cartItems.innerHTML += `
-      <div class="cartItem">
-        <span>${item}</span>
-        <span class="remove" onclick="remover(${i})">X</span>
-      </div>
-    `;
-  });
-}
-
-/* REMOVER ITEM */
-function remover(i){
-  carrinho.splice(i,1);
-  atualizar();
-}
-
-/* FINALIZAR */
-function finalizar(){
-  if(carrinho.length === 0){
-    alert("Carrinho vazio!");
-    return;
-  }
-  alert("Compra finalizada com sucesso!");
-  carrinho = [];
-  atualizar();
-}
-
-</script>
-
+</footer>
+  
 </body>
 </html>
