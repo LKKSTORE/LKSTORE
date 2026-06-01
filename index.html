@@ -25,7 +25,6 @@ header{
   align-items:center;
   padding:15px;
   border-bottom:2px solid red;
-  z-index:1000;
 }
 
 .logo{
@@ -34,19 +33,10 @@ header{
   font-size:22px;
 }
 
-.topIcons{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
 .cartBtn{
-  display:flex;
-  align-items:center;
-  gap:6px;
   background:#111;
-  padding:6px 10px;
   border:1px solid red;
+  padding:6px 10px;
   border-radius:8px;
   cursor:pointer;
   color:white;
@@ -67,7 +57,6 @@ header{
   border-radius:15px;
   padding:15px;
   text-align:center;
-  border:1px solid #222;
 }
 
 .card img{
@@ -82,7 +71,6 @@ header{
   color:white;
   font-weight:bold;
   border-radius:8px;
-  cursor:pointer;
 }
 
 /* CARRINHO */
@@ -97,13 +85,12 @@ header{
   width:320px;
   border-radius:12px;
   border:1px solid red;
-  z-index:2000;
 }
 
 .cartItem{
   display:flex;
   justify-content:space-between;
-  margin:8px 0;
+  margin:6px 0;
 }
 
 .remove{
@@ -119,14 +106,13 @@ header{
   background:rgba(0,0,0,0.95);
   justify-content:center;
   align-items:center;
-  z-index:9999;
 }
 
 .authCard{
   background:#111;
   padding:20px;
   border-radius:12px;
-  width:320px;
+  width:300px;
   border:1px solid red;
 }
 
@@ -146,20 +132,6 @@ header{
   color:white;
   border:none;
   border-radius:8px;
-  font-weight:bold;
-}
-
-/* BOTÃO FINALIZAR */
-.finalizar{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  background:red;
-  border:none;
-  color:white;
-  font-weight:bold;
-  border-radius:8px;
-  cursor:pointer;
 }
 </style>
 </head>
@@ -169,13 +141,14 @@ header{
 <!-- LOGIN -->
 <div id="authBox">
   <div class="authCard">
-    <h2 style="color:red;">LKSTORE LOGIN</h2>
+    <h2 style="color:red;">LOGIN LKSTORE</h2>
 
-    <input id="user" placeholder="Usuário">
-    <input id="pass" type="password" placeholder="Senha">
+    <input id="user">
+    <input id="pass" type="password">
 
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
+
     <p id="msg"></p>
   </div>
 </div>
@@ -184,88 +157,89 @@ header{
 <header>
   <div class="logo">LKSTORE</div>
 
-  <div class="topIcons">
-
-    <div class="cartBtn" onclick="toggleCart()">
-      🛒 <span id="count">0</span>
-    </div>
-
+  <div class="cartBtn" onclick="toggleCart()">
+    🛒 <span id="count">0</span>
   </div>
 </header>
 
 <!-- PRODUTOS -->
-<div class="products">
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
-    <h3>Netflix</h3>
-    <button onclick="add('Netflix')">Comprar</button>
-  </div>
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
-    <h3>Disney+</h3>
-    <button onclick="add('Disney+')">Comprar</button>
-  </div>
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
-    <h3>Prime Video</h3>
-    <button onclick="add('Prime Video')">Comprar</button>
-  </div>
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
-    <h3>Spotify</h3>
-    <button onclick="add('Spotify')">Comprar</button>
-  </div>
-
-</div>
+<div class="products" id="products"></div>
 
 <!-- CARRINHO -->
 <div id="cartBox">
   <h3>Carrinho</h3>
   <div id="cartItems"></div>
 
-  <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
+  <button onclick="finalizar()" style="width:100%;padding:10px;background:red;color:white;border:none;border-radius:8px;">
+    Finalizar Compra
+  </button>
 </div>
 
 <script>
 let carrinho = [];
 let logado = false;
 
-/* criar conta */
+/* PRODUTOS */
+const produtos = [
+  {nome:"Netflix", img:"https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+  {nome:"Disney+", img:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"},
+  {nome:"Prime Video", img:"https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png"},
+  {nome:"Spotify", img:"https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg"}
+];
+
+/* render produtos */
+function loadProducts(){
+  let box = document.getElementById("products");
+
+  produtos.forEach(p=>{
+    box.innerHTML += `
+      <div class="card">
+        <img src="${p.img}">
+        <h3>${p.nome}</h3>
+        <button onclick="add('${p.nome}')">Comprar</button>
+      </div>
+    `;
+  });
+}
+loadProducts();
+
+/* login */
 function register(){
   localStorage.setItem("user_"+user.value, pass.value);
   msg.innerText = "Conta criada!";
 }
 
-/* login */
 function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
     logado = true;
     authBox.style.display = "none";
   } else {
-    msg.innerText = "Login inválido";
+    msg.innerText = "Erro no login";
   }
 }
 
-/* adicionar carrinho */
-function add(prod){
+/* abrir login automático */
+window.onload = ()=>{
+  authBox.style.display = "flex";
+};
+
+/* add carrinho */
+function add(nome){
   if(!logado){
-    alert("Crie conta e faça login primeiro!");
     authBox.style.display = "flex";
+    alert("Faça login primeiro");
     return;
   }
 
-  carrinho.push(prod);
+  carrinho.push(nome);
   count.innerText = carrinho.length;
-  render();
+  renderCart();
 }
 
-/* render carrinho */
-function render(){
+/* carrinho */
+function renderCart(){
   cartItems.innerHTML = "";
+
   carrinho.forEach((item,i)=>{
     cartItems.innerHTML += `
       <div class="cartItem">
@@ -276,14 +250,14 @@ function render(){
   });
 }
 
-/* remover item */
+/* remover */
 function removeItem(i){
   carrinho.splice(i,1);
   count.innerText = carrinho.length;
-  render();
+  renderCart();
 }
 
-/* abrir carrinho */
+/* toggle carrinho */
 function toggleCart(){
   cartBox.style.display =
     cartBox.style.display === "block" ? "none" : "block";
@@ -294,8 +268,7 @@ function finalizar(){
   alert("Compra finalizada!");
   carrinho = [];
   count.innerText = 0;
-  render();
-  cartBox.style.display = "none";
+  renderCart();
 }
 </script>
 
