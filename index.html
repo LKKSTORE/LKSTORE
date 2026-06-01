@@ -22,7 +22,6 @@ header{
   background:#000;
   display:flex;
   justify-content:space-between;
-  align-items:center;
   padding:15px;
   border-bottom:2px solid red;
   z-index:1000;
@@ -30,16 +29,21 @@ header{
 
 .logo{
   color:red;
-  font-size:22px;
   font-weight:bold;
+  font-size:22px;
+}
+
+.topIcons{
+  display:flex;
+  gap:15px;
+  align-items:center;
 }
 
 .cartBtn{
-  background:#111;
-  border:1px solid red;
+  cursor:pointer;
+  background:red;
   padding:6px 10px;
   border-radius:8px;
-  cursor:pointer;
 }
 
 /* PRODUTOS */
@@ -48,7 +52,7 @@ header{
   flex-wrap:wrap;
   justify-content:center;
   gap:20px;
-  padding:20px;
+  margin-top:20px;
 }
 
 .card{
@@ -57,6 +61,7 @@ header{
   border-radius:15px;
   padding:15px;
   text-align:center;
+  border:1px solid #222;
 }
 
 .card img{
@@ -71,40 +76,29 @@ header{
   color:white;
   font-weight:bold;
   border-radius:8px;
+  cursor:pointer;
 }
 
-/* AVISOS */
-.banner{
-  margin:10px;
-  padding:12px;
-  background:#111;
-  border-left:4px solid red;
-  border-radius:10px;
-}
-
-.grande{font-size:20px;font-weight:bold;}
-.medio{font-size:16px;}
-.pequeno{font-size:14px;opacity:0.8;}
-
-/* CARRINHO */
+/* CARRINHO FIXO */
 #cartBox{
   display:none;
   position:fixed;
-  top:15%;
-  left:50%;
-  transform:translateX(-50%);
+  right:20px;
+  top:90px;
+  width:300px;
   background:#111;
-  padding:20px;
-  width:320px;
-  border-radius:12px;
   border:1px solid red;
+  padding:15px;
+  border-radius:12px;
   z-index:2000;
 }
 
 .cartItem{
   display:flex;
   justify-content:space-between;
-  margin:6px 0;
+  margin:5px 0;
+  border-bottom:1px solid #222;
+  padding:5px 0;
 }
 
 .remove{
@@ -114,20 +108,20 @@ header{
 
 /* LOGIN */
 #authBox{
-  display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
+  background:rgba(0,0,0,0.9);
+  display:flex;
   justify-content:center;
   align-items:center;
-  z-index:9999;
+  z-index:3000;
 }
 
 .authCard{
   background:#111;
   padding:20px;
   border-radius:12px;
-  width:320px;
+  width:300px;
   border:1px solid red;
 }
 
@@ -135,17 +129,26 @@ header{
   width:100%;
   padding:10px;
   margin:5px 0;
-  border-radius:8px;
-  border:none;
 }
 
-.authCard button{
+/* AVISOS */
+.banner{
+  background:#111;
+  margin:10px;
+  padding:15px;
+  border-left:4px solid red;
+  border-radius:10px;
+}
+
+/* BOTÃO FINALIZAR */
+.finalizar{
   width:100%;
   padding:10px;
   margin-top:10px;
   background:red;
-  color:white;
   border:none;
+  color:white;
+  font-weight:bold;
   border-radius:8px;
 }
 </style>
@@ -153,36 +156,28 @@ header{
 
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN (só trava compra, NÃO site) -->
 <div id="authBox">
   <div class="authCard">
-    <h2 style="color:red;">LOGIN LKSTORE</h2>
+    <h2 style="color:red;">LKSTORE LOGIN</h2>
 
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
-
-    <p id="msg"></p>
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="logo">LKSTORE</div>
 
-  <div class="cartBtn" onclick="toggleCart()">
-    🛒 <span id="count">0</span>
+  <div class="topIcons">
+    <div class="cartBtn" onclick="toggleCart()">🛒 <span id="count">0</span></div>
   </div>
 </header>
 
-<!-- AVISOS (ANTES DO LOGIN) -->
-<div class="banner grande">🔒 PAGAMENTO 100% SEGURO</div>
-<div class="banner medio">⚡ ENTREGA AUTOMÁTICA NA HORA</div>
-<div class="banner pequeno">💬 SUPORTE VIA WHATSAPP 24H</div>
-
-<!-- PRODUTOS (VISÍVEIS SEM LOGIN) -->
+<!-- PRODUTOS (VISÍVEL SEM LOGIN) -->
 <div class="products">
 
   <div class="card">
@@ -216,83 +211,89 @@ header{
   <h3>Carrinho</h3>
   <div id="cartItems"></div>
 
-  <button onclick="finalizar()" style="width:100%;padding:10px;background:red;color:white;border:none;border-radius:8px;">
-    Finalizar Compra
-  </button>
+  <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
 </div>
 
+<!-- AVISOS NO FINAL -->
+<footer style="margin-top:40px; text-align:center;">
+
+  <div class="banner">🔒 PAGAMENTO 100% SEGURO</div>
+  <div class="banner">⚡ ENTREGA AUTOMÁTICA</div>
+  <div class="banner">💬 SUPORTE VIA WHATSAPP</div>
+
+</footer>
+
 <script>
+
 let carrinho = [];
 let logado = false;
 
-/* abrir login só quando precisar */
-function abrirLogin(){
-  authBox.style.display = "flex";
-}
-
-/* register */
+/* LOGIN */
 function register(){
-  localStorage.setItem("user_"+user.value, pass.value);
-  msg.innerText = "Conta criada!";
+  let u = user.value;
+  let p = pass.value;
+  localStorage.setItem("user_"+u,p);
+  alert("Conta criada!");
 }
 
-/* login */
 function login(){
-  if(localStorage.getItem("user_"+user.value) === pass.value){
+  let u = user.value;
+  let p = pass.value;
+
+  if(localStorage.getItem("user_"+u) === p){
     logado = true;
     authBox.style.display = "none";
   } else {
-    msg.innerText = "Erro no login";
+    alert("Login inválido");
   }
 }
 
-/* comprar */
+/* CARRINHO */
 function add(prod){
   if(!logado){
-    abrirLogin();
-    alert("Crie conta para comprar!");
+    alert("Crie uma conta e faça login para comprar!");
     return;
   }
 
   carrinho.push(prod);
   count.innerText = carrinho.length;
-  render();
+  renderCart();
 }
 
-/* carrinho */
-function render(){
-  cartItems.innerHTML = "";
+/* MOSTRAR CARRINHO */
+function toggleCart(){
+  cartBox.style.display = cartBox.style.display === "block" ? "none" : "block";
+  renderCart();
+}
 
-  carrinho.forEach((item,i)=>{
+/* RENDER */
+function renderCart(){
+  cartItems.innerHTML = "";
+  carrinho.forEach((item, i)=>{
     cartItems.innerHTML += `
       <div class="cartItem">
         ${item}
-        <span class="remove" onclick="removeItem(${i})">X</span>
+        <span class="remove" onclick="removeItem(${i})">x</span>
       </div>
     `;
   });
 }
 
-/* remover */
+/* REMOVER */
 function removeItem(i){
   carrinho.splice(i,1);
   count.innerText = carrinho.length;
-  render();
+  renderCart();
 }
 
-/* abrir carrinho */
-function toggleCart(){
-  cartBox.style.display =
-    cartBox.style.display === "block" ? "none" : "block";
-}
-
-/* finalizar */
+/* FINALIZAR */
 function finalizar(){
-  alert("Compra finalizada!");
+  alert("Compra finalizada com sucesso!");
   carrinho = [];
   count.innerText = 0;
-  render();
+  renderCart();
 }
+
 </script>
 
 </body>
