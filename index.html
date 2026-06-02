@@ -234,9 +234,14 @@ input{
   <div class="card">
     Netflix
     <button class="btn red" onclick="add('Netflix')">Comprar</button>
+
+      <button onclick="this.parentElement.remove()">
+🗑️ Remover
+</button>
+  
   </div>
-</div>
-<!-- PERFIL -->
+</div> 
+  <!-- PERFIL -->
 <div id="profile" class="sidePanel">
   <span class="close" onclick="openProfile()">✖</span>
 
