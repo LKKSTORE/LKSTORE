@@ -44,9 +44,7 @@ header{
 
 .topIcons{display:flex;gap:8px;align-items:center;}
 
-.profileBtn,.cartBtn{
-  cursor:pointer;
-}
+.profileBtn,.cartBtn{cursor:pointer;}
 
 .profileBtn{
   font-size:22px;
@@ -78,7 +76,6 @@ header{
   border-radius:15px;
   padding:15px;
   text-align:center;
-  border:1px solid #222;
 }
 
 .card img{height:70px;}
@@ -92,7 +89,6 @@ header{
   color:white;
   font-weight:bold;
   border-radius:8px;
-  cursor:pointer;
 }
 
 /* LOGIN */
@@ -111,18 +107,9 @@ header{
   padding:20px;
   border-radius:12px;
   width:300px;
-  border:1px solid red;
 }
 
-.authCard input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border-radius:8px;
-  border:none;
-}
-
-/* OVERLAY */
+/* CARRINHO */
 #overlay{
   display:none;
   position:fixed;
@@ -131,7 +118,6 @@ header{
   z-index:2999;
 }
 
-/* CARRINHO */
 #cartBox{
   position:fixed;
   top:0;
@@ -151,6 +137,7 @@ header{
   display:flex;
   justify-content:space-between;
   margin:8px 0;
+  border-bottom:1px solid #222;
 }
 
 .remove{color:red;cursor:pointer;}
@@ -163,7 +150,6 @@ header{
   color:white;
   font-weight:bold;
   border-radius:8px;
-  cursor:pointer;
 }
 
 .finalizar{background:red;}
@@ -185,19 +171,18 @@ header{
 
 .sidePanel.open{right:0;}
 
-.menu{
-  margin-top:15px;
-}
-
 .menu div{
   padding:12px;
   border-bottom:1px solid #222;
   cursor:pointer;
 }
 
-/* ABAS */
-.tab{display:none;margin-top:10px;}
-.tab.active{display:block;}
+/* X BUTTON */
+.closeX{
+  float:right;
+  cursor:pointer;
+  font-size:20px;
+}
 
 /* AVISOS */
 .banner{
@@ -218,10 +203,8 @@ header{
 <div id="authBox">
   <div class="authCard">
     <h2 style="color:red;">LOGIN</h2>
-
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
-
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
   </div>
@@ -246,64 +229,64 @@ header{
 
 <!-- CARRINHO -->
 <div id="cartBox">
+  <h3>
+    🛒 Carrinho
+    <span class="closeX" onclick="toggleCart()">✖</span>
+  </h3>
 
-  <h3>🛒 Carrinho</h3>
   <div id="cartItems"></div>
 
   <button class="finalizar" onclick="finalizar()">Finalizar compra</button>
   <button class="limpar" onclick="limparCarrinho()">Limpar carrinho</button>
-
 </div>
 
 <!-- PERFIL -->
 <div id="profileBox" class="sidePanel">
 
-  <h3>👤 Perfil</h3>
+  <h3>
+    👤 Perfil
+    <span class="closeX" onclick="togglePerfil()">✖</span>
+  </h3>
 
   <p>Usuário: <b id="userName">---</b></p>
 
   <div class="menu">
-    <div onclick="openTab('afiliado')">🤝 Afiliado</div>
-    <div onclick="openTab('compras')">🛒 Minhas compras</div>
     <div onclick="openTab('conta')">🧾 Minha conta</div>
+    <div onclick="openTab('compras')">🛒 Minhas compras</div>
+    <div onclick="openTab('afiliado')">🤝 Afiliado</div>
     <div onclick="logout()" style="color:red;">🚪 Sair</div>
   </div>
 
-  <div id="afiliado" class="tab">
-    🔒 Afiliado bloqueado
+  <div id="conta" class="tab">
+    <p>Conta do usuário</p>
+    <p id="emailOwner" style="color:gray;font-size:12px;">
+      Dono do sistema: ls4619058@gmail.com
+    </p>
   </div>
 
   <div id="compras" class="tab">
-    Nenhuma compra ainda
+    <p>Nenhuma compra ainda</p>
   </div>
 
-  <div id="conta" class="tab">
-    <h4>Conta</h4>
-    <p>Bem-vindo ao sistema</p>
-
-    <!-- ADMIN -->
-    <div id="adminBox" style="display:none;margin-top:10px;">
-      <h4>⚙️ Admin</h4>
-      <input placeholder="Adicionar produto">
-      <button onclick="alert('Produto adicionado')">Adicionar</button>
-    </div>
+  <div id="afiliado" class="tab">
+    <p style="color:red;">🔒 Afiliado bloqueado (precisa liberação admin)</p>
   </div>
 
 </div>
 
 <!-- AVISOS -->
 <div style="margin-top:40px;padding:20px;">
-
   <div class="banner">🔒 Pagamento 100% Seguro</div>
-  <div class="banner">⚡ Entrega Automática</div>
+  <div class="banner">⚡ Entrega automática</div>
   <div class="banner">💬 Suporte 24h</div>
-
 </div>
 
 <script>
 
 let carrinho = [];
-let userLogado = "";
+let logado = false;
+
+const donoSite = "ls4619058@gmail.com";
 
 /* LOGIN */
 function register(){
@@ -313,21 +296,18 @@ function register(){
 
 function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
-
-    userLogado = user.value;
+    logado = true;
     authBox.style.display="none";
-    userName.innerText = userLogado;
-
-    if(userLogado === "admin"){
-      adminBox.style.display="block";
-    }
-
-  } else alert("Erro login");
+    userName.innerText = user.value;
+  } else {
+    alert("Login inválido");
+  }
 }
 
 /* CARRINHO */
-function add(){
-  carrinho.push("Produto");
+function add(p){
+  if(!logado) return alert("Faça login");
+  carrinho.push(p);
   count.innerText = carrinho.length;
   renderCart();
 }
@@ -350,7 +330,7 @@ function renderCart(){
 
 function removeItem(i){
   carrinho.splice(i,1);
-  count.innerText = carrinho.length;
+  count.innerText=carrinho.length;
   renderCart();
 }
 
@@ -372,8 +352,8 @@ function togglePerfil(){
 }
 
 function openTab(id){
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.style.display="none");
+  document.getElementById(id).style.display="block";
 }
 
 function logout(){
