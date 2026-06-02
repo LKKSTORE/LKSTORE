@@ -257,8 +257,20 @@ input{
 <!-- ADMIN -->
 <div id="adminPanel">
   <span class="close" onclick="openAdmin()">✖</span>
-  <h3>ADMIN</h3>
+
+  <h3>⚙️ Painel Admin</h3>
+
   <p id="adminStatus">Bloqueado</p>
+
+  <input id="nomeProd" placeholder="Nome do produto">
+
+  <input id="precoProd" placeholder="Preço">
+
+  <input id="imgProd" placeholder="URL da imagem">
+
+  <button class="btn red" onclick="adicionarProduto()">
+    Adicionar Produto
+  </button>
 </div>
 
 <!-- CARRINHO -->
@@ -284,10 +296,28 @@ function adicionarProduto(){
   let preco = document.getElementById("precoProd").value;
   let img = document.getElementById("imgProd").value;
 
-  alert("Produto adicionado: " + nome);
+  if(nome == "" || preco == ""){
+    alert("Preencha os campos");
+    return;
+  }
 
+  document.querySelector(".products").innerHTML += `
+    <div class="card">
+      ${img ? `<img src="${img}" width="100%">` : ""}
+      <h4>${nome}</h4>
+      <p>R$ ${preco}</p>
+      <button class="btn red" onclick="add('${nome}')">
+        Comprar
+      </button>
+    </div>
+  `;
+
+  alert("Produto adicionado!");
+
+  document.getElementById("nomeProd").value="";
+  document.getElementById("precoProd").value="";
+  document.getElementById("imgProd").value="";
 }
-
   
 let isAdmin = false;
 let userLogado = "";
@@ -396,33 +426,6 @@ function logout(){
 
 </script>
 
-<div id="adminPanel" style="
-display:none;
-position:fixed;
-top:0;
-right:0;
-width:300px;
-height:100%;
-background:#111;
-padding:15px;
-border-left:2px solid red;
-z-index:9999;
-overflow:auto;
-">
-
-  <h3>⚙️ Painel Admin</h3>
-
-  <input id="nomeProd" placeholder="Nome do produto">
-
-  <input id="precoProd" placeholder="Preço">
-
-  <input id="imgProd" placeholder="URL da imagem">
-
-  <button onclick="adicionarProduto()">
-    Adicionar Produto
-  </button>
-
-</div>
   
 </body>
   </html>
