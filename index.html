@@ -236,7 +236,6 @@ input{
     <button class="btn red" onclick="add('Netflix')">Comprar</button>
   </div>
 </div>
-</div>
 <!-- PERFIL -->
 <div id="profile" class="sidePanel">
   <span class="close" onclick="openProfile()">✖</span>
@@ -359,15 +358,8 @@ function loginUser(){
     alert("Login inválido");
   }
 }
-    userLogado = user.value;
-    document.getElementById("userLogin").style.display = "none";
-    document.getElementById("userName").innerText = userLogado;
-  } else {
-    alert("Login inválido");
-  }
-}
-
-/* ADMIN */
+ 
+/*ADMIN */
 function openAdminLogin(){
   document.getElementById("adminLogin").style.display = "flex";
 }
