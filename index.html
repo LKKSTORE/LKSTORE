@@ -109,6 +109,13 @@ header{
   width:300px;
 }
 
+.authCard input{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:8px;
+}
+
 /* CARRINHO */
 #overlay{
   display:none;
@@ -137,7 +144,6 @@ header{
   display:flex;
   justify-content:space-between;
   margin:8px 0;
-  border-bottom:1px solid #222;
 }
 
 .remove{color:red;cursor:pointer;}
@@ -177,14 +183,16 @@ header{
   cursor:pointer;
 }
 
-/* X BUTTON */
 .closeX{
   float:right;
   cursor:pointer;
-  font-size:20px;
 }
 
-/* AVISOS */
+/* TAB */
+.tab{display:none;margin-top:10px;}
+.tab.active{display:block;}
+
+/* BANNER */
 .banner{
   background:#111;
   margin:10px auto;
@@ -229,10 +237,7 @@ header{
 
 <!-- CARRINHO -->
 <div id="cartBox">
-  <h3>
-    🛒 Carrinho
-    <span class="closeX" onclick="toggleCart()">✖</span>
-  </h3>
+  <h3>🛒 Carrinho <span class="closeX" onclick="toggleCart()">✖</span></h3>
 
   <div id="cartItems"></div>
 
@@ -243,10 +248,7 @@ header{
 <!-- PERFIL -->
 <div id="profileBox" class="sidePanel">
 
-  <h3>
-    👤 Perfil
-    <span class="closeX" onclick="togglePerfil()">✖</span>
-  </h3>
+  <h3>👤 Perfil <span class="closeX" onclick="togglePerfil()">✖</span></h3>
 
   <p>Usuário: <b id="userName">---</b></p>
 
@@ -257,11 +259,9 @@ header{
     <div onclick="logout()" style="color:red;">🚪 Sair</div>
   </div>
 
-  <div id="conta" class="tab">
-    <p>Conta do usuário</p>
-    <p id="emailOwner" style="color:gray;font-size:12px;">
-      Dono do sistema: ls4619058@gmail.com
-    </p>
+  <div id="conta" class="tab active">
+    <p>Bem-vindo ao sistema</p>
+    <p style="color:gray;">Dono: ls4619058@gmail.com</p>
   </div>
 
   <div id="compras" class="tab">
@@ -269,14 +269,14 @@ header{
   </div>
 
   <div id="afiliado" class="tab">
-    <p style="color:red;">🔒 Afiliado bloqueado (precisa liberação admin)</p>
+    <p style="color:red;">🔒 Afiliado bloqueado</p>
   </div>
 
 </div>
 
 <!-- AVISOS -->
 <div style="margin-top:40px;padding:20px;">
-  <div class="banner">🔒 Pagamento 100% Seguro</div>
+  <div class="banner">🔒 Pagamento seguro</div>
   <div class="banner">⚡ Entrega automática</div>
   <div class="banner">💬 Suporte 24h</div>
 </div>
@@ -286,7 +286,7 @@ header{
 let carrinho = [];
 let logado = false;
 
-const donoSite = "ls4619058@gmail.com";
+const dono = "ls4619058@gmail.com";
 
 /* LOGIN */
 function register(){
@@ -300,13 +300,12 @@ function login(){
     authBox.style.display="none";
     userName.innerText = user.value;
   } else {
-    alert("Login inválido");
+    alert("Erro login");
   }
 }
 
 /* CARRINHO */
 function add(p){
-  if(!logado) return alert("Faça login");
   carrinho.push(p);
   count.innerText = carrinho.length;
   renderCart();
@@ -352,8 +351,8 @@ function togglePerfil(){
 }
 
 function openTab(id){
-  document.querySelectorAll(".tab").forEach(t=>t.style.display="none");
-  document.getElementById(id).style.display="block";
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
 function logout(){
