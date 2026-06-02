@@ -278,6 +278,17 @@ input{
 
 <script>
 
+function adicionarProduto(){
+
+  let nome = document.getElementById("nomeProd").value;
+  let preco = document.getElementById("precoProd").value;
+  let img = document.getElementById("imgProd").value;
+
+  alert("Produto adicionado: " + nome);
+
+}
+
+  
 let isAdmin = false;
 let userLogado = "";
 let carrinho = [];
