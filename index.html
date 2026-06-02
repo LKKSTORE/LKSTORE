@@ -291,7 +291,33 @@ input{
 
 <script>
 
-function adicionarProduto(){
+function loginUser(){
+
+  let usuario = document.getElementById("user").value;
+  let senha = document.getElementById("pass").value;
+
+  if(localStorage.getItem("u_" + usuario) === senha){
+
+    userLogado = usuario;
+
+    document.getElementById("userLogin").style.display = "none";
+    document.getElementById("userName").innerText = usuario;
+
+    // Libera admin somente para o dono
+    if(usuario === "ls4619058@gmail.com"){
+      isAdmin = true;
+      document.getElementById("adminBtn").style.display = "block";
+      document.getElementById("dono").style.display = "block";
+      document.getElementById("adminStatus").innerText = "LIBERADO ✔";
+    }
+
+  } else {
+    alert("Login inválido");
+  }
+}
+  
+  
+  function adicionarProduto(){
 
   let nome = document.getElementById("nomeProd").value;
   let preco = document.getElementById("precoProd").value;
