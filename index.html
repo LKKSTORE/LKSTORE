@@ -107,11 +107,11 @@ header{
   color:white;
 }
 
- .topIcons{
+.topIcons{
   display:flex;
   align-items:center;
-  gap:6px;
-  margin-right:8px;
+  gap:8px;
+  margin-left:auto;
 }
 
 /* PERFIL */
@@ -360,26 +360,21 @@ header{
 
 <!-- HEADER -->
 <header>
-  <!-- LOGO -->
+
   <div class="logo">LKSTORE</div>
 
-  <!-- SEARCH (MEIO) -->
   <input class="searchBar" placeholder="Buscar produtos...">
 
-  <!-- ÍCONES DIREITA -->
   <div class="topIcons">
 
-    <!-- PERFIL -->
-    <div class="profileBtn" onclick="abrirPerfil()">
-      👤
-    </div>
+    <div class="profileBtn" onclick="abrirPerfil()">👤</div>
 
-    <!-- CARRINHO -->
     <div class="cartBtn" onclick="toggleCart()">
       🛒 <span id="count">0</span>
     </div>
 
   </div>
+
 </header>
 
 <!-- PRODUTOS -->
