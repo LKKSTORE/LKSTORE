@@ -269,6 +269,10 @@ header{
   <div id="conta" class="tab active">
     <p>Bem-vindo ao sistema</p>
 
+<p id="donoInfo" style="display:none; color:gray;">
+  Dono do sistema: <span id="donoEmail"></span>
+</p>
+    
     <div id="adminBox" style="display:none;margin-top:10px;">
       <h4>⚙️ ADMIN LIBERADO</h4>
       <p>Você é o dono do sistema</p>
@@ -307,6 +311,30 @@ header{
 </div>
 
 <script>
+
+function checkAdmin(){
+  if(document.getElementById("adminPass").value === ADMIN_PASS){
+
+    isAdmin = true;
+
+    fecharAdmin();
+    document.getElementById("adminBox").style.display = "block";
+
+    // MOSTRA DONO DO SITE SÓ PRA ADMIN
+    document.getElementById("donoInfo").style.display = "block";
+    document.getElementById("donoEmail").innerText = DONO_SITE;
+
+  } else {
+    alert("Senha incorreta!");
+  }
+}
+
+
+  document.getElementById("donoInfo").style.display = "none";
+isAdmin = false;
+  
+  const DONO_SITE = "ls4619058@gmail.com";
+let isAdmin = false;
 
 const ADMIN_PASS = "159874"; // senha secreta
 
