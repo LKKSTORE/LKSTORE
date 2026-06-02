@@ -499,6 +499,34 @@ function finalizar(){
 
 </div>
 
+<div id="profileBox" class="profileBox">
+
+  <div class="profileHeader">
+    <h3>👤 Meu Perfil</h3>
+    <span onclick="fecharPerfil()" style="cursor:pointer;">❌</span>
+  </div>
+
+  <div class="tabs">
+    <button onclick="openTab('conta')">Conta</button>
+    <button onclick="openTab('pedidos')">Pedidos</button>
+    <button onclick="openTab('config')">Config</button>
+  </div>
+
+  <div id="conta" class="tab active">
+    <p>📧 Usuário logado</p>
+  </div>
+
+  <div id="pedidos" class="tab">
+    <p>🛒 Nenhum pedido ainda</p>
+  </div>
+
+  <div id="config" class="tab">
+    <p>⚙️ Configurações da conta</p>
+  </div>
+
+  <button class="logout" onclick="logout()">Sair</button>
+
+</div>
   
 </body>
 </html>
