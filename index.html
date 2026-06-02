@@ -90,13 +90,12 @@ header{
   border:1px solid #222;
 }
 
-.card img{
-  height:70px;
-}
+.card img{height:70px;}
 
 .card button{
   width:100%;
   padding:10px;
+  margin-top:5px;
   background:red;
   border:none;
   color:white;
@@ -132,7 +131,7 @@ header{
   border:none;
 }
 
-/* CARRINHO */
+/* OVERLAY */
 #overlay{
   display:none;
   position:fixed;
@@ -144,6 +143,7 @@ header{
   z-index:2999;
 }
 
+/* CARRINHO */
 #cartBox{
   position:fixed;
   top:0;
@@ -157,9 +157,7 @@ header{
   padding:15px;
 }
 
-#cartBox.open{
-  right:0;
-}
+#cartBox.open{right:0;}
 
 .cartItem{
   display:flex;
@@ -169,10 +167,7 @@ header{
   padding-bottom:5px;
 }
 
-.remove{
-  color:red;
-  cursor:pointer;
-}
+.remove{color:red;cursor:pointer;}
 
 .finalizar{
   width:100%;
@@ -199,24 +194,18 @@ header{
   padding:15px;
 }
 
-.sidePanel.open{
-  right:0;
-}
+.sidePanel.open{right:0;}
 
-/* BANNER */
-.banner{
-  background:#111;
-  margin:10px auto;
-  padding:15px;
-  border-left:4px solid red;
-  border-radius:10px;
-  max-width:700px;
-  text-align:center;
+/* ADMIN */
+#adminBox input{
+  width:100%;
+  padding:8px;
+  margin-top:8px;
+  border:none;
+  border-radius:8px;
+  background:#000;
+  color:white;
 }
-
-.grande{font-size:20px;font-weight:bold;}
-.medio{font-size:16px;}
-.pequeno{font-size:14px;opacity:0.8;}
 
 </style>
 </head>
@@ -227,77 +216,47 @@ header{
 <div id="authBox">
   <div class="authCard">
     <h2 style="color:red;">LKSTORE LOGIN</h2>
-
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
-
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
   </div>
 </div>
 
-<!-- OVERLAY -->
 <div id="overlay" onclick="toggleCart()"></div>
 
 <!-- HEADER -->
 <header>
-
   <div class="logo">LKSTORE</div>
 
   <input class="searchBar" placeholder="Buscar produtos...">
 
   <div class="topIcons">
+
     <div class="profileBtn" onclick="togglePerfil()">👤</div>
+    <div class="profileBtn" onclick="toggleAdmin()">⚙️</div>
 
     <div class="cartBtn" onclick="toggleCart()">
       🛒 <span id="count">0</span>
     </div>
-  </div>
 
+  </div>
 </header>
 
 <!-- PRODUTOS -->
-<div class="products">
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
-    <h3>Netflix</h3>
-    <button onclick="add('Netflix')">Comprar</button>
-  </div>
-
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg">
-    <h3>Disney+</h3>
-    <button onclick="add('Disney+')">Comprar</button>
-  </div>
-
-</div>
+<div class="products"></div>
 
 <!-- CARRINHO -->
 <div id="cartBox">
 
-  <div style="display:flex;justify-content:space-between;align-items:center;">
+  <div style="display:flex;justify-content:space-between;">
     <h3>🛒 Carrinho</h3>
-    <span onclick="toggleCart()" style="cursor:pointer;font-size:22px;">✖</span>
+    <span onclick="toggleCart()" style="cursor:pointer;">✖</span>
   </div>
 
   <div id="cartItems"></div>
 
-  <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
-
-  <button onclick="limparCarrinho()" style="
-    width:100%;
-    margin-top:8px;
-    padding:10px;
-    background:#333;
-    border:none;
-    color:white;
-    border-radius:8px;
-    cursor:pointer;
-  ">
-    Limpar Carrinho
-  </button>
-
+  <button class="finalizar" onclick="finalizar()">Finalizar</button>
 </div>
 
 <!-- PERFIL -->
@@ -308,110 +267,151 @@ header{
     <span onclick="togglePerfil()" style="cursor:pointer;">✖</span>
   </div>
 
+  <p style="color:red;font-weight:bold;">Usuário: <span id="userName">---</span></p>
+
   <p>🧾 Minha conta</p>
   <p>🛒 Meus pedidos</p>
-  <p>⚙️ Configurações</p>
-  <p onclick="logout()" style="color:red;cursor:pointer;">🚪 Sair</p>
+  <p onclick="logout()" style="color:red;cursor:pointer;">Sair</p>
 
 </div>
 
-<!-- AVISOS -->
-<div style="margin-top:40px; text-align:center; padding:20px;">
-  <div class="banner grande">🔒 PAGAMENTO 100% SEGURO</div>
-  <div class="banner medio">⚡ ENTREGA AUTOMÁTICA</div>
-  <div class="banner pequeno">💬 SUPORTE VIA WHATSAPP</div>
+<!-- ADMIN -->
+<div id="adminBox" class="sidePanel">
+
+  <div style="display:flex;justify-content:space-between;">
+    <h3>⚙️ ADMIN</h3>
+    <span onclick="toggleAdmin()" style="cursor:pointer;">✖</span>
+  </div>
+
+  <input id="prodName" placeholder="Nome produto">
+  <input id="prodImg" placeholder="Imagem URL">
+
+  <button class="finalizar" onclick="addProduct()">Adicionar</button>
+
+  <div id="adminList"></div>
+
 </div>
 
 <script>
 
 let carrinho = [];
 let logado = false;
+let produtos = [
+  {nome:"Netflix",img:"https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"},
+  {nome:"Disney+",img:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"}
+];
 
 /* LOGIN */
 function register(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
-  localStorage.setItem("user_"+u, p);
+  let u = user.value;
+  let p = pass.value;
+  localStorage.setItem("user_"+u,p);
   alert("Conta criada!");
 }
 
 function login(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
+  let u = user.value;
+  let p = pass.value;
 
   if(localStorage.getItem("user_"+u) === p){
     logado = true;
-    document.getElementById("authBox").style.display = "none";
-  } else {
-    alert("Login inválido");
-  }
+    localStorage.setItem("logadoUser",u);
+    authBox.style.display="none";
+    loadUser();
+    renderProdutos();
+  } else alert("Erro login");
+}
+
+function loadUser(){
+  userName.innerText = localStorage.getItem("logadoUser");
+}
+
+/* PRODUTOS */
+function renderProdutos(){
+  let box = document.querySelector(".products");
+  box.innerHTML = "";
+
+  produtos.forEach((p,i)=>{
+    box.innerHTML += `
+      <div class="card">
+        <img src="${p.img}">
+        <h3>${p.nome}</h3>
+        <button onclick="add('${p.nome}')">Comprar</button>
+      </div>
+    `;
+  });
+
+  renderAdmin();
+}
+
+function addProduct(){
+  produtos.push({
+    nome:prodName.value,
+    img:prodImg.value
+  });
+  renderProdutos();
+}
+
+function renderAdmin(){
+  let box = document.getElementById("adminList");
+  box.innerHTML = "";
+
+  produtos.forEach((p,i)=>{
+    box.innerHTML += `<p>${p.nome}</p>`;
+  });
 }
 
 /* CARRINHO */
 function add(prod){
-  if(!logado){
-    alert("Faça login primeiro!");
-    return;
-  }
+  if(!logado) return alert("Login primeiro");
 
   carrinho.push(prod);
-  document.getElementById("count").innerText = carrinho.length;
+  count.innerText = carrinho.length;
   renderCart();
 }
 
 function toggleCart(){
-  document.getElementById("cartBox").classList.toggle("open");
-
-  let overlay = document.getElementById("overlay");
-  if(document.getElementById("cartBox").classList.contains("open")){
-    overlay.style.display = "block";
-  } else {
-    overlay.style.display = "none";
-  }
+  cartBox.classList.toggle("open");
+  overlay.style.display = cartBox.classList.contains("open")?"block":"none";
 }
 
 function renderCart(){
-  let box = document.getElementById("cartItems");
-  box.innerHTML = "";
-
-  carrinho.forEach((item, i)=>{
-    box.innerHTML += `
+  cartItems.innerHTML="";
+  carrinho.forEach((c,i)=>{
+    cartItems.innerHTML += `
       <div class="cartItem">
-        ${item}
-        <span class="remove" onclick="removeItem(${i})">x</span>
-      </div>
-    `;
+        ${c}
+        <span onclick="removeItem(${i})" class="remove">x</span>
+      </div>`;
   });
 }
 
 function removeItem(i){
   carrinho.splice(i,1);
-  document.getElementById("count").innerText = carrinho.length;
-  renderCart();
-}
-
-function limparCarrinho(){
-  carrinho = [];
-  document.getElementById("count").innerText = 0;
+  count.innerText=carrinho.length;
   renderCart();
 }
 
 function finalizar(){
-  alert("Compra finalizada!");
-  carrinho = [];
-  document.getElementById("count").innerText = 0;
+  alert("Finalizado!");
+  carrinho=[];
+  count.innerText=0;
   renderCart();
   toggleCart();
 }
 
 /* PERFIL */
 function togglePerfil(){
-  document.getElementById("profileBox").classList.toggle("open");
+  profileBox.classList.toggle("open");
 }
 
 function logout(){
-  alert("Saiu da conta");
   location.reload();
+}
+
+/* ADMIN */
+function toggleAdmin(){
+  adminBox.classList.toggle("open");
 }
 
 </script>
