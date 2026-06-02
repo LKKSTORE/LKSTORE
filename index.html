@@ -214,27 +214,27 @@ input{
   <p>Usuário: <b id="userName">---</b></p>
 
   <div class="menu">
-    <div>Minha conta</div>
-    <div>Minhas compras</div>
-    <div onclick="afiliado()">Afiliado</div>
-    <div onclick="logout()" style="color:red;">Sair</div>
+    <div>🧾 Minha conta</div>
+    <div>🛒 Minhas compras</div>
+    <div onclick="afiliado()">🤝 Afiliado</div>
+    <div onclick="logout()" style="color:red;">🚪 Sair</div>
   </div>
 
-  <p id="donoInfo" style="display:none;color:gray;">
-    Dono: <span>ls4619058@gmail.com</span>
+  <p id="donoInfo" style="display:none;color:gray;margin-top:10px;">
+    Dono: ls4619058@gmail.com
   </p>
 </div>
 
 <!-- ADMIN -->
 <div id="adminPanel" class="sidePanel">
   <h3>⚙️ ADMIN <span class="closeX" onclick="openAdmin()">✖</span></h3>
-  <p>Digite senha:</p>
-  <input id="adminPass" type="password">
+
+  <input id="adminPass" type="password" placeholder="Senha admin">
   <button class="btn red" onclick="checkAdmin()">Entrar</button>
 
   <div id="adminBox" style="display:none;margin-top:10px;">
-    <p>✔ Painel liberado</p>
-    <p>👑 Controle total</p>
+    <p>✔ Admin liberado</p>
+    <p>🔓 Afiliado liberado</p>
   </div>
 </div>
 
@@ -246,7 +246,8 @@ input{
 <script>
 
 let carrinho = [];
-let logadoUser = "";
+let userLogado = "";
+let isAdmin = false;
 
 const ADMIN_PASS = "1234";
 const DONO = "ls4619058@gmail.com";
@@ -259,11 +260,11 @@ function register(){
 
 function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
-    logadoUser = user.value;
+    userLogado = user.value;
     authBox.style.display = "none";
-    userName.innerText = logadoUser;
+    userName.innerText = userLogado;
 
-    if(logadoUser === DONO){
+    if(userLogado === DONO){
       donoInfo.style.display = "block";
     }
 
@@ -305,16 +306,22 @@ function checkAdmin(){
   let pass = document.getElementById("adminPass").value;
 
   if(pass === ADMIN_PASS){
+    isAdmin = true;
     document.getElementById("adminBox").style.display = "block";
+    document.getElementById("afiliado").innerHTML = "✅ Afiliado liberado";
     alert("Admin liberado!");
   } else {
     alert("Senha errada!");
   }
 }
 
-/* OUTROS */
+/* AFILIADO */
 function afiliado(){
-  alert("Bloqueado - precisa admin");
+  if(isAdmin){
+    alert("Você já tem acesso afiliado!");
+  } else {
+    alert("🔒 Bloqueado - precisa admin");
+  }
 }
 
 function logout(){
