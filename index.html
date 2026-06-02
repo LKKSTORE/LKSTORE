@@ -202,9 +202,11 @@ input{
     <button class="btn red" onclick="loginUser()">Entrar</button>
     <button class="btn gray" onclick="register()">Criar conta</button>
 
-    <hr>
-    <button class="btn gray" onclick="openAdminLogin()">⚙️ Login Admin</button>
+ <button class="btn gray" onclick="openAdminLogin()">⚙️ Login Admin</button>
   </div>
+</div>
+
+<!-- ADMIN LOGIN -->
 
 <!-- ADMIN LOGIN -->
 <div id="adminLogin" class="screen" style="display:none;">
@@ -325,14 +327,38 @@ let carrinho = [];
 
 const ADMIN_PASS = "1234";
 
-/* LOGIN USER */
 function register(){
-  localStorage.setItem("u_"+user.value, pass.value);
-  alert("Conta criada!");
+
+  let usuario = document.getElementById("user").value;
+  let senha = document.getElementById("pass").value;
+
+  if(usuario === "" || senha === ""){
+    alert("Preencha usuário e senha");
+    return;
+  }
+
+  localStorage.setItem("u_" + usuario, senha);
+
+  alert("Conta criada com sucesso!");
 }
 
 function loginUser(){
-  if(localStorage.getItem("u_"+user.value) === pass.value){
+
+  let usuario = document.getElementById("user").value;
+  let senha = document.getElementById("pass").value;
+
+  if(localStorage.getItem("u_" + usuario) === senha){
+
+    userLogado = usuario;
+
+    document.getElementById("userLogin").style.display = "none";
+
+    document.getElementById("userName").innerText = usuario;
+
+  } else {
+    alert("Login inválido");
+  }
+}
     userLogado = user.value;
     document.getElementById("userLogin").style.display = "none";
     document.getElementById("userName").innerText = userLogado;
