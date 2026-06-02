@@ -42,15 +42,14 @@ header{
   color:white;
 }
 
-.topIcons{
-  display:flex;
-  gap:8px;
-  align-items:center;
+.topIcons{display:flex;gap:8px;align-items:center;}
+
+.profileBtn,.cartBtn{
+  cursor:pointer;
 }
 
 .profileBtn{
   font-size:22px;
-  cursor:pointer;
   padding:6px 10px;
 }
 
@@ -59,7 +58,6 @@ header{
   color:white;
   padding:8px 12px;
   border-radius:50px;
-  cursor:pointer;
   display:flex;
   gap:6px;
   font-weight:bold;
@@ -110,7 +108,7 @@ header{
   border:none;
 }
 
-/* CARRINHO */
+/* OVERLAY */
 #overlay{
   display:none;
   position:fixed;
@@ -119,6 +117,7 @@ header{
   z-index:2999;
 }
 
+/* CARRINHO */
 #cartBox{
   position:fixed;
   top:0;
@@ -173,30 +172,15 @@ header{
 
 .sidePanel.open{right:0;}
 
-.tab{
-  display:none;
-  margin-top:10px;
-}
-
-.tab.active{display:block;}
-
-.tabBtn{
-  background:#000;
-  border:none;
-  color:white;
-  padding:6px;
-  margin:3px;
-  border-radius:6px;
+.closeX{
   cursor:pointer;
+  font-size:22px;
 }
 
-.banner{
-  background:#111;
-  margin:10px;
-  padding:15px;
-  border-left:4px solid red;
-  border-radius:10px;
-  text-align:center;
+/* AFILIADO BLOQUEADO */
+.afiliadoBloqueado{
+  color:#888;
+  font-size:13px;
 }
 </style>
 </head>
@@ -206,11 +190,10 @@ header{
 <!-- LOGIN -->
 <div id="authBox">
   <div class="authCard">
-    <h2 style="color:red;">LKSTORE LOGIN</h2>
+    <h2 style="color:red;">LOGIN</h2>
     <input id="user">
     <input id="pass" type="password">
     <button onclick="login()">Entrar</button>
-    <button onclick="register()">Criar conta</button>
   </div>
 </div>
 
@@ -218,7 +201,8 @@ header{
 
 <header>
   <div class="logo">LKSTORE</div>
-  <input class="searchBar" placeholder="Buscar produtos...">
+
+  <input class="searchBar" placeholder="Buscar...">
 
   <div class="topIcons">
     <div class="profileBtn" onclick="togglePerfil()">👤</div>
@@ -227,39 +211,38 @@ header{
 </header>
 
 <!-- PRODUTOS -->
-<div class="products" id="products"></div>
+<div class="products"></div>
 
 <!-- CARRINHO -->
 <div id="cartBox">
-  <div style="display:flex;justify-content:space-between;">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;">
     <h3>🛒 Carrinho</h3>
-    <span onclick="toggleCart()" style="cursor:pointer">✖</span>
+    <span class="closeX" onclick="toggleCart()">✖</span>
   </div>
 
   <div id="cartItems"></div>
 
   <button class="finalizar" onclick="finalizar()">Finalizar</button>
-  <button class="limpar" onclick="limparCarrinho()">Limpar carrinho</button>
+  <button class="limpar" onclick="limparCarrinho()">Limpar</button>
 </div>
 
 <!-- PERFIL -->
 <div id="profileBox" class="sidePanel">
 
-  <h3>👤 Perfil</h3>
-
-  <p><b>Usuário:</b> <span id="userName">---</span></p>
-
-  <div class="tabBtn" onclick="openTab('conta')">Conta</div>
-  <div class="tabBtn" onclick="openTab('afiliado')">Afiliado</div>
-
-  <div id="conta" class="tab active">
-    <p>🧾 Minha conta</p>
-    <p>🛒 Meus pedidos</p>
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3>👤 Perfil</h3>
+    <span class="closeX" onclick="togglePerfil()">✖</span>
   </div>
 
-  <div id="afiliado" class="tab">
-    <p>🤝 Link afiliado:</p>
-    <p style="color:lime;">lkstore.com/?ref=<span id="refUser">---</span></p>
+  <p>Usuário: <b id="userName">---</b></p>
+
+  <h4>Conta</h4>
+  <p>🧾 Minha conta</p>
+
+  <h4>Afiliado</h4>
+  <div id="afiliadoArea" class="afiliadoBloqueado">
+    🔒 Afiliado bloqueado pelo admin
   </div>
 
 </div>
@@ -267,46 +250,45 @@ header{
 <script>
 
 let carrinho = [];
-let logadoUser = "";
+let userLogado = "";
 
 /* LOGIN */
-function register(){
-  localStorage.setItem("user_"+user.value, pass.value);
-  alert("Conta criada!");
-}
-
 function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
     authBox.style.display="none";
-    logadoUser = user.value;
+    userLogado = user.value;
+    userName.innerText = userLogado;
 
-    userName.innerText = logadoUser;
-    refUser.innerText = logadoUser;
+    // LIBERA AFILIADO (ADMIN SIMULAÇÃO)
+    if(userLogado === "admin"){
+      document.getElementById("afiliadoArea").innerHTML =
+        "🔗 lkstore.com/?ref=" + userLogado;
+    }
 
-    renderProducts();
+    renderProdutos();
   } else alert("Erro login");
 }
 
 /* PRODUTOS */
-function renderProducts(){
-  products.innerHTML = `
+function renderProdutos(){
+  document.querySelector(".products").innerHTML = `
     <div class="card">
       <h3>Netflix</h3>
-      <button onclick="add('Netflix')">Comprar</button>
+      <button onclick="add()">Comprar</button>
     </div>
   `;
 }
 
 /* CARRINHO */
-function add(p){
-  carrinho.push(p);
+function add(){
+  carrinho.push("Produto");
   count.innerText = carrinho.length;
   renderCart();
 }
 
 function toggleCart(){
   cartBox.classList.toggle("open");
-  overlay.style.display = cartBox.classList.contains("open")?"block":"none";
+  overlay.style.display = cartBox.classList.contains("open") ? "block" : "none";
 }
 
 function renderCart(){
@@ -327,13 +309,13 @@ function removeItem(i){
 }
 
 function limparCarrinho(){
-  carrinho=[];
-  count.innerText=0;
+  carrinho = [];
+  count.innerText = 0;
   renderCart();
 }
 
 function finalizar(){
-  alert("Compra finalizada!");
+  alert("Finalizado!");
   limparCarrinho();
   toggleCart();
 }
@@ -341,11 +323,6 @@ function finalizar(){
 /* PERFIL */
 function togglePerfil(){
   profileBox.classList.toggle("open");
-}
-
-function openTab(t){
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-  document.getElementById(t).classList.add("active");
 }
 
 </script>
