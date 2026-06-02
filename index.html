@@ -230,6 +230,7 @@ header{
     <div class="profileBtn" onclick="togglePerfil()">👤</div>
     <div class="cartBtn" onclick="toggleCart()">🛒 <span id="count">0</span></div>
   </div>
+  <div class="profileBtn" onclick="abrirAdmin()">⚙️</div>
 </header>
 
 <!-- PRODUTOS -->
@@ -258,6 +259,11 @@ header{
     <div onclick="openTab('afiliado')">🤝 Afiliado</div>
     <div onclick="logout()" style="color:red;">🚪 Sair</div>
   </div>
+
+  <div id="adminBox" style="display:none;margin-top:10px;">
+  <h4>⚙️ PAINEL ADMIN</h4>
+  <p>Você tem acesso total ao sistema</p>
+</div>
 
   <div id="conta" class="tab active">
     <p>Bem-vindo ao sistema</p>
@@ -359,7 +365,60 @@ function logout(){
   location.reload();
 }
 
+const ADMIN_PASSWORD = "159874"; // 🔐 muda aqui depois
+
+function abrirAdmin(){
+  document.getElementById("adminLogin").style.display = "flex";
+}
+
+function fecharAdmin(){
+  document.getElementById("adminLogin").style.display = "none";
+}
+
+function checkAdmin(){
+  let pass = document.getElementById("adminPass").value;
+
+  if(pass === ADMIN_PASSWORD){
+    alert("Acesso admin liberado!");
+
+    fecharAdmin();
+
+    // mostra painel admin
+    document.getElementById("adminBox").style.display = "block";
+
+  } else {
+    alert("Senha incorreta!");
+  }
+}
+
+  
 </script>
 
+<div id="adminLogin" style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.9);
+z-index:9999;
+justify-content:center;
+align-items:center;
+">
+
+  <div style="background:#111;padding:20px;border-radius:10px;width:280px;">
+    <h3>⚙️ Admin Login</h3>
+
+    <input id="adminPass" type="password" placeholder="Senha admin" style="width:100%;padding:10px;margin-top:10px;">
+
+    <button onclick="checkAdmin()" style="width:100%;margin-top:10px;padding:10px;background:red;color:white;border:none;">
+      Entrar
+    </button>
+
+    <button onclick="fecharAdmin()" style="width:100%;margin-top:8px;padding:10px;background:#333;color:white;border:none;">
+      Cancelar
+    </button>
+  </div>
+
+</div>
+  
 </body>
 </html>
