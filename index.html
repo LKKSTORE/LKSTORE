@@ -58,9 +58,9 @@ header{
   color:white;
   padding:8px 12px;
   border-radius:50px;
+  font-weight:bold;
   display:flex;
   gap:6px;
-  font-weight:bold;
 }
 
 /* PRODUTOS */
@@ -79,6 +79,20 @@ header{
   padding:15px;
   text-align:center;
   border:1px solid #222;
+}
+
+.card img{height:70px;}
+
+.card button{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  background:red;
+  border:none;
+  color:white;
+  font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
 }
 
 /* LOGIN */
@@ -137,12 +151,11 @@ header{
   display:flex;
   justify-content:space-between;
   margin:8px 0;
-  border-bottom:1px solid #222;
 }
 
 .remove{color:red;cursor:pointer;}
 
-.finalizar, .limpar{
+.finalizar,.limpar{
   width:100%;
   padding:10px;
   margin-top:8px;
@@ -172,15 +185,29 @@ header{
 
 .sidePanel.open{right:0;}
 
-.closeX{
-  cursor:pointer;
-  font-size:22px;
+.menu{
+  margin-top:15px;
 }
 
-/* AFILIADO BLOQUEADO */
-.afiliadoBloqueado{
-  color:#888;
-  font-size:13px;
+.menu div{
+  padding:12px;
+  border-bottom:1px solid #222;
+  cursor:pointer;
+}
+
+/* ABAS */
+.tab{display:none;margin-top:10px;}
+.tab.active{display:block;}
+
+/* AVISOS */
+.banner{
+  background:#111;
+  margin:10px auto;
+  padding:15px;
+  border-left:4px solid red;
+  border-radius:10px;
+  max-width:600px;
+  text-align:center;
 }
 </style>
 </head>
@@ -191,14 +218,18 @@ header{
 <div id="authBox">
   <div class="authCard">
     <h2 style="color:red;">LOGIN</h2>
-    <input id="user">
-    <input id="pass" type="password">
+
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
+
     <button onclick="login()">Entrar</button>
+    <button onclick="register()">Criar conta</button>
   </div>
 </div>
 
 <div id="overlay" onclick="toggleCart()"></div>
 
+<!-- HEADER -->
 <header>
   <div class="logo">LKSTORE</div>
 
@@ -216,34 +247,56 @@ header{
 <!-- CARRINHO -->
 <div id="cartBox">
 
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h3>🛒 Carrinho</h3>
-    <span class="closeX" onclick="toggleCart()">✖</span>
-  </div>
-
+  <h3>🛒 Carrinho</h3>
   <div id="cartItems"></div>
 
-  <button class="finalizar" onclick="finalizar()">Finalizar</button>
-  <button class="limpar" onclick="limparCarrinho()">Limpar</button>
+  <button class="finalizar" onclick="finalizar()">Finalizar compra</button>
+  <button class="limpar" onclick="limparCarrinho()">Limpar carrinho</button>
+
 </div>
 
 <!-- PERFIL -->
 <div id="profileBox" class="sidePanel">
 
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h3>👤 Perfil</h3>
-    <span class="closeX" onclick="togglePerfil()">✖</span>
-  </div>
+  <h3>👤 Perfil</h3>
 
   <p>Usuário: <b id="userName">---</b></p>
 
-  <h4>Conta</h4>
-  <p>🧾 Minha conta</p>
-
-  <h4>Afiliado</h4>
-  <div id="afiliadoArea" class="afiliadoBloqueado">
-    🔒 Afiliado bloqueado pelo admin
+  <div class="menu">
+    <div onclick="openTab('afiliado')">🤝 Afiliado</div>
+    <div onclick="openTab('compras')">🛒 Minhas compras</div>
+    <div onclick="openTab('conta')">🧾 Minha conta</div>
+    <div onclick="logout()" style="color:red;">🚪 Sair</div>
   </div>
+
+  <div id="afiliado" class="tab">
+    🔒 Afiliado bloqueado
+  </div>
+
+  <div id="compras" class="tab">
+    Nenhuma compra ainda
+  </div>
+
+  <div id="conta" class="tab">
+    <h4>Conta</h4>
+    <p>Bem-vindo ao sistema</p>
+
+    <!-- ADMIN -->
+    <div id="adminBox" style="display:none;margin-top:10px;">
+      <h4>⚙️ Admin</h4>
+      <input placeholder="Adicionar produto">
+      <button onclick="alert('Produto adicionado')">Adicionar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- AVISOS -->
+<div style="margin-top:40px;padding:20px;">
+
+  <div class="banner">🔒 Pagamento 100% Seguro</div>
+  <div class="banner">⚡ Entrega Automática</div>
+  <div class="banner">💬 Suporte 24h</div>
 
 </div>
 
@@ -253,30 +306,23 @@ let carrinho = [];
 let userLogado = "";
 
 /* LOGIN */
-function login(){
-  if(localStorage.getItem("user_"+user.value) === pass.value){
-    authBox.style.display="none";
-    userLogado = user.value;
-    userName.innerText = userLogado;
-
-    // LIBERA AFILIADO (ADMIN SIMULAÇÃO)
-    if(userLogado === "admin"){
-      document.getElementById("afiliadoArea").innerHTML =
-        "🔗 lkstore.com/?ref=" + userLogado;
-    }
-
-    renderProdutos();
-  } else alert("Erro login");
+function register(){
+  localStorage.setItem("user_"+user.value, pass.value);
+  alert("Conta criada!");
 }
 
-/* PRODUTOS */
-function renderProdutos(){
-  document.querySelector(".products").innerHTML = `
-    <div class="card">
-      <h3>Netflix</h3>
-      <button onclick="add()">Comprar</button>
-    </div>
-  `;
+function login(){
+  if(localStorage.getItem("user_"+user.value) === pass.value){
+
+    userLogado = user.value;
+    authBox.style.display="none";
+    userName.innerText = userLogado;
+
+    if(userLogado === "admin"){
+      adminBox.style.display="block";
+    }
+
+  } else alert("Erro login");
 }
 
 /* CARRINHO */
@@ -288,7 +334,7 @@ function add(){
 
 function toggleCart(){
   cartBox.classList.toggle("open");
-  overlay.style.display = cartBox.classList.contains("open") ? "block" : "none";
+  overlay.style.display = cartBox.classList.contains("open")?"block":"none";
 }
 
 function renderCart(){
@@ -309,13 +355,13 @@ function removeItem(i){
 }
 
 function limparCarrinho(){
-  carrinho = [];
-  count.innerText = 0;
+  carrinho=[];
+  count.innerText=0;
   renderCart();
 }
 
 function finalizar(){
-  alert("Finalizado!");
+  alert("Compra finalizada!");
   limparCarrinho();
   toggleCart();
 }
@@ -323,6 +369,15 @@ function finalizar(){
 /* PERFIL */
 function togglePerfil(){
   profileBox.classList.toggle("open");
+}
+
+function openTab(id){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function logout(){
+  location.reload();
 }
 
 </script>
