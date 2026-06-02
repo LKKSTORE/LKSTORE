@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LKSTORE PRO</title>
+<title>LKSTORE PRO MAX</title>
 
 <style>
 body{
@@ -11,69 +11,34 @@ body{
   font-family:Arial;
   background:#0b0b0b;
   color:white;
-  padding-top:80px;
 }
 
 /* HEADER */
 header{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  background:#000;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   padding:10px;
+  background:#000;
   border-bottom:2px solid red;
-  z-index:1000;
 }
 
 .logo{color:red;font-weight:bold;}
 
-.searchBar{
-  flex:1;
-  margin:0 10px;
-  padding:8px;
-  border-radius:8px;
-  border:none;
-  background:#111;
-  color:white;
-}
+button{cursor:pointer}
 
-.topIcons{display:flex;gap:10px;align-items:center;}
-
-.topIcons div{cursor:pointer;font-size:20px;}
-
-/* PRODUTOS */
-.products{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:15px;
-  margin-top:20px;
-}
-
-.card{
-  width:200px;
-  background:#111;
-  padding:10px;
-  border-radius:10px;
-  text-align:center;
-}
-
-/* LOGIN */
-#authBox{
+/* LOGIN SCREENS */
+.screen{
   position:fixed;
   inset:0;
-  background:black;
+  background:#000;
   display:flex;
   justify-content:center;
   align-items:center;
   z-index:9999;
 }
 
-.authCard{
+.box{
   background:#111;
   padding:20px;
   border-radius:10px;
@@ -82,39 +47,13 @@ header{
 
 input{
   width:100%;
-  padding:8px;
+  padding:10px;
   margin-top:8px;
-  border-radius:6px;
   border:none;
+  border-radius:6px;
 }
 
-/* OVERLAY */
-#overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  z-index:2000;
-}
-
-/* SIDE PANELS */
-.sidePanel{
-  position:fixed;
-  top:0;
-  right:-320px;
-  width:300px;
-  height:100%;
-  background:#111;
-  padding:15px;
-  transition:0.3s;
-  z-index:3000;
-}
-
-.sidePanel.open{right:0;}
-
-.closeX{float:right;cursor:pointer;}
-
-/* BOTÕES */
+/* BUTTONS */
 .btn{
   width:100%;
   padding:10px;
@@ -127,23 +66,19 @@ input{
 .red{background:red;}
 .gray{background:#333;}
 
-/* MENU */
-.menu div{
-  padding:10px;
-  border-bottom:1px solid #222;
-  cursor:pointer;
+/* LAYOUT */
+.products{
+  padding:20px;
 }
 
-/* BANNER */
-.banner{
-  margin:10px;
-  padding:12px;
+.card{
   background:#111;
-  border-left:4px solid red;
-  text-align:center;
+  padding:10px;
+  border-radius:10px;
+  width:200px;
 }
 
-/* ADMIN */
+/* SIDEPANEL ADMIN */
 #adminPanel{
   position:fixed;
   top:0;
@@ -153,186 +88,191 @@ input{
   background:#111;
   padding:15px;
   transition:0.3s;
-  z-index:5000;
   border-left:2px solid red;
+  z-index:5000;
 }
 
 #adminPanel.open{right:0;}
+
+.close{
+  float:right;
+  cursor:pointer;
+}
+
+/* PROFILE */
+#profile{
+  position:fixed;
+  top:0;
+  right:-320px;
+  width:300px;
+  height:100%;
+  background:#111;
+  padding:15px;
+  transition:0.3s;
+  z-index:4000;
+}
+
+#profile.open{right:0;}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="authBox">
-  <div class="authCard">
-    <h3>LOGIN</h3>
+<!-- 🔐 LOGIN USER -->
+<div id="userLogin" class="screen">
+  <div class="box">
+    <h3>LOGIN USUÁRIO</h3>
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
-    <button class="btn red" onclick="login()">Entrar</button>
+    <button class="btn red" onclick="loginUser()">Entrar</button>
     <button class="btn gray" onclick="register()">Criar conta</button>
+
+    <hr>
+
+    <button class="btn gray" onclick="openAdminLogin()">⚙️ Login Admin</button>
   </div>
 </div>
 
-<div id="overlay" onclick="closeAll()"></div>
+<!-- 🔐 LOGIN ADMIN -->
+<div id="adminLogin" class="screen" style="display:none;">
+  <div class="box">
+    <h3>LOGIN ADMIN</h3>
+
+    <input id="adminPass" type="password" placeholder="Senha admin">
+
+    <button class="btn red" onclick="loginAdmin()">Entrar Admin</button>
+    <button class="btn gray" onclick="closeAdminLogin()">Voltar</button>
+  </div>
+</div>
 
 <!-- HEADER -->
 <header>
-  <div class="logo">LKSTORE</div>
+  <div class="logo">LKSTORE PRO</div>
 
-  <input class="searchBar" placeholder="Buscar...">
-
-  <div class="topIcons">
-    <div onclick="toggleProfile()">👤</div>
-    <div onclick="toggleCart()">🛒 <span id="count">0</span></div>
-    <div onclick="openAdmin()">⚙️</div>
+  <div>
+    <button onclick="openProfile()">👤 Perfil</button>
+    <button onclick="openAdmin()">⚙️ Admin</button>
   </div>
 </header>
 
 <!-- PRODUTOS -->
 <div class="products">
   <div class="card">
-    <h4>Netflix</h4>
-    <button class="btn red" onclick="add()">Comprar</button>
+    Netflix
+    <button class="btn red">Comprar</button>
   </div>
-</div>
-
-<!-- CARRINHO -->
-<div id="cartBox" class="sidePanel">
-  <h3>🛒 Carrinho <span class="closeX" onclick="toggleCart()">✖</span></h3>
-  <div id="cartItems"></div>
-
-  <button class="btn red" onclick="finalizar()">Finalizar</button>
-  <button class="btn gray" onclick="limpar()">Limpar</button>
 </div>
 
 <!-- PERFIL -->
-<div id="profileBox" class="sidePanel">
-  <h3>👤 Perfil <span class="closeX" onclick="toggleProfile()">✖</span></h3>
+<div id="profile">
+  <span class="close" onclick="openProfile()">✖</span>
 
-  <p>Usuário: <b id="userName">---</b></p>
+  <h3>Perfil</h3>
 
-  <div class="menu">
-    <div>🧾 Minha conta</div>
-    <div>🛒 Minhas compras</div>
-    <div onclick="afiliado()">🤝 Afiliado</div>
-    <div onclick="logout()" style="color:red;">🚪 Sair</div>
-  </div>
+  <p>Usuário: <span id="userName">---</span></p>
 
-  <p id="donoInfo" style="display:none;color:gray;margin-top:10px;">
+  <p onclick="afiliado()">🤝 Afiliado</p>
+  <p>🛒 Minhas compras</p>
+  <p onclick="logout()" style="color:red;">Sair</p>
+
+  <p id="dono" style="display:none;color:gray;">
     Dono: ls4619058@gmail.com
   </p>
 </div>
 
-<!-- ADMIN -->
-<div id="adminPanel" class="sidePanel">
-  <h3>⚙️ ADMIN <span class="closeX" onclick="openAdmin()">✖</span></h3>
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <span class="close" onclick="openAdmin()">✖</span>
 
-  <input id="adminPass" type="password" placeholder="Senha admin">
-  <button class="btn red" onclick="checkAdmin()">Entrar</button>
+  <h3>ADMIN</h3>
 
-  <div id="adminBox" style="display:none;margin-top:10px;">
-    <p>✔ Admin liberado</p>
-    <p>🔓 Afiliado liberado</p>
-  </div>
+  <p>✔ Painel liberado</p>
+  <p id="adminStatus">Bloqueado</p>
 </div>
-
-<!-- AVISOS -->
-<div class="banner">🔒 Seguro</div>
-<div class="banner">⚡ Entrega automática</div>
-<div class="banner">💬 Suporte 24h</div>
 
 <script>
 
-let carrinho = [];
-let userLogado = "";
 let isAdmin = false;
+let userLogado = "";
 
-const ADMIN_PASS = "1234";
-const DONO = "ls4619058@gmail.com";
-
-/* LOGIN */
+/* USER LOGIN */
 function register(){
-  localStorage.setItem("user_"+user.value, pass.value);
+  localStorage.setItem("u_"+user.value, pass.value);
   alert("Conta criada!");
 }
 
-function login(){
-  if(localStorage.getItem("user_"+user.value) === pass.value){
+function loginUser(){
+
+  if(localStorage.getItem("u_"+user.value) === pass.value){
+
     userLogado = user.value;
-    authBox.style.display = "none";
-    userName.innerText = userLogado;
 
-    if(userLogado === DONO){
-      donoInfo.style.display = "block";
-    }
+    document.getElementById("userLogin").style.display="none";
+    document.getElementById("userName").innerText = userLogado;
 
-  } else alert("Erro login");
+  } else {
+    alert("Erro login");
+  }
 }
 
-/* CARRINHO */
-function add(){
-  carrinho.push("produto");
-  count.innerText = carrinho.length;
+/* ADMIN LOGIN SCREEN */
+function openAdminLogin(){
+  document.getElementById("adminLogin").style.display="flex";
 }
 
-function toggleCart(){
-  cartBox.classList.toggle("open");
-  overlay.style.display = cartBox.classList.contains("open") ? "block" : "none";
+function closeAdminLogin(){
+  document.getElementById("adminLogin").style.display="none";
 }
 
-function toggleProfile(){
-  profileBox.classList.toggle("open");
-  overlay.style.display = profileBox.classList.contains("open") ? "block" : "none";
-}
+/* ADMIN LOGIN */
+function loginAdmin(){
 
-function limpar(){
-  carrinho = [];
-  count.innerText = 0;
-}
-
-function finalizar(){
-  alert("Compra finalizada!");
-  limpar();
-}
-
-/* ADMIN */
-function openAdmin(){
-  adminPanel.classList.toggle("open");
-}
-
-function checkAdmin(){
   let pass = document.getElementById("adminPass").value;
 
-  if(pass === ADMIN_PASS){
+  if(pass === "1234"){
     isAdmin = true;
-    document.getElementById("adminBox").style.display = "block";
-    document.getElementById("afiliado").innerHTML = "✅ Afiliado liberado";
+
+    document.getElementById("adminStatus").innerText = "LIBERADO ✔";
+    document.getElementById("dono").style.display = "block";
+
+    closeAdminLogin();
+
     alert("Admin liberado!");
   } else {
-    alert("Senha errada!");
+    alert("Senha errada");
   }
+}
+
+/* ADMIN PANEL */
+function openAdmin(){
+
+  if(!isAdmin){
+    alert("Acesso negado");
+    return;
+  }
+
+  document.getElementById("adminPanel").classList.toggle("open");
+}
+
+/* PROFILE */
+function openProfile(){
+  document.getElementById("profile").classList.toggle("open");
 }
 
 /* AFILIADO */
 function afiliado(){
+
   if(isAdmin){
-    alert("Você já tem acesso afiliado!");
+    alert("Afiliado liberado");
   } else {
-    alert("🔒 Bloqueado - precisa admin");
+    alert("Bloqueado - precisa admin");
   }
 }
 
+/* LOGOUT */
 function logout(){
   location.reload();
-}
-
-function closeAll(){
-  cartBox.classList.remove("open");
-  profileBox.classList.remove("open");
-  adminPanel.classList.remove("open");
-  overlay.style.display = "none";
 }
 
 </script>
