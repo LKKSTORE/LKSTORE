@@ -27,7 +27,7 @@ header{
 
 .topIcons{
   display:flex;
-  gap:12px;
+  gap:10px;
   align-items:center;
 }
 
@@ -52,6 +52,8 @@ header{
   border-radius:10px;
   text-align:center;
 }
+
+.card img{height:60px;}
 
 /* LOGIN */
 .screen{
@@ -92,33 +94,6 @@ input{
 .red{background:red;}
 .gray{background:#333;}
 
-/* SIDE PANEL */
-.sidePanel{
-  position:fixed;
-  top:0;
-  right:-320px;
-  width:300px;
-  height:100%;
-  background:#111;
-  padding:15px;
-  transition:0.3s;
-  z-index:3000;
-}
-
-.sidePanel.open{right:0;}
-
-.close{
-  float:right;
-  cursor:pointer;
-}
-
-/* MENU */
-.menu div{
-  padding:10px;
-  border-bottom:1px solid #222;
-  cursor:pointer;
-}
-
 /* ADMIN */
 #adminPanel{
   position:fixed;
@@ -133,17 +108,34 @@ input{
   z-index:5000;
 }
 
-#adminPanel.open{
-  right:0;
+#adminPanel.open{right:0;}
+
+/* PROFILE */
+#profile{
+  position:fixed;
+  top:0;
+  right:-320px;
+  width:300px;
+  height:100%;
+  background:#111;
+  padding:15px;
+  transition:0.3s;
+  z-index:4000;
 }
 
-/* BANNER */
-.banner{
-  margin:10px;
-  padding:12px;
-  background:#111;
-  border-left:4px solid red;
-  text-align:center;
+#profile.open{right:0;}
+
+/* MENU */
+.menu div{
+  padding:10px;
+  border-bottom:1px solid #222;
+  cursor:pointer;
+}
+
+/* CLOSE */
+.close{
+  float:right;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -163,7 +155,7 @@ input{
 
     <hr>
 
-    <button class="btn gray" onclick="openAdminLogin()">⚙️ Login Admin</button>
+    <button class="btn gray" onclick="openAdminLogin()">⚙️ Admin</button>
   </div>
 </div>
 
@@ -186,63 +178,128 @@ input{
   <div class="topIcons">
     <div onclick="openProfile()">👤</div>
     <div onclick="openCart()">🛒 <span id="count">0</span></div>
-
-    <!-- só aparece pra admin -->
-    <div id="adminBtn" onclick="openAdmin()" style="display:none;">⚙️</div>
+    <div id="adminBtn" style="display:none;" onclick="openAdmin()">⚙️</div>
   </div>
 </header>
 
 <!-- PRODUTOS -->
-<div class="products">
-  <div class="card">
-    Netflix
-    <button class="btn red" onclick="add()">Comprar</button>
-  </div>
-</div>
+<div class="products"></div>
 
 <!-- PERFIL -->
 <div id="profile" class="sidePanel">
   <span class="close" onclick="openProfile()">✖</span>
 
   <h3>👤 Perfil</h3>
-
   <p>Usuário: <span id="userName">---</span></p>
 
   <div class="menu">
     <div>🧾 Minha conta</div>
     <div>🛒 Minhas compras</div>
-    <div onclick="afiliado()">🤝 Afiliado</div>
+    <div>🤝 Afiliado</div>
     <div onclick="logout()" style="color:red;">🚪 Sair</div>
   </div>
-
-  <p id="dono" style="display:none;color:gray;margin-top:10px;">
-    Dono: ls4619058@gmail.com
-  </p>
 </div>
 
 <!-- ADMIN -->
 <div id="adminPanel">
   <span class="close" onclick="openAdmin()">✖</span>
 
-  <h3>ADMIN</h3>
-  <p id="adminStatus">Bloqueado</p>
-</div>
+  <h3>⚙️ ADMIN</h3>
 
-<!-- AVISOS -->
-<div class="banner">🔒 Seguro</div>
-<div class="banner">⚡ Entrega automática</div>
-<div class="banner">💬 Suporte 24h</div>
+  <h4>➕ Adicionar Produto</h4>
+  <input id="nomeProd" placeholder="Nome">
+  <input id="imgProd" placeholder="Imagem URL">
+  <button class="btn red" onclick="adicionarProduto()">Adicionar</button>
+
+  <hr>
+
+  <div id="listaAdmin"></div>
+</div>
 
 <script>
 
+/* 🔥 PRODUTOS SALVOS */
+let produtos = JSON.parse(localStorage.getItem("produtos")) || [
+  {nome:"Netflix", img:"https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"}
+];
+
+let carrinho = [];
 let isAdmin = false;
 let userLogado = "";
-let carrinho = [];
 
 const ADMIN_PASS = "1234";
-const DONO = "ls4619058@gmail.com";
 
-/* USER LOGIN */
+/* SALVAR */
+function salvar(){
+  localStorage.setItem("produtos", JSON.stringify(produtos));
+}
+
+/* RENDER PRODUTOS */
+function renderProdutos(){
+
+  let box = document.querySelector(".products");
+  box.innerHTML = "";
+
+  produtos.forEach((p,i)=>{
+
+    box.innerHTML += `
+      <div class="card">
+        <img src="${p.img}">
+        <h4>${p.nome}</h4>
+
+        <button class="btn red" onclick="addCarrinho('${p.nome}')">
+          Comprar
+        </button>
+
+        ${isAdmin ? `<button class="btn gray" onclick="remover(${i})">Remover</button>` : ""}
+      </div>
+    `;
+  });
+
+  renderAdminList();
+}
+
+/* ADMIN LIST */
+function renderAdminList(){
+
+  let box = document.getElementById("listaAdmin");
+  if(!box) return;
+
+  box.innerHTML = "<h4>📦 Produtos</h4>";
+
+  produtos.forEach((p,i)=>{
+    box.innerHTML += `
+      <p>${p.nome}
+      <button onclick="remover(${i})">X</button></p>
+    `;
+  });
+}
+
+/* ADD PRODUTO */
+function adicionarProduto(){
+
+  let nome = document.getElementById("nomeProd").value;
+  let img = document.getElementById("imgProd").value;
+
+  produtos.push({nome,img});
+  salvar();
+  renderProdutos();
+}
+
+/* REMOVER */
+function remover(i){
+  produtos.splice(i,1);
+  salvar();
+  renderProdutos();
+}
+
+/* CARRINHO */
+function addCarrinho(nome){
+  carrinho.push(nome);
+  document.getElementById("count").innerText = carrinho.length;
+}
+
+/* LOGIN USER */
 function register(){
   localStorage.setItem("u_"+user.value, pass.value);
   alert("Conta criada!");
@@ -254,37 +311,36 @@ function loginUser(){
 
     userLogado = user.value;
 
-    document.getElementById("userLogin").style.display = "none";
-    document.getElementById("userName").innerText = userLogado;
+    document.getElementById("userLogin").style.display="none";
+    document.getElementById("userName").innerText=userLogado;
+
+    renderProdutos();
 
   } else {
-    alert("Login inválido");
+    alert("Erro login");
   }
 }
 
-/* ADMIN LOGIN SCREEN */
+/* ADMIN */
 function openAdminLogin(){
-  document.getElementById("adminLogin").style.display = "flex";
+  document.getElementById("adminLogin").style.display="flex";
 }
 
 function closeAdminLogin(){
-  document.getElementById("adminLogin").style.display = "none";
+  document.getElementById("adminLogin").style.display="none";
 }
 
-/* ADMIN LOGIN */
 function loginAdmin(){
 
-  let pass = document.getElementById("adminPass").value;
-
-  if(pass === ADMIN_PASS){
+  if(document.getElementById("adminPass").value === ADMIN_PASS){
 
     isAdmin = true;
 
-    document.getElementById("adminBtn").style.display = "block";
-    document.getElementById("adminStatus").innerText = "LIBERADO ✔";
-    document.getElementById("dono").style.display = "block";
+    document.getElementById("adminBtn").style.display="block";
 
     closeAdminLogin();
+
+    renderProdutos();
 
     alert("Admin liberado!");
 
@@ -293,46 +349,25 @@ function loginAdmin(){
   }
 }
 
-/* ADMIN PANEL */
+/* PANELS */
 function openAdmin(){
-
-  if(!isAdmin){
-    alert("Acesso negado");
-    return;
-  }
-
   document.getElementById("adminPanel").classList.toggle("open");
 }
 
-/* PROFILE */
 function openProfile(){
   document.getElementById("profile").classList.toggle("open");
 }
 
-/* CARRINHO */
 function openCart(){
-  alert("Carrinho: " + carrinho.length + " itens");
+  alert("Carrinho: " + carrinho.length);
 }
 
-function add(){
-  carrinho.push("produto");
-  document.getElementById("count").innerText = carrinho.length;
-}
-
-/* AFILIADO */
-function afiliado(){
-
-  if(isAdmin){
-    alert("Afiliado liberado");
-  } else {
-    alert("🔒 Bloqueado");
-  }
-}
-
-/* LOGOUT */
 function logout(){
   location.reload();
 }
+
+/* INIT */
+renderProdutos();
 
 </script>
 
