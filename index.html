@@ -44,7 +44,9 @@ header{
 
 .topIcons{display:flex;gap:8px;align-items:center;}
 
-.profileBtn,.cartBtn{cursor:pointer;}
+.profileBtn,.cartBtn{
+  cursor:pointer;
+}
 
 .profileBtn{
   font-size:22px;
@@ -109,14 +111,7 @@ header{
   width:300px;
 }
 
-.authCard input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border-radius:8px;
-}
-
-/* CARRINHO */
+/* OVERLAY */
 #overlay{
   display:none;
   position:fixed;
@@ -125,6 +120,7 @@ header{
   z-index:2999;
 }
 
+/* CART */
 #cartBox{
   position:fixed;
   top:0;
@@ -186,13 +182,23 @@ header{
 .closeX{
   float:right;
   cursor:pointer;
+  font-size:20px;
 }
 
-/* TAB */
 .tab{display:none;margin-top:10px;}
 .tab.active{display:block;}
 
-/* BANNER */
+/* ADMIN */
+#adminLogin{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;
+}
+
 .banner{
   background:#111;
   margin:10px auto;
@@ -223,27 +229,24 @@ header{
 <!-- HEADER -->
 <header>
   <div class="logo">LKSTORE</div>
-
   <input class="searchBar" placeholder="Buscar...">
 
   <div class="topIcons">
     <div class="profileBtn" onclick="togglePerfil()">👤</div>
     <div class="cartBtn" onclick="toggleCart()">🛒 <span id="count">0</span></div>
   </div>
-  <div class="profileBtn" onclick="abrirAdmin()">⚙️</div>
 </header>
 
 <!-- PRODUTOS -->
 <div class="products"></div>
 
-<!-- CARRINHO -->
+<!-- CART -->
 <div id="cartBox">
   <h3>🛒 Carrinho <span class="closeX" onclick="toggleCart()">✖</span></h3>
-
   <div id="cartItems"></div>
 
-  <button class="finalizar" onclick="finalizar()">Finalizar compra</button>
-  <button class="limpar" onclick="limparCarrinho()">Limpar carrinho</button>
+  <button class="finalizar" onclick="finalizar()">Finalizar</button>
+  <button class="limpar" onclick="limparCarrinho()">Limpar</button>
 </div>
 
 <!-- PERFIL -->
@@ -252,6 +255,7 @@ header{
   <h3>👤 Perfil <span class="closeX" onclick="togglePerfil()">✖</span></h3>
 
   <p>Usuário: <b id="userName">---</b></p>
+  <p>Dono: ls4619058@gmail.com</p>
 
   <div class="menu">
     <div onclick="openTab('conta')">🧾 Minha conta</div>
@@ -259,18 +263,18 @@ header{
     <div onclick="openTab('afiliado')">🤝 Afiliado</div>
     <div onclick="logout()" style="color:red;">🚪 Sair</div>
   </div>
-  <div id="adminBox" style="display:none;margin-top:10px;">
-  <h4>⚙️ PAINEL ADMIN</h4>
-  <p>Você tem acesso total ao sistema</p>
-</div>
 
   <div id="conta" class="tab active">
     <p>Bem-vindo ao sistema</p>
-    <p style="color:gray;">Dono: ls4619058@gmail.com</p>
+
+    <div id="adminBox" style="display:none;margin-top:10px;">
+      <h4>⚙️ ADMIN LIBERADO</h4>
+      <p>Você é o dono do sistema</p>
+    </div>
   </div>
 
   <div id="compras" class="tab">
-    <p>Nenhuma compra ainda</p>
+    <p>Nenhuma compra</p>
   </div>
 
   <div id="afiliado" class="tab">
@@ -286,12 +290,25 @@ header{
   <div class="banner">💬 Suporte 24h</div>
 </div>
 
+<!-- ADMIN LOGIN -->
+<div id="adminLogin">
+  <div style="background:#111;padding:20px;border-radius:10px;width:280px;">
+    <h3>⚙️ Admin</h3>
+    <input id="adminPass" type="password" placeholder="Senha admin">
+    <button onclick="checkAdmin()" style="width:100%;margin-top:10px;background:red;color:white;padding:10px;border:none;">
+      Entrar
+    </button>
+    <button onclick="fecharAdmin()" style="width:100%;margin-top:8px;background:#333;color:white;padding:10px;border:none;">
+      Cancelar
+    </button>
+  </div>
+</div>
+
 <script>
 
 let carrinho = [];
 let logado = false;
-
-const dono = "ls4619058@gmail.com";
+const ADMIN_PASS = "159874";
 
 /* LOGIN */
 function register(){
@@ -304,13 +321,17 @@ function login(){
     logado = true;
     authBox.style.display="none";
     userName.innerText = user.value;
-  } else {
-    alert("Erro login");
-  }
+
+    if(user.value === "admin"){
+      document.getElementById("adminBox").style.display="block";
+    }
+
+  } else alert("Erro login");
 }
 
-/* CARRINHO */
+/* CART */
 function add(p){
+  if(!logado) return alert("Faça login");
   carrinho.push(p);
   count.innerText = carrinho.length;
   renderCart();
@@ -324,7 +345,7 @@ function toggleCart(){
 function renderCart(){
   cartItems.innerHTML="";
   carrinho.forEach((c,i)=>{
-    cartItems.innerHTML += `
+    cartItems.innerHTML+=`
       <div class="cartItem">
         ${c}
         <span class="remove" onclick="removeItem(${i})">x</span>
@@ -364,60 +385,26 @@ function logout(){
   location.reload();
 }
 
-const ADMIN_PASSWORD = "159874"; // 🔐 muda aqui depois
-
+/* ADMIN */
 function abrirAdmin(){
-  document.getElementById("adminLogin").style.display = "flex";
+  adminLogin.style.display="flex";
 }
 
 function fecharAdmin(){
-  document.getElementById("adminLogin").style.display = "none";
+  adminLogin.style.display="none";
 }
 
 function checkAdmin(){
-  let pass = document.getElementById("adminPass").value;
-
-  if(pass === ADMIN_PASSWORD){
-    alert("Acesso admin liberado!");
-
+  if(adminPass.value === ADMIN_PASS){
+    alert("Admin liberado!");
     fecharAdmin();
-
-    // mostra painel admin
-    document.getElementById("adminBox").style.display = "block";
-
+    document.getElementById("adminBox").style.display="block";
   } else {
-    alert("Senha incorreta!");
+    alert("Senha errada!");
   }
 }
 
-  
 </script>
 
-<div id="adminLogin" style="
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.9);
-z-index:9999;
-justify-content:center;
-align-items:center;
-">
-
-  <div style="background:#111;padding:20px;border-radius:10px;width:280px;">
-    <h3>⚙️ Admin Login</h3>
-
-    <input id="adminPass" type="password" placeholder="Senha admin" style="width:100%;padding:10px;margin-top:10px;">
-
-    <button onclick="checkAdmin()" style="width:100%;margin-top:10px;padding:10px;background:red;color:white;border:none;">
-      Entrar
-    </button>
-
-    <button onclick="fecharAdmin()" style="width:100%;margin-top:8px;padding:10px;background:#333;color:white;border:none;">
-      Cancelar
-    </button>
-  </div>
-
-</div>
-  
 </body>
 </html>
