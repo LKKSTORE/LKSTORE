@@ -14,6 +14,52 @@ body{
   padding-top:80px;
 }
 
+/* FUNDO ESCURO */
+#overlayProfile{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  z-index:2000;
+}
+
+/* PAINEL */
+.profileBox{
+  position:fixed;
+  top:0;
+  right:-320px;
+  width:300px;
+  height:100%;
+  background:#111;
+  border-left:2px solid red;
+  padding:15px;
+  z-index:3001;
+  transition:0.3s;
+}
+
+/* ABERTO */
+.profileBox.open{
+  right:0;
+}
+
+.profileHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #222;
+  padding-bottom:10px;
+}
+
+.profileMenu p{
+  padding:10px 0;
+  border-bottom:1px solid #222;
+  cursor:pointer;
+}
+
+  
 .searchBar{
   flex:1;
   margin:0 10px;
@@ -417,6 +463,21 @@ header{
 <script>
 
 function abrirPerfil(){
+  document.getElementById("profileBox").classList.add("open");
+  document.getElementById("overlayProfile").style.display = "block";
+}
+
+function fecharPerfil(){
+  document.getElementById("profileBox").classList.remove("open");
+  document.getElementById("overlayProfile").style.display = "none";
+}
+
+function logout(){
+  alert("Você saiu da conta");
+  location.reload();
+}
+  
+  function abrirPerfil(){
   document.getElementById("profileBox").style.display = "block";
 }
 
@@ -533,6 +594,24 @@ function finalizar(){
 
   <button onclick="fecharPerfil()">Fechar</button>
 </div>
+
+<div id="profileBox" class="profileBox">
+
+  <div class="profileHeader">
+    <h3>👤 Meu Perfil</h3>
+    <span onclick="fecharPerfil()" style="cursor:pointer;">✖</span>
+  </div>
+
+  <div class="profileMenu">
+    <p>🧾 Minha conta</p>
+    <p>🛒 Meus pedidos</p>
+    <p>⚙️ Configurações</p>
+    <p onclick="logout()" style="color:red;cursor:pointer;">🚪 Sair</p>
+  </div>
+
+</div>
+
+<div id="overlayProfile" onclick="fecharPerfil()"></div>
   
 </body>
 </html>
