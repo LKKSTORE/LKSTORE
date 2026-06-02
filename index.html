@@ -43,15 +43,7 @@ header{
 
 .topIcons{display:flex;gap:10px;align-items:center;}
 
-.profileBtn,.cartBtn{cursor:pointer;font-size:20px;}
-
-.cartBtn{
-  background:red;
-  padding:6px 10px;
-  border-radius:20px;
-  display:flex;
-  gap:5px;
-}
+.topIcons div{cursor:pointer;font-size:20px;}
 
 /* PRODUTOS */
 .products{
@@ -88,7 +80,15 @@ header{
   width:280px;
 }
 
-/* CARRINHO */
+input{
+  width:100%;
+  padding:8px;
+  margin-top:8px;
+  border-radius:6px;
+  border:none;
+}
+
+/* OVERLAY */
 #overlay{
   display:none;
   position:fixed;
@@ -97,7 +97,8 @@ header{
   z-index:2000;
 }
 
-#cartBox,#profileBox{
+/* SIDE PANELS */
+.sidePanel{
   position:fixed;
   top:0;
   right:-320px;
@@ -109,19 +110,9 @@ header{
   z-index:3000;
 }
 
-.open{right:0 !important;}
+.sidePanel.open{right:0;}
 
-.closeX{
-  float:right;
-  cursor:pointer;
-}
-
-/* MENU */
-.menu div{
-  padding:10px;
-  border-bottom:1px solid #222;
-  cursor:pointer;
-}
+.closeX{float:right;cursor:pointer;}
 
 /* BOTÕES */
 .btn{
@@ -136,6 +127,13 @@ header{
 .red{background:red;}
 .gray{background:#333;}
 
+/* MENU */
+.menu div{
+  padding:10px;
+  border-bottom:1px solid #222;
+  cursor:pointer;
+}
+
 /* BANNER */
 .banner{
   margin:10px;
@@ -145,7 +143,8 @@ header{
   text-align:center;
 }
 
-  #adminPanel{
+/* ADMIN */
+#adminPanel{
   position:fixed;
   top:0;
   right:-320px;
@@ -158,10 +157,7 @@ header{
   border-left:2px solid red;
 }
 
-#adminPanel.open{
-  right:0;
-}
-  
+#adminPanel.open{right:0;}
 </style>
 </head>
 
@@ -171,8 +167,8 @@ header{
 <div id="authBox">
   <div class="authCard">
     <h3>LOGIN</h3>
-    <input id="user" placeholder="Usuário"><br><br>
-    <input id="pass" type="password" placeholder="Senha"><br><br>
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
 
     <button class="btn red" onclick="login()">Entrar</button>
     <button class="btn gray" onclick="register()">Criar conta</button>
@@ -190,11 +186,8 @@ header{
   <div class="topIcons">
     <div onclick="toggleProfile()">👤</div>
     <div onclick="toggleCart()">🛒 <span id="count">0</span></div>
-
-    <!-- ⚙️ ADMIN -->
-    <div onclick="openAdminPanel()">⚙️</div>
+    <div onclick="openAdmin()">⚙️</div>
   </div>
-
 </header>
 
 <!-- PRODUTOS -->
@@ -206,17 +199,17 @@ header{
 </div>
 
 <!-- CARRINHO -->
-<div id="cartBox">
-  <h3>Carrinho <span class="closeX" onclick="toggleCart()">✖</span></h3>
+<div id="cartBox" class="sidePanel">
+  <h3>🛒 Carrinho <span class="closeX" onclick="toggleCart()">✖</span></h3>
   <div id="cartItems"></div>
 
   <button class="btn red" onclick="finalizar()">Finalizar</button>
-  <button class="btn gray" onclick="limpar()">Limpar carrinho</button>
+  <button class="btn gray" onclick="limpar()">Limpar</button>
 </div>
 
 <!-- PERFIL -->
-<div id="profileBox">
-  <h3>Perfil <span class="closeX" onclick="toggleProfile()">✖</span></h3>
+<div id="profileBox" class="sidePanel">
+  <h3>👤 Perfil <span class="closeX" onclick="toggleProfile()">✖</span></h3>
 
   <p>Usuário: <b id="userName">---</b></p>
 
@@ -228,14 +221,21 @@ header{
   </div>
 
   <p id="donoInfo" style="display:none;color:gray;">
-    Dono do site: <span id="donoEmail">ls4619058@gmail.com</span>
+    Dono: <span>ls4619058@gmail.com</span>
   </p>
 </div>
 
 <!-- ADMIN -->
-<div id="adminBox" style="display:none;">
-  <h3>ADMIN</h3>
-  <p>Senha liberada ✔</p>
+<div id="adminPanel" class="sidePanel">
+  <h3>⚙️ ADMIN <span class="closeX" onclick="openAdmin()">✖</span></h3>
+  <p>Digite senha:</p>
+  <input id="adminPass" type="password">
+  <button class="btn red" onclick="checkAdmin()">Entrar</button>
+
+  <div id="adminBox" style="display:none;margin-top:10px;">
+    <p>✔ Painel liberado</p>
+    <p>👑 Controle total</p>
+  </div>
 </div>
 
 <!-- AVISOS -->
@@ -245,94 +245,76 @@ header{
 
 <script>
 
-const ADMIN_PASS = "159874";
-let isAdmin = false;
+let carrinho = [];
+let logadoUser = "";
 
-function openAdminPanel(){
-  document.getElementById("adminPanel").classList.toggle("open");
-}
-
-function toggleAdmin(){
-  document.getElementById("adminPanel").classList.remove("open");
-}
-
-function loginAdmin(){
-  let pass = prompt("Senha admin:");
-
-  if(pass === ADMIN_PASS){
-    isAdmin = true;
-    document.getElementById("adminContent").style.display = "block";
-    alert("Admin liberado!");
-  } else {
-    alert("Senha incorreta");
-  }
-}
-
-  
-let carrinho=[];
-let user="";
-const ADMIN_PASS="1234";
-const DONO_SITE="ls4619058@gmail.com";
+const ADMIN_PASS = "1234";
+const DONO = "ls4619058@gmail.com";
 
 /* LOGIN */
 function register(){
-  localStorage.setItem("u_"+user.value,pass.value);
-  alert("Conta criada");
+  localStorage.setItem("user_"+user.value, pass.value);
+  alert("Conta criada!");
 }
 
 function login(){
-  if(localStorage.getItem("u_"+user.value)===pass.value){
-    user=user.value;
-    authBox.style.display="none";
-    userName.innerText=user;
+  if(localStorage.getItem("user_"+user.value) === pass.value){
+    logadoUser = user.value;
+    authBox.style.display = "none";
+    userName.innerText = logadoUser;
 
-    if(user===DONO_SITE){
-      donoInfo.style.display="block";
+    if(logadoUser === DONO){
+      donoInfo.style.display = "block";
     }
-  }else alert("Erro login");
+
+  } else alert("Erro login");
 }
 
 /* CARRINHO */
 function add(){
   carrinho.push("produto");
-  count.innerText=carrinho.length;
+  count.innerText = carrinho.length;
 }
 
 function toggleCart(){
   cartBox.classList.toggle("open");
-  overlay.style.display=cartBox.classList.contains("open")?"block":"none";
+  overlay.style.display = cartBox.classList.contains("open") ? "block" : "none";
 }
 
 function toggleProfile(){
   profileBox.classList.toggle("open");
-  overlay.style.display=profileBox.classList.contains("open")?"block":"none";
+  overlay.style.display = profileBox.classList.contains("open") ? "block" : "none";
 }
 
 function limpar(){
-  carrinho=[];
-  count.innerText=0;
+  carrinho = [];
+  count.innerText = 0;
 }
 
 function finalizar(){
-  alert("Compra ok!");
+  alert("Compra finalizada!");
   limpar();
 }
 
 /* ADMIN */
 function openAdmin(){
-  let p=prompt("Senha admin:");
-  if(p===ADMIN_PASS){
-    adminBox.style.display="block";
-    alert("Admin liberado");
+  adminPanel.classList.toggle("open");
+}
+
+function checkAdmin(){
+  let pass = document.getElementById("adminPass").value;
+
+  if(pass === ADMIN_PASS){
+    document.getElementById("adminBox").style.display = "block";
+    alert("Admin liberado!");
+  } else {
+    alert("Senha errada!");
   }
 }
 
+/* OUTROS */
 function afiliado(){
-  if(user===DONO_SITE){
-    alert("Afiliado liberado");
-  }else{
-    alert("Bloqueado - precisa admin");
-  }
+  alert("Bloqueado - precisa admin");
 }
 
 function logout(){
@@ -342,7 +324,8 @@ function logout(){
 function closeAll(){
   cartBox.classList.remove("open");
   profileBox.classList.remove("open");
-  overlay.style.display="none";
+  adminPanel.classList.remove("open");
+  overlay.style.display = "none";
 }
 
 </script>
