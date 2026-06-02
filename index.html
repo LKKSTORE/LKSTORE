@@ -14,6 +14,40 @@ body{
   padding-top:80px;
 }
 
+  .sidePanel{
+  position:fixed;
+  top:0;
+  right:-320px;
+  width:300px;
+  height:100%;
+  background:#111;
+  border-left:2px solid red;
+  transition:0.3s;
+  z-index:3000;
+  padding:15px;
+}
+
+.sidePanel.open{
+  right:0;
+}
+
+  .sidePanel{
+  position:fixed;
+  top:0;
+  right:-320px;
+  width:300px;
+  height:100%;
+  background:#111;
+  border-left:2px solid red;
+  transition:0.3s;
+  z-index:3000;
+  padding:15px;
+}
+
+.sidePanel.open{
+  right:0;
+}
+  
   .profileBox{
   display:none;
   position:fixed;
@@ -549,25 +583,15 @@ header{
 
 <script>
 
-function abrirPerfil(){
-  document.getElementById("profileBox").style.display = "block";
-}
-
-function fecharPerfil(){
-  document.getElementById("profileBox").style.display = "none";
-}
-
-function openTab(tab){
-  let tabs = document.querySelectorAll(".tab");
-  tabs.forEach(t => t.classList.remove("active"));
-
-  document.getElementById(tab).classList.add("active");
+function togglePerfil(){
+  document.getElementById("profileBox").classList.toggle("open");
 }
 
 function logout(){
   alert("Você saiu da conta");
   location.reload();
 }
+  
   
   function togglePerfil(){
   document.getElementById("profileBox").classList.toggle("open");
@@ -578,107 +602,6 @@ function logout(){
   location.reload();
 }
   
-  function abrirPerfil(){
-  document.getElementById("profileBox").classList.add("open");
-  document.getElementById("overlayProfile").style.display = "block";
-}
-
-function fecharPerfil(){
-  document.getElementById("profileBox").classList.remove("open");
-  document.getElementById("overlayProfile").style.display = "none";
-}
-
-function logout(){
-  alert("Você saiu da conta");
-  location.reload();
-}
-  
-  function abrirPerfil(){
-  document.getElementById("profileBox").style.display = "block";
-}
-
-function fecharPerfil(){
-  document.getElementById("profileBox").style.display = "none";
-}
-
-  
-let carrinho = [];
-let logado = false;
-
-/* LOGIN */
-function register(){
-  let u = user.value;
-  let p = pass.value;
-  localStorage.setItem("user_"+u,p);
-  alert("Conta criada!");
-}
-
-function login(){
-  let u = user.value;
-  let p = pass.value;
-
-  if(localStorage.getItem("user_"+u) === p){
-    logado = true;
-    authBox.style.display = "none";
-  } else {
-    alert("Login inválido");
-  }
-}
-
-/* ADD */
-function add(prod){
-  if(!logado){
-    alert("Crie uma conta e faça login!");
-    return;
-  }
-
-  carrinho.push(prod);
-  count.innerText = carrinho.length;
-  renderCart();
-}
-
-/* TOGGLE CART */
-function toggleCart(){
-  const cart = document.getElementById("cartBox");
-  const overlay = document.getElementById("overlay");
-
-  cart.classList.toggle("open");
-
-  overlay.style.display = cart.classList.contains("open") ? "block" : "none";
-
-  renderCart();
-}
-
-/* RENDER */
-function renderCart(){
-  cartItems.innerHTML = "";
-
-  carrinho.forEach((item, i)=>{
-    cartItems.innerHTML += `
-      <div class="cartItem">
-        ${item}
-        <span class="remove" onclick="removeItem(${i})">x</span>
-      </div>
-    `;
-  });
-}
-
-/* REMOVE */
-function removeItem(i){
-  carrinho.splice(i,1);
-  count.innerText = carrinho.length;
-  renderCart();
-}
-
-/* FINALIZAR */
-function finalizar(){
-  alert("Compra finalizada!");
-  carrinho = [];
-  count.innerText = 0;
-  renderCart();
-  toggleCart();
-}
-
 </script>
 
 <!-- AVISOS -->
@@ -772,6 +695,20 @@ function finalizar(){
   </div>
 
   <button class="logout" onclick="logout()">Sair</button>
+
+</div>
+
+<div id="profileBox" class="sidePanel">
+
+  <div style="display:flex;justify-content:space-between;">
+    <h3>👤 Perfil</h3>
+    <span onclick="togglePerfil()" style="cursor:pointer;">✖</span>
+  </div>
+
+  <p>🧾 Minha conta</p>
+  <p>🛒 Meus pedidos</p>
+  <p>⚙️ Configurações</p>
+  <p onclick="logout()" style="color:red;cursor:pointer;">Sair</p>
 
 </div>
   
