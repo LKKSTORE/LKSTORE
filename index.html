@@ -27,7 +27,6 @@ header{
   padding:10px 12px;
   border-bottom:2px solid red;
   z-index:1000;
-  gap:10px;
 }
 
 .logo{color:red;font-weight:bold;font-size:20px;}
@@ -43,14 +42,15 @@ header{
   color:white;
 }
 
-.topIcons{display:flex;gap:8px;align-items:center;}
-
-.profileBtn,.cartBtn{
-  cursor:pointer;
+.topIcons{
+  display:flex;
+  gap:8px;
+  align-items:center;
 }
 
 .profileBtn{
   font-size:22px;
+  cursor:pointer;
   padding:6px 10px;
 }
 
@@ -59,6 +59,7 @@ header{
   color:white;
   padding:8px 12px;
   border-radius:50px;
+  cursor:pointer;
   display:flex;
   gap:6px;
   font-weight:bold;
@@ -80,20 +81,6 @@ header{
   padding:15px;
   text-align:center;
   border:1px solid #222;
-}
-
-.card img{height:70px;}
-
-.card button{
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  background:red;
-  border:none;
-  color:white;
-  font-weight:bold;
-  border-radius:8px;
-  cursor:pointer;
 }
 
 /* LOGIN */
@@ -152,7 +139,6 @@ header{
   justify-content:space-between;
   margin:8px 0;
   border-bottom:1px solid #222;
-  padding-bottom:5px;
 }
 
 .remove{color:red;cursor:pointer;}
@@ -171,7 +157,7 @@ header{
 .finalizar{background:red;}
 .limpar{background:#333;}
 
-/* PERFIL + AFILIADO */
+/* PERFIL */
 .sidePanel{
   position:fixed;
   top:0;
@@ -187,16 +173,6 @@ header{
 
 .sidePanel.open{right:0;}
 
-.tabBtn{
-  background:#000;
-  color:white;
-  border:none;
-  padding:6px;
-  margin:3px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
 .tab{
   display:none;
   margin-top:10px;
@@ -204,14 +180,22 @@ header{
 
 .tab.active{display:block;}
 
-/* AVISOS */
+.tabBtn{
+  background:#000;
+  border:none;
+  color:white;
+  padding:6px;
+  margin:3px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
 .banner{
   background:#111;
-  margin:10px auto;
+  margin:10px;
   padding:15px;
   border-left:4px solid red;
   border-radius:10px;
-  max-width:700px;
   text-align:center;
 }
 </style>
@@ -223,8 +207,8 @@ header{
 <div id="authBox">
   <div class="authCard">
     <h2 style="color:red;">LKSTORE LOGIN</h2>
-    <input id="user" placeholder="Usuário">
-    <input id="pass" type="password" placeholder="Senha">
+    <input id="user">
+    <input id="pass" type="password">
     <button onclick="login()">Entrar</button>
     <button onclick="register()">Criar conta</button>
   </div>
@@ -232,10 +216,8 @@ header{
 
 <div id="overlay" onclick="toggleCart()"></div>
 
-<!-- HEADER -->
 <header>
   <div class="logo">LKSTORE</div>
-
   <input class="searchBar" placeholder="Buscar produtos...">
 
   <div class="topIcons">
@@ -245,54 +227,47 @@ header{
 </header>
 
 <!-- PRODUTOS -->
-<div class="products"></div>
+<div class="products" id="products"></div>
 
 <!-- CARRINHO -->
 <div id="cartBox">
-
-  <h3>🛒 Carrinho</h3>
+  <div style="display:flex;justify-content:space-between;">
+    <h3>🛒 Carrinho</h3>
+    <span onclick="toggleCart()" style="cursor:pointer">✖</span>
+  </div>
 
   <div id="cartItems"></div>
 
-  <button class="finalizar" onclick="finalizar()">Finalizar compra</button>
+  <button class="finalizar" onclick="finalizar()">Finalizar</button>
   <button class="limpar" onclick="limparCarrinho()">Limpar carrinho</button>
-
 </div>
 
-<!-- PERFIL + AFILIADO -->
+<!-- PERFIL -->
 <div id="profileBox" class="sidePanel">
 
   <h3>👤 Perfil</h3>
 
-  <p>Usuário: <b id="userName">---</b></p>
+  <p><b>Usuário:</b> <span id="userName">---</span></p>
 
-  <button class="tabBtn" onclick="openTab('conta')">Conta</button>
-  <button class="tabBtn" onclick="openTab('afiliado')">Afiliado</button>
+  <div class="tabBtn" onclick="openTab('conta')">Conta</div>
+  <div class="tabBtn" onclick="openTab('afiliado')">Afiliado</div>
 
   <div id="conta" class="tab active">
     <p>🧾 Minha conta</p>
     <p>🛒 Meus pedidos</p>
-    <p onclick="logout()" style="color:red;cursor:pointer;">Sair</p>
   </div>
 
   <div id="afiliado" class="tab">
-    <p>🤝 Seu link afiliado:</p>
-    <p style="color:lime;">lkstore.com/?ref=USER</p>
+    <p>🤝 Link afiliado:</p>
+    <p style="color:lime;">lkstore.com/?ref=<span id="refUser">---</span></p>
   </div>
 
-</div>
-
-<!-- AVISOS -->
-<div style="margin-top:40px;padding:20px;text-align:center;">
-  <div class="banner">🔒 PAGAMENTO 100% SEGURO</div>
-  <div class="banner">⚡ ENTREGA AUTOMÁTICA</div>
-  <div class="banner">💬 SUPORTE 24H</div>
 </div>
 
 <script>
 
 let carrinho = [];
-let logado = false;
+let logadoUser = "";
 
 /* LOGIN */
 function register(){
@@ -302,18 +277,20 @@ function register(){
 
 function login(){
   if(localStorage.getItem("user_"+user.value) === pass.value){
-    logado = true;
     authBox.style.display="none";
-    userName.innerText = user.value;
-    renderProdutos();
+    logadoUser = user.value;
+
+    userName.innerText = logadoUser;
+    refUser.innerText = logadoUser;
+
+    renderProducts();
   } else alert("Erro login");
 }
 
 /* PRODUTOS */
-function renderProdutos(){
-  document.querySelector(".products").innerHTML = `
+function renderProducts(){
+  products.innerHTML = `
     <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
       <h3>Netflix</h3>
       <button onclick="add('Netflix')">Comprar</button>
     </div>
@@ -322,9 +299,8 @@ function renderProdutos(){
 
 /* CARRINHO */
 function add(p){
-  if(!logado) return alert("Faça login");
   carrinho.push(p);
-  count.innerText=carrinho.length;
+  count.innerText = carrinho.length;
   renderCart();
 }
 
@@ -336,7 +312,7 @@ function toggleCart(){
 function renderCart(){
   cartItems.innerHTML="";
   carrinho.forEach((c,i)=>{
-    cartItems.innerHTML+=`
+    cartItems.innerHTML += `
       <div class="cartItem">
         ${c}
         <span class="remove" onclick="removeItem(${i})">x</span>
@@ -346,7 +322,7 @@ function renderCart(){
 
 function removeItem(i){
   carrinho.splice(i,1);
-  count.innerText=carrinho.length;
+  count.innerText = carrinho.length;
   renderCart();
 }
 
@@ -370,10 +346,6 @@ function togglePerfil(){
 function openTab(t){
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
   document.getElementById(t).classList.add("active");
-}
-
-function logout(){
-  location.reload();
 }
 
 </script>
