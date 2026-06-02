@@ -6,6 +6,7 @@
 <title>LKSTORE PRO</title>
 
 <style>
+
 body{
   margin:0;
   font-family:Arial;
@@ -13,6 +14,7 @@ body{
   color:white;
   padding-top:80px;
 }
+
 /* HEADER */
 header{
   position:fixed;
@@ -103,12 +105,49 @@ header{
   cursor:pointer;
 }
 
-/* CARRINHO LATERAL */
-#cartBox{
+/* LOGIN */
+#authBox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:5000;
+}
 
+.authCard{
+  background:#111;
+  padding:20px;
+  border-radius:12px;
+  width:300px;
+  border:1px solid red;
+}
+
+.authCard input{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:8px;
+  border:none;
+}
+
+/* CARRINHO */
+#overlay{
+  display:none;
   position:fixed;
   top:0;
-  right:-320px;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  z-index:2999;
+}
+
+#cartBox{
+  position:fixed;
+  top:0;
+  right:-350px;
   width:300px;
   height:100%;
   background:#111;
@@ -164,33 +203,6 @@ header{
   right:0;
 }
 
-/* LOGIN */
-#authBox{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.95);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:5000;
-}
-
-.authCard{
-  background:#111;
-  padding:20px;
-  border-radius:12px;
-  width:300px;
-  border:1px solid red;
-}
-
-.authCard input{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border-radius:8px;
-  border:none;
-}
-
 /* BANNER */
 .banner{
   background:#111;
@@ -224,8 +236,12 @@ header{
   </div>
 </div>
 
+<!-- OVERLAY -->
+<div id="overlay" onclick="toggleCart()"></div>
+
 <!-- HEADER -->
 <header>
+
   <div class="logo">LKSTORE</div>
 
   <input class="searchBar" placeholder="Buscar produtos...">
@@ -237,6 +253,7 @@ header{
       🛒 <span id="count">0</span>
     </div>
   </div>
+
 </header>
 
 <!-- PRODUTOS -->
@@ -254,19 +271,33 @@ header{
     <button onclick="add('Disney+')">Comprar</button>
   </div>
 
-  <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Prime_Video.png">
-    <h3>Prime Video</h3>
-    <button onclick="add('Prime Video')">Comprar</button>
-  </div>
-
 </div>
 
 <!-- CARRINHO -->
 <div id="cartBox">
-  <h3>Carrinho</h3>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3>🛒 Carrinho</h3>
+    <span onclick="toggleCart()" style="cursor:pointer;font-size:22px;">✖</span>
+  </div>
+
   <div id="cartItems"></div>
+
   <button class="finalizar" onclick="finalizar()">Finalizar Compra</button>
+
+  <button onclick="limparCarrinho()" style="
+    width:100%;
+    margin-top:8px;
+    padding:10px;
+    background:#333;
+    border:none;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+  ">
+    Limpar Carrinho
+  </button>
+
 </div>
 
 <!-- PERFIL -->
@@ -300,7 +331,6 @@ let logado = false;
 function register(){
   let u = document.getElementById("user").value;
   let p = document.getElementById("pass").value;
-
   localStorage.setItem("user_"+u, p);
   alert("Conta criada!");
 }
@@ -331,7 +361,13 @@ function add(prod){
 
 function toggleCart(){
   document.getElementById("cartBox").classList.toggle("open");
-  renderCart();
+
+  let overlay = document.getElementById("overlay");
+  if(document.getElementById("cartBox").classList.contains("open")){
+    overlay.style.display = "block";
+  } else {
+    overlay.style.display = "none";
+  }
 }
 
 function renderCart(){
@@ -354,11 +390,18 @@ function removeItem(i){
   renderCart();
 }
 
+function limparCarrinho(){
+  carrinho = [];
+  document.getElementById("count").innerText = 0;
+  renderCart();
+}
+
 function finalizar(){
   alert("Compra finalizada!");
   carrinho = [];
   document.getElementById("count").innerText = 0;
   renderCart();
+  toggleCart();
 }
 
 /* PERFIL */
