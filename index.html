@@ -14,6 +14,63 @@ body{
   padding-top:80px;
 }
 
+  .profileBox{
+  display:none;
+  position:fixed;
+  top:80px;
+  right:10px;
+  width:280px;
+  background:#111;
+  border:1px solid red;
+  border-radius:12px;
+  padding:15px;
+  z-index:3000;
+}
+
+.profileHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.tabs{
+  display:flex;
+  gap:5px;
+  margin-top:10px;
+}
+
+.tabs button{
+  flex:1;
+  padding:6px;
+  background:#000;
+  border:none;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.tab{
+  display:none;
+  margin-top:10px;
+  font-size:14px;
+}
+
+.tab.active{
+  display:block;
+}
+
+.logout{
+  width:100%;
+  margin-top:10px;
+  padding:8px;
+  background:red;
+  border:none;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+  
 .sidePanel{
   position:fixed;
   top:0;
@@ -492,7 +549,27 @@ header{
 
 <script>
 
-function togglePerfil(){
+function abrirPerfil(){
+  document.getElementById("profileBox").style.display = "block";
+}
+
+function fecharPerfil(){
+  document.getElementById("profileBox").style.display = "none";
+}
+
+function openTab(tab){
+  let tabs = document.querySelectorAll(".tab");
+  tabs.forEach(t => t.classList.remove("active"));
+
+  document.getElementById(tab).classList.add("active");
+}
+
+function logout(){
+  alert("Você saiu da conta");
+  location.reload();
+}
+  
+  function togglePerfil(){
   document.getElementById("profileBox").classList.toggle("open");
 }
 
