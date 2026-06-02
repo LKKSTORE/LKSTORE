@@ -235,6 +235,8 @@ header{
     <div class="profileBtn" onclick="togglePerfil()">👤</div>
     <div class="cartBtn" onclick="toggleCart()">🛒 <span id="count">0</span></div>
   </div>
+  <div class="profileBtn" onclick="abrirAdmin()">⚙️</div>
+  
 </header>
 
 <!-- PRODUTOS -->
@@ -306,6 +308,26 @@ header{
 
 <script>
 
+const ADMIN_PASS = "159874"; // senha secreta
+
+function abrirAdmin(){
+  document.getElementById("adminLogin").style.display = "flex";
+}
+
+function fecharAdmin(){
+  document.getElementById("adminLogin").style.display = "none";
+}
+
+function checkAdmin(){
+  if(document.getElementById("adminPass").value === ADMIN_PASS){
+    alert("Acesso liberado!");
+    fecharAdmin();
+    document.getElementById("adminBox").style.display = "block";
+  } else {
+    alert("Senha incorreta!");
+  }
+}
+  
 let carrinho = [];
 let logado = false;
 const ADMIN_PASS = "159874";
@@ -406,5 +428,24 @@ function checkAdmin(){
 
 </script>
 
+<div id="adminLogin">
+  <div style="background:#111;padding:20px;border-radius:10px;width:280px;">
+    <h3>⚙️ Admin Login</h3>
+
+    <input id="adminPass" type="password" placeholder="Senha admin"
+      style="width:100%;padding:10px;margin-top:10px;">
+
+    <button onclick="checkAdmin()" 
+      style="width:100%;margin-top:10px;padding:10px;background:red;color:white;border:none;">
+      Entrar
+    </button>
+
+    <button onclick="fecharAdmin()" 
+      style="width:100%;margin-top:8px;padding:10px;background:#333;color:white;border:none;">
+      Cancelar
+    </button>
+  </div>
+</div>
+  
 </body>
 </html>
