@@ -615,89 +615,6 @@ function logout(){
 
 </div>
 
-<div id="profileBox" class="profileBox">
-
-  <div class="profileHeader">
-    <h3>👤 Meu Perfil</h3>
-    <span onclick="fecharPerfil()" style="cursor:pointer;">❌</span>
-  </div>
-
-  <div class="tabs">
-    <button onclick="openTab('conta')">Conta</button>
-    <button onclick="openTab('pedidos')">Pedidos</button>
-    <button onclick="openTab('config')">Config</button>
-  </div>
-
-<div id="profileBox" class="profileBox">
-  <h3>👤 Meu Perfil</h3>
-
-  <button onclick="fecharPerfil()">Fechar</button>
-</div>
-
-<div id="profileBox" class="profileBox">
-
-  <div class="profileHeader">
-    <h3>👤 Meu Perfil</h3>
-    <span onclick="fecharPerfil()" style="cursor:pointer;">✖</span>
-  </div>
-
-  <div class="profileMenu">
-    <p>🧾 Minha conta</p>
-    <p>🛒 Meus pedidos</p>
-    <p>⚙️ Configurações</p>
-    <p onclick="logout()" style="color:red;cursor:pointer;">🚪 Sair</p>
-  </div>
-
-</div>
-
-<div id="overlayProfile" onclick="fecharPerfil()"></div>
-
-<!-- PERFIL -->
-<div id="profileBox" class="sidePanel">
-
-  <div class="panelHeader">
-    <h3>👤 Perfil</h3>
-    <span onclick="togglePerfil()" style="cursor:pointer;">✖</span>
-  </div>
-
-  <div class="panelBody">
-    <p>🧾 Minha conta</p>
-    <p>🛒 Meus pedidos</p>
-    <p>⚙️ Configurações</p>
-    <p onclick="logout()" style="color:red;cursor:pointer;">🚪 Sair</p>
-  </div>
-
-</div>
-
-<div id="profileBox" class="profileBox">
-
-  <div class="profileHeader">
-    <h3>👤 Meu Perfil</h3>
-    <span onclick="fecharPerfil()" style="cursor:pointer;">❌</span>
-  </div>
-
-  <div class="tabs">
-    <button onclick="openTab('conta')">Conta</button>
-    <button onclick="openTab('pedidos')">Pedidos</button>
-    <button onclick="openTab('config')">Config</button>
-  </div>
-
-  <div id="conta" class="tab active">
-    <p>📧 Usuário logado</p>
-  </div>
-
-  <div id="pedidos" class="tab">
-    <p>🛒 Nenhum pedido ainda</p>
-  </div>
-
-  <div id="config" class="tab">
-    <p>⚙️ Configurações da conta</p>
-  </div>
-
-  <button class="logout" onclick="logout()">Sair</button>
-
-</div>
-
 <div id="profileBox" class="sidePanel">
 
   <div style="display:flex;justify-content:space-between;">
@@ -708,9 +625,8 @@ function logout(){
   <p>🧾 Minha conta</p>
   <p>🛒 Meus pedidos</p>
   <p>⚙️ Configurações</p>
-  <p onclick="logout()" style="color:red;cursor:pointer;">Sair</p>
+  <p onclick="logout()" style="color:red;cursor:pointer;">🚪 Sair</p>
 
 </div>
-  
 </body>
 </html>
