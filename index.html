@@ -276,6 +276,18 @@ function loginUser(){
   let u = user.value;
   let p = pass.value;
 
+function esgotarProduto(botao){
+
+  let card = botao.parentElement;
+
+  let btnComprar = card.querySelector(".btn.red");
+
+  btnComprar.innerText = "🚫 ESGOTADO";
+
+  btnComprar.disabled = true;
+
+}
+  
   if(localStorage.getItem("u_"+u) === p){
     userLogado = u;
     userLogin.style.display="none";
