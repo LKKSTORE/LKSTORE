@@ -200,7 +200,10 @@ input{
     <div id="adminBtn" onclick="openAdmin()" style="display:none;">⚙️</div>
   </div>
 </header>
-
+<div id="avisoLoja" class="banner">
+🔥 Bem-vindo à LKSTORE
+</div>
+  
 <!-- PRODUTOS -->
 <div class="products">
 
@@ -248,6 +251,12 @@ input{
   <input id="imgProd" placeholder="Imagem">
 
   <button class="btn red" onclick="adicionarProduto()">Adicionar</button>
+<input id="novoAviso" placeholder="Digite o aviso">
+
+<button onclick="alterarAviso()">
+📢 Alterar Aviso
+</button>
+
 </div>
 
 <!-- CARRINHO -->
@@ -416,6 +425,15 @@ function openProfile(){
   profile.classList.toggle("open");
 }
 
+function alterarAviso(){
+
+  let aviso = document.getElementById("novoAviso").value;
+
+  document.getElementById("avisoLoja").innerText = aviso;
+
+  alert("Aviso atualizado!");
+}
+  
 </script>
 
 </body>
