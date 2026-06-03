@@ -133,8 +133,7 @@ input{
   <button onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
   <button onclick="esgotarProduto(this)">🚫 Esgotar</button>
   <button onclick="this.parentElement.remove()">🗑️ Remover</button>
-  <button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
-   
+
 </div>
 
 </div>
@@ -216,71 +215,8 @@ function openAdmin(){
   if(!isAdmin) return alert("Negado");
   alert("Painel ADM aberto (v2)");
 }
-function adicionarProduto(){
 
-  let nome = document.getElementById("nomeProd").value;
-  let preco = document.getElementById("precoProd").value;
-
-  if(!nome || !preco){
-    alert("Preencha nome e preço");
-    return;
-  }
-
-  document.querySelector(".products").innerHTML += `
-    <div class="card">
-      <h4>${nome}</h4>
-
-      <button class="btn red comprarBtn" onclick="add('${nome}')">
-        Comprar
-      </button>
-
-      <button onclick="editarNome(this)">✏️ Editar Nome</button>
-      <button onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
-      <button onclick="esgotarProduto(this)">🚫 Esgotar</button>
-      <button onclick="this.parentElement.remove()">🗑️ Remover</button>
-    </div>
-  `;
-
-  document.getElementById("nomeProd").value = "";
-  document.getElementById("precoProd").value = "";
-
-  alert("Produto adicionado!");
-}
-<script>
-function abrirAddProduto() {
-  document.getElementById("modalAddProduto").style.display = "flex";
-}
-
-function fecharAddProduto() {
-  document.getElementById("modalAddProduto").style.display = "none";
-}
 </script>
-  
-</script>
-<div id="modalAddProduto" style="
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.6);
-  justify-content:center;
-  align-items:center;
-">
 
-  <div style="background:#fff; padding:20px; border-radius:10px; width:300px;">
-    <h3>Adicionar Produto</h3>
-
-    <input type="text" id="nomeProduto" placeholder="Nome"><br><br>
-    <input type="text" id="precoProduto" placeholder="Preço"><br><br>
-    <input type="text" id="imgProduto" placeholder="Imagem URL"><br><br>
-
-    <button onclick="adicionarProduto()">Salvar</button>
-    <button onclick="fecharAddProduto()">Fechar</button>
-  </div>
-
-</div>
-  
 </body>
 </html>
