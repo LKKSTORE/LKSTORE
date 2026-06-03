@@ -473,6 +473,12 @@ function logout(){
   location.reload();
 }
 
+function removerProduto(botao) {
+  if (confirm("Deseja remover este produto?")) {
+    botao.parentElement.remove();
+  }
+}
+
 </script>
 
   
