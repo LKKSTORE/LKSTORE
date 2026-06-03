@@ -13,7 +13,6 @@ body{
   color:white;
 }
 
-/* HEADER */
 header{
   display:flex;
   justify-content:space-between;
@@ -25,18 +24,9 @@ header{
 
 .logo{color:red;font-weight:bold;}
 
-.topIcons{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
+.topIcons{display:flex;gap:12px;align-items:center;}
+.topIcons div{cursor:pointer;font-size:22px;}
 
-.topIcons div{
-  cursor:pointer;
-  font-size:22px;
-}
-
-/* PRODUTOS */
 .products{
   display:flex;
   flex-wrap:wrap;
@@ -53,7 +43,6 @@ header{
   text-align:center;
 }
 
-/* LOGIN */
 .screen{
   position:fixed;
   inset:0;
@@ -79,7 +68,6 @@ input{
   border-radius:6px;
 }
 
-/* BOTÕES */
 .btn{
   width:100%;
   padding:10px;
@@ -92,7 +80,6 @@ input{
 .red{background:red;}
 .gray{background:#333;}
 
-/* SIDE PANEL PERFIL */
 .sidePanel{
   position:fixed;
   top:0;
@@ -107,10 +94,7 @@ input{
 
 .sidePanel.open{right:0;}
 
-.close{
-  float:right;
-  cursor:pointer;
-}
+.close{float:right;cursor:pointer;}
 
 .menu div{
   padding:10px;
@@ -118,7 +102,6 @@ input{
   cursor:pointer;
 }
 
-/* ADMIN */
 #adminPanel{
   position:fixed;
   top:0;
@@ -134,16 +117,6 @@ input{
 
 #adminPanel.open{right:0;}
 
-/* BANNER */
-.banner{
-  margin:10px;
-  padding:12px;
-  background:#111;
-  border-left:4px solid red;
-  text-align:center;
-}
-
-/* ===== CARRINHO NOVO ===== */
 .cartPanel{
   position:fixed;
   top:0;
@@ -153,23 +126,12 @@ input{
   background:#111;
   padding:15px;
   z-index:6000;
-
   transform:translateX(100%);
-  transition:0.35s ease;
+  transition:0.35s;
 }
 
-.cartPanel.open{
-  transform:translateX(0);
-}
+.cartPanel.open{transform:translateX(0);}
 
-.cartItem{
-  background:#222;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-}
-
-/* overlay */
 .cartOverlay{
   position:fixed;
   top:0;
@@ -179,13 +141,26 @@ input{
   background:rgba(0,0,0,0.6);
   opacity:0;
   pointer-events:none;
-  transition:0.3s;
-  z-index:5900;
 }
 
 .cartOverlay.active{
   opacity:1;
   pointer-events:all;
+}
+
+.cartItem{
+  background:#222;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+}
+
+.banner{
+  margin:10px;
+  padding:12px;
+  background:#111;
+  border-left:4px solid red;
+  text-align:center;
 }
 </style>
 </head>
@@ -201,12 +176,9 @@ input{
 
     <button class="btn red" onclick="loginUser()">Entrar</button>
     <button class="btn gray" onclick="register()">Criar conta</button>
-
- <button class="btn gray" onclick="openAdminLogin()">⚙️ Login Admin</button>
+    <button class="btn gray" onclick="openAdminLogin()">⚙️ Admin</button>
   </div>
 </div>
-
-<!-- ADMIN LOGIN -->
 
 <!-- ADMIN LOGIN -->
 <div id="adminLogin" class="screen" style="display:none;">
@@ -231,61 +203,44 @@ input{
 
 <!-- PRODUTOS -->
 <div class="products">
-  <<div class="card">
-  <div class="card">
-  <span class="nome-produto">Netflix</span>
-  <span class="preco-produto">R$ 19,90</span>
 
-  <button onclick="add('Netflix')">Comprar</button>
-  <button onclick="removerProduto(this)">🗑️ Remover</button>
-  <button onclick="editarProduto(this)">✏️ Editar</button>
+  <div class="card">
+    <span class="nome-produto">Netflix</span>
+    <p class="preco-produto">R$ 19,90</p>
+
+    <button onclick="add('Netflix')">Comprar</button>
+    <button onclick="removerProduto(this)">🗑️ Remover</button>
+    <button onclick="editarProduto(this)">✏️ Editar</button>
   </div>
-</div> 
-  <!-- PERFIL -->
+
+</div>
+
+<!-- PERFIL -->
 <div id="profile" class="sidePanel">
   <span class="close" onclick="openProfile()">✖</span>
-
-  <h3>👤 Perfil</h3>
-  <p>Usuário: <span id="userName">---</span></p>
-
-  <div class="menu">
-    <div>🧾 Minha conta</div>
-    <div>🛒 Minhas compras</div>
-    <div onclick="afiliado()">🤝 Afiliado</div>
-    <div onclick="logout()" style="color:red;">🚪 Sair</div>
-  </div>
-
-  <p id="dono" style="display:none;color:gray;margin-top:10px;">
-    Dono: ls4619058@gmail.com
-  </p>
+  <h3>Perfil</h3>
+  <p id="userName">---</p>
 </div>
 
 <!-- ADMIN -->
 <div id="adminPanel">
   <span class="close" onclick="openAdmin()">✖</span>
 
-  <h3>⚙️ Painel Admin</h3>
+  <h3>Painel ADM</h3>
 
-  <p id="adminStatus">Bloqueado</p>
-
-  <input id="nomeProd" placeholder="Nome do produto">
-
+  <input id="nomeProd" placeholder="Nome">
   <input id="precoProd" placeholder="Preço">
+  <input id="imgProd" placeholder="Imagem">
 
-  <input id="imgProd" placeholder="URL da imagem">
-
-  <button class="btn red" onclick="adicionarProduto()">
-    Adicionar Produto
-  </button>
+  <button class="btn red" onclick="adicionarProduto()">Adicionar</button>
 </div>
 
 <!-- CARRINHO -->
 <div class="cartOverlay" onclick="openCart()"></div>
 
 <div id="cartPanel" class="cartPanel">
-  <h3>🛒 Carrinho</h3>
+  <h3>Carrinho</h3>
   <div id="cartItems"></div>
-  <hr>
   <p>Total: <span id="total">0</span></p>
 </div>
 
@@ -294,273 +249,112 @@ input{
 <div class="banner">⚡ Entrega automática</div>
 <div class="banner">💬 Suporte 24h</div>
 
+<!-- SCRIPT -->
 <script>
 
-function removerProduto(botao) {
-  if (!isAdmin) {
-    alert("Acesso negado! Só o ADM pode remover produtos.");
-    return;
-  }
-
-  botao.parentElement.remove();
-}
-
-function editarProduto(botao) {
-  if (!isAdmin) {
-    alert("Acesso negado! Só o ADM pode editar produtos.");
-    return;
-  }
-
-  let produto = botao.parentElement;
-
-  let nome = produto.querySelector(".nome-produto");
-  let preco = produto.querySelector(".preco-produto");
-
-  let novoNome = prompt("Novo nome do produto:", nome.innerText);
-  let novoPreco = prompt("Novo preço do produto:", preco.innerText);
-
-  if (novoNome) nome.innerText = novoNome;
-  if (novoPreco) preco.innerText = novoPreco;
-}
-
-
-  
-  let isAdmin = false;
-  
-function loginUser(){
-
-  let usuario = document.getElementById("user").value;
-  let senha = document.getElementById("pass").value;
-
-  if(localStorage.getItem("u_" + usuario) === senha){
-
-    userLogado = usuario;
-
-    document.getElementById("userLogin").style.display = "none";
-    document.getElementById("userName").innerText = usuario;
-
-    // Libera admin somente para o dono
-    if(usuario === "ls4619058@gmail.com"){
-      isAdmin = true;
-      document.getElementById("adminBtn").style.display = "block";
-      document.getElementById("dono").style.display = "block";
-      document.getElementById("adminStatus").innerText = "LIBERADO ✔";
-    }
-
-  } else {
-    alert("Login inválido");
-  }
-}
-  
-  
-  function adicionarProduto(){
-
-  let nome = document.getElementById("nomeProd").value;
-  let preco = document.getElementById("precoProd").value;
-  let img = document.getElementById("imgProd").value;
-
-  if(nome == "" || preco == ""){
-    alert("Preencha os campos");
-    return;
-  }
-
-  document.querySelector(".products").innerHTML += `
-    <div class="card">
-      ${img ? `<img src="${img}" width="100%">` : ""}
-      <h4>${nome}</h4>
-      <p>R$ ${preco}</p>
-      <button class="btn red" onclick="add('${nome}')">
-        Comprar
-      </button>
-    </div>
-  `;
-
-  alert("Produto adicionado!");
-
-  document.getElementById("nomeProd").value="";
-  document.getElementById("precoProd").value="";
-  document.getElementById("imgProd").value="";
-}
-  
 let isAdmin = false;
 let userLogado = "";
 let carrinho = [];
 
 const ADMIN_PASS = "1234";
 
+/* LOGIN USER */
 function register(){
-
-  let usuario = document.getElementById("user").value;
-  let senha = document.getElementById("pass").value;
-
-  if(usuario === "" || senha === ""){
-    alert("Preencha usuário e senha");
-    return;
-  }
-
-  localStorage.setItem("u_" + usuario, senha);
-
-  alert("Conta criada com sucesso!");
+  let u = user.value;
+  let p = pass.value;
+  localStorage.setItem("u_"+u,p);
+  alert("Conta criada!");
 }
 
 function loginUser(){
+  let u = user.value;
+  let p = pass.value;
 
-  let usuario = document.getElementById("user").value;
-  let senha = document.getElementById("pass").value;
-
-  if(localStorage.getItem("u_" + usuario) === senha){
-
-    userLogado = usuario;
-
-    document.getElementById("userLogin").style.display = "none";
-
-    document.getElementById("userName").innerText = usuario;
-
-  } else {
-    alert("Login inválido");
-  }
+  if(localStorage.getItem("u_"+u) === p){
+    userLogado = u;
+    userLogin.style.display="none";
+    userName.innerText=u;
+  } else alert("Erro login");
 }
- 
-/*ADMIN */
+
+/* ADMIN */
 function openAdminLogin(){
-  document.getElementById("adminLogin").style.display = "flex";
+  adminLogin.style.display="flex";
 }
 
 function closeAdminLogin(){
-  document.getElementById("adminLogin").style.display = "none";
+  adminLogin.style.display="none";
 }
 
 function loginAdmin(){
-  let pass = document.getElementById("adminPass").value;
-
-  if(pass === ADMIN_PASS){
+  if(adminPass.value === ADMIN_PASS){
     isAdmin = true;
-    document.getElementById("adminBtn").style.display = "block";
-    document.getElementById("adminStatus").innerText = "LIBERADO ✔";
-    document.getElementById("dono").style.display = "block";
+    adminBtn.style.display="block";
     closeAdminLogin();
-    alert("Admin liberado!");
-  } else {
-    alert("Senha errada");
-  }
+    alert("ADM liberado");
+  } else alert("Senha errada");
 }
 
 function openAdmin(){
-  if(!isAdmin){
-    alert("Acesso negado");
-    return;
-  }
-  document.getElementById("adminPanel").classList.toggle("open");
+  if(!isAdmin) return alert("Negado");
+  adminPanel.classList.toggle("open");
 }
 
-/* PERFIL */
-function openProfile(){
-  document.getElementById("profile").classList.toggle("open");
+/* PRODUTOS */
+function adicionarProduto(){
+  let nome = nomeProd.value;
+  let preco = precoProd.value;
+
+  products.innerHTML += `
+    <div class="card">
+      <span class="nome-produto">${nome}</span>
+      <p class="preco-produto">R$ ${preco}</p>
+
+      <button onclick="add('${nome}')">Comprar</button>
+      <button onclick="removerProduto(this)">🗑️ Remover</button>
+      <button onclick="editarProduto(this)">✏️ Editar</button>
+    </div>
+  `;
+}
+
+/* EDITAR */
+function editarProduto(botao){
+  if(!isAdmin) return alert("Só ADM");
+
+  let card = botao.parentElement;
+
+  let nome = card.querySelector(".nome-produto");
+  let preco = card.querySelector(".preco-produto");
+
+  let n = prompt("Nome:", nome.innerText);
+  let p = prompt("Preço:", preco.innerText);
+
+  if(n) nome.innerText=n;
+  if(p) preco.innerText=p;
+}
+
+/* REMOVER */
+function removerProduto(botao){
+  if(!isAdmin) return alert("Só ADM");
+  botao.parentElement.remove();
 }
 
 /* CARRINHO */
+function add(nome){
+  carrinho.push(nome);
+  count.innerText = carrinho.length;
+}
+
 function openCart(){
-  const panel = document.getElementById("cartPanel");
-  const overlay = document.querySelector(".cartOverlay");
-
-  panel.classList.toggle("open");
-  overlay.classList.toggle("active");
-
-  renderCart();
+  cartPanel.classList.toggle("open");
+  cartOverlay.classList.toggle("active");
 }
 
-function add(produto){
-
-  carrinho.push(produto);
-
-  document.getElementById("count").innerText = carrinho.length;
-
-  renderCart();
-}
-
-function renderCart(){
-
-  let box = document.getElementById("cartItems");
-  box.innerHTML = "";
-
-  carrinho.forEach((item)=>{
-    box.innerHTML += `<div class="cartItem">${item}</div>`;
-  });
-
-  document.getElementById("total").innerText = carrinho.length;
-}
-
-/* AFILIADO */
-function afiliado(){
-  if(isAdmin){
-    alert("Afiliado liberado");
-  } else {
-    alert("🔒 Bloqueado");
-  }
-}
-
-/* LOGOUT */
-function logout(){
-  location.reload();
-}
-
-function removerProduto(botao) {
-  if (confirm("Deseja remover este produto?")) {
-    botao.parentElement.remove();
-  }
-}
-
-
-function editarProduto(botao) {
-  let produto = botao.parentElement;
-
-  let nomeAtual = produto.querySelector("h3").innerText;
-
-  let novoNome = prompt("Novo nome do produto:", nomeAtual);
-
-  if (novoNome) {
-    produto.querySelector("h3").innerText = novoNome;
-  }
-}
-  
-function editarProduto(botao) {
-  let produto = botao.parentElement;
-
-  let nome = produto.querySelector(".nome-produto");
-
-  let novoNome = prompt("Novo nome do produto:", nome.innerText);
-
-  if (novoNome) {
-    nome.innerText = novoNome;
-  }
-}
-
-  
-function editarProduto(botao) {
-  let produto = botao.parentElement;
-
-  let nome = produto.querySelector(".nome-produto");
-  let preco = produto.querySelector(".preco-produto");
-
-  let novoNome = prompt("Novo nome do produto:", nome.innerText);
-  let novoPreco = prompt("Novo preço do produto:", preco.innerText);
-
-  if (novoNome) {
-    nome.innerText = novoNome;
-  }
-
-  if (novoPreco) {
-    preco.innerText = novoPreco;
-  }
-}
-
-  
-function removerProduto(botao) {
-  botao.parentElement.remove();
+function openProfile(){
+  profile.classList.toggle("open");
 }
 
 </script>
 
-  
 </body>
-  </html>
+</html>
