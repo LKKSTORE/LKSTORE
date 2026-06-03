@@ -239,6 +239,10 @@ input{
 🗑️ Remover
 </button>
   
+<button onclick="editarProduto(this)">
+✏️ Editar
+</button>
+  
   </div>
 </div> 
   <!-- PERFIL -->
@@ -479,6 +483,19 @@ function removerProduto(botao) {
   }
 }
 
+
+function editarProduto(botao) {
+  let produto = botao.parentElement;
+
+  let nomeAtual = produto.querySelector("h3").innerText;
+
+  let novoNome = prompt("Novo nome do produto:", nomeAtual);
+
+  if (novoNome) {
+    produto.querySelector("h3").innerText = novoNome;
+  }
+}
+  
 </script>
 
   
