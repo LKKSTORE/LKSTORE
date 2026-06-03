@@ -80,81 +80,6 @@ input{
 .red{background:red;}
 .gray{background:#333;}
 
-.sidePanel{
-  position:fixed;
-  top:0;
-  right:-320px;
-  width:300px;
-  height:100%;
-  background:#111;
-  padding:15px;
-  transition:0.3s;
-  z-index:3000;
-}
-
-.sidePanel.open{right:0;}
-
-.close{float:right;cursor:pointer;}
-
-.menu div{
-  padding:10px;
-  border-bottom:1px solid #222;
-  cursor:pointer;
-}
-
-#adminPanel{
-  position:fixed;
-  top:0;
-  right:-320px;
-  width:300px;
-  height:100%;
-  background:#111;
-  padding:15px;
-  transition:0.3s;
-  border-left:2px solid red;
-  z-index:5000;
-}
-
-#adminPanel.open{right:0;}
-
-.cartPanel{
-  position:fixed;
-  top:0;
-  right:0;
-  width:320px;
-  height:100%;
-  background:#111;
-  padding:15px;
-  z-index:6000;
-  transform:translateX(100%);
-  transition:0.35s;
-}
-
-.cartPanel.open{transform:translateX(0);}
-
-.cartOverlay{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.6);
-  opacity:0;
-  pointer-events:none;
-}
-
-.cartOverlay.active{
-  opacity:1;
-  pointer-events:all;
-}
-
-.cartItem{
-  background:#222;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-}
-
 .banner{
   margin:10px;
   padding:12px;
@@ -176,17 +101,6 @@ input{
 
     <button class="btn red" onclick="loginUser()">Entrar</button>
     <button class="btn gray" onclick="register()">Criar conta</button>
-    <button class="btn gray" onclick="openAdminLogin()">⚙️ Admin</button>
-  </div>
-</div>
-
-<!-- ADMIN LOGIN -->
-<div id="adminLogin" class="screen" style="display:none;">
-  <div class="box">
-    <h3>LOGIN ADMIN</h3>
-    <input id="adminPass" type="password">
-    <button class="btn red" onclick="loginAdmin()">Entrar</button>
-    <button class="btn gray" onclick="closeAdminLogin()">Voltar</button>
   </div>
 </div>
 
@@ -195,15 +109,15 @@ input{
   <div class="logo">LKSTORE PRO</div>
 
   <div class="topIcons">
-    <div onclick="openProfile()">👤</div>
     <div onclick="openCart()">🛒 <span id="count">0</span></div>
     <div id="adminBtn" onclick="openAdmin()" style="display:none;">⚙️</div>
   </div>
 </header>
+
 <div id="avisoLoja" class="banner">
 🔥 Bem-vindo à LKSTORE
 </div>
-  
+
 <!-- PRODUTOS -->
 <div class="products">
 
@@ -211,249 +125,97 @@ input{
 
   <h4>Netflix</h4>
 
-  <button class="btn red" onclick="add('Netflix')">
+  <button class="btn red comprarBtn" onclick="add('Netflix')">
     Comprar
   </button>
 
-  <button onclick="editarNome(this)">
-    ✏️ Editar Nome
-  </button>
-
-  <button onclick="trocarImagem(this)">
-    🖼️ Trocar Imagem
-  </button>
-
-  <button onclick="esgotarProduto(this)">
-    🚫 Esgotar
-  </button>
-
-  <button onclick="this.parentElement.remove()">
-    🗑️ Remover
-  </button>
-
-</div>
-</div>
-<!-- PERFIL -->
-<div id="profile" class="sidePanel">
-  <span class="close" onclick="openProfile()">✖</span>
-  <h3>Perfil</h3>
-  <p id="userName">---</p>
-</div>
-
-<!-- ADMIN -->
-<div id="adminPanel">
-  <span class="close" onclick="openAdmin()">✖</span>
-
-  <h3>Painel ADM</h3>
-
-  <input id="nomeProd" placeholder="Nome">
-  <input id="precoProd" placeholder="Preço">
-  <input id="imgProd" placeholder="Imagem">
-
-  <button class="btn red" onclick="adicionarProduto()">Adicionar</button>
-<input id="novoAviso" placeholder="Digite o aviso">
-
-<button onclick="alterarAviso()">
-📢 Alterar Aviso
-</button>
+  <button onclick="editarNome(this)">✏️ Editar Nome</button>
+  <button onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
+  <button onclick="esgotarProduto(this)">🚫 Esgotar</button>
+  <button onclick="this.parentElement.remove()">🗑️ Remover</button>
 
 </div>
 
-<!-- CARRINHO -->
-<div class="cartOverlay" onclick="openCart()"></div>
-
-<div id="cartPanel" class="cartPanel">
-  <h3>Carrinho</h3>
-  <div id="cartItems"></div>
-  <p>Total: <span id="total">0</span></p>
 </div>
-
-<!-- BANNERS -->
-<div class="banner">🔒 Seguro</div>
-<div class="banner">⚡ Entrega automática</div>
-<div class="banner">💬 Suporte 24h</div>
 
 <!-- SCRIPT -->
 <script>
 
-function editarNome(botao){
-
-  let novoNome = prompt("Novo nome do produto:");
-
-  if(!novoNome) return;
-
-  let card = botao.parentElement;
-
-  let titulo = card.querySelector("h4");
-
-  if(titulo){
-    titulo.innerText = novoNome;
-  }
-
-}
-  
-  let isAdmin = false;
+let isAdmin = false;
 let userLogado = "";
 let carrinho = [];
 
-const ADMIN_PASS = "1234";
+const ADMIN_EMAIL = "ls4619058@gmail.com";
 
-/* LOGIN USER */
+/* LOGIN */
 function register(){
-  let u = user.value;
-  let p = pass.value;
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
   localStorage.setItem("u_"+u,p);
   alert("Conta criada!");
 }
 
-function esgotarProduto(botao){
+function loginUser(){
 
-  let card = botao.parentElement;
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
 
-  let btnComprar = card.querySelector(".comprarBtn");
+  if(localStorage.getItem("u_"+u) === p){
+
+    userLogado = u;
+    document.getElementById("userLogin").style.display = "none";
+
+    if(u === ADMIN_EMAIL){
+      isAdmin = true;
+      document.getElementById("adminBtn").style.display = "block";
+    }
+
+  } else {
+    alert("Login inválido");
   }
 }
 
+/* PRODUTO */
 function esgotarProduto(botao){
 
   let card = botao.parentElement;
-
   let btnComprar = card.querySelector(".comprarBtn");
 
   if(btnComprar){
     btnComprar.innerHTML = "🚫 ESGOTADO";
     btnComprar.disabled = true;
   }
-
 }
-  
-function loginUser(){
 
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
-
-  if(localStorage.getItem("u_" + u) === p){
-
-    userLogado = u;
-
-    document.getElementById("userLogin").style.display = "none";
-    document.getElementById("userName").innerText = u;
-
-    if(u === "ls4619058@gmail.com"){
-      isAdmin = true;
-      document.getElementById("adminBtn").style.display = "block";
-    }
-
-  }else{
-    alert("Login inválido");
-  }
-
+function editarNome(botao){
+  let novoNome = prompt("Novo nome:");
+  if(!novoNome) return;
+  botao.parentElement.querySelector("h4").innerText = novoNome;
 }
 
 function trocarImagem(botao){
-
-  let novaImagem = prompt("Cole a URL da nova imagem:");
-
-  if(novaImagem){
-
-    let card = botao.parentElement;
-
-    let img = card.querySelector("img");
-
-    if(img){
-      img.src = novaImagem;
-    }
-
-  }
-
-}
-  
-/* ADMIN */
-function openAdminLogin(){
-  adminLogin.style.display="flex";
-}
-
-function closeAdminLogin(){
-  adminLogin.style.display="none";
-}
-
-function loginAdmin(){
-  if(adminPass.value === ADMIN_PASS){
-    isAdmin = true;
-    adminBtn.style.display="block";
-    closeAdminLogin();
-    alert("ADM liberado");
-  } else alert("Senha errada");
-}
-
-function openAdmin(){
-  if(!isAdmin) return alert("Negado");
-  adminPanel.classList.toggle("open");
-}
-
-/* PRODUTOS */
-function adicionarProduto(){
-  let nome = nomeProd.value;
-  let preco = precoProd.value;
-
-  products.innerHTML += `
-    <div class="card">
-      <span class="nome-produto">${nome}</span>
-      <p class="preco-produto">R$ ${preco}</p>
-
-      <button onclick="add('${nome}')">Comprar</button>
-      <button onclick="removerProduto(this)">🗑️ Remover</button>
-      <button onclick="editarProduto(this)">✏️ Editar</button>
-    </div>
-  `;
-}
-
-/* EDITAR */
-function editarProduto(botao){
-  if(!isAdmin) return alert("Só ADM");
-
-  let card = botao.parentElement;
-
-  let nome = card.querySelector(".nome-produto");
-  let preco = card.querySelector(".preco-produto");
-
-  let n = prompt("Nome:", nome.innerText);
-  let p = prompt("Preço:", preco.innerText);
-
-  if(n) nome.innerText=n;
-  if(p) preco.innerText=p;
-}
-
-/* REMOVER */
-function removerProduto(botao){
-  if(!isAdmin) return alert("Só ADM");
-  botao.parentElement.remove();
+  let url = prompt("URL da imagem:");
+  if(!url) return;
+  let img = botao.parentElement.querySelector("img");
+  if(img) img.src = url;
 }
 
 /* CARRINHO */
 function add(nome){
   carrinho.push(nome);
-  count.innerText = carrinho.length;
+  document.getElementById("count").innerText = carrinho.length;
 }
 
 function openCart(){
-  cartPanel.classList.toggle("open");
-  cartOverlay.classList.toggle("active");
+  alert("Carrinho: " + carrinho.join(", "));
 }
 
-function openProfile(){
-  profile.classList.toggle("open");
+/* ADMIN */
+function openAdmin(){
+  if(!isAdmin) return alert("Negado");
+  alert("Painel ADM aberto (v2)");
 }
 
-function alterarAviso(){
-
-  let aviso = document.getElementById("novoAviso").value;
-
-  document.getElementById("avisoLoja").innerText = aviso;
-
-  alert("Aviso atualizado!");
-}
-  
 </script>
 
 </body>
