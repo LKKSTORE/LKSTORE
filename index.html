@@ -296,6 +296,37 @@ input{
 
 <script>
 
+function removerProduto(botao) {
+  if (!isAdmin) {
+    alert("Acesso negado! Só o ADM pode remover produtos.");
+    return;
+  }
+
+  botao.parentElement.remove();
+}
+
+function editarProduto(botao) {
+  if (!isAdmin) {
+    alert("Acesso negado! Só o ADM pode editar produtos.");
+    return;
+  }
+
+  let produto = botao.parentElement;
+
+  let nome = produto.querySelector(".nome-produto");
+  let preco = produto.querySelector(".preco-produto");
+
+  let novoNome = prompt("Novo nome do produto:", nome.innerText);
+  let novoPreco = prompt("Novo preço do produto:", preco.innerText);
+
+  if (novoNome) nome.innerText = novoNome;
+  if (novoPreco) preco.innerText = novoPreco;
+}
+
+
+  
+  let isAdmin = false;
+  
 function loginUser(){
 
   let usuario = document.getElementById("user").value;
