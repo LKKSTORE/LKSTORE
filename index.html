@@ -231,18 +231,20 @@ input{
 
 <!-- PRODUTOS -->
 <div class="products">
-  <div class="card">
-    Netflix
-    <button class="btn red" onclick="add('Netflix')">Comprar</button>
+  <<div class="card">
+    <span class="nome-produto">Netflix</span>
 
-      <button onclick="this.parentElement.remove()">
-🗑️ Remover
-</button>
-  
-<button onclick="editarProduto(this)">
-✏️ Editar
-</button>
-  
+    <button class="btn red" onclick="add('Netflix')">
+      Comprar
+    </button>
+
+    <button onclick="removerProduto(this)">
+      🗑️ Remover
+    </button>
+
+    <button onclick="editarProduto(this)">
+      ✏️ Editar
+    </button>
   </div>
 </div> 
   <!-- PERFIL -->
@@ -496,6 +498,17 @@ function editarProduto(botao) {
   }
 }
   
+function editarProduto(botao) {
+  let produto = botao.parentElement;
+
+  let nome = produto.querySelector(".nome-produto");
+
+  let novoNome = prompt("Novo nome do produto:", nome.innerText);
+
+  if (novoNome) {
+    nome.innerText = novoNome;
+  }
+}
 </script>
 
   
