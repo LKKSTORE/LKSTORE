@@ -209,6 +209,9 @@ input{
     <p class="preco-produto">R$ 19,90</p>
 
     <button onclick="add('Netflix')">Comprar</button>
+ <button onclick="trocarImagem(this)">
+🖼️ Trocar Imagem
+</button>    
     <button onclick="removerProduto(this)">🗑️ Remover</button>
     <button onclick="editarProduto(this)">✏️ Editar</button>
   </div>
@@ -277,6 +280,24 @@ function loginUser(){
   } else alert("Erro login");
 }
 
+function trocarImagem(botao){
+
+  let novaImagem = prompt("Cole a URL da nova imagem:");
+
+  if(novaImagem){
+
+    let card = botao.parentElement;
+
+    let img = card.querySelector("img");
+
+    if(img){
+      img.src = novaImagem;
+    }
+
+  }
+
+}
+  
 /* ADMIN */
 function openAdminLogin(){
   adminLogin.style.display="flex";
