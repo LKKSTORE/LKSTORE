@@ -208,13 +208,13 @@ input{
     <span class="nome-produto">Netflix</span>
     <p class="preco-produto">R$ 19,90</p>
 
-    <button onclick="add('Netflix')">Comprar</button>
-<button onclick="esgotarProduto(this)">
-🚫 Esgotar
+<button class="btn red comprarBtn" onclick="add('Netflix')">
+  Comprar
 </button>
-       <button onclick="trocarImagem(this)">
-🖼️ Trocar Imagem
-</button>    
+
+<button onclick="esgotarProduto(this)">
+  🚫 Esgotar
+</button>
     <button onclick="removerProduto(this)">🗑️ Remover</button>
     <button onclick="editarProduto(this)">✏️ Editar</button>
   </div>
@@ -280,11 +280,12 @@ function esgotarProduto(botao){
 
   let card = botao.parentElement;
 
-  let btnComprar = card.querySelector(".btn.red");
+  let btnComprar = card.querySelector(".comprarBtn");
 
-  btnComprar.innerText = "🚫 ESGOTADO";
-
-  btnComprar.disabled = true;
+  if(btnComprar){
+    btnComprar.innerHTML = "🚫 ESGOTADO";
+    btnComprar.disabled = true;
+  }
 
 }
   
