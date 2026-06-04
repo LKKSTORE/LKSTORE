@@ -231,36 +231,84 @@ function adicionarProduto(nome, preco, img) {
   }
 }
 
-function closePerfil(){
-  document.getElementById("perfilModal").style.display = "none";
+let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+
+function adicionarProduto() {
+
+  let nome = document.getElementById("nomeProduto").value;
+  let preco = document.getElementById("precoProduto").value;
+  let img = document.getElementById("imgProduto").value;
+
+  produtos.push({
+    id: Date.now(),
+    nome,
+    preco,
+    img,
+    afiliadoLiberado:false
+  });
+
+  salvar();
+  renderizar();
+  fecharAddProduto();
 }
 
-/* troca de abas */
-function showTab(tab){
-
-  document.getElementById("tabPerfil").style.display = "none";
-  document.getElementById("tabAdm").style.display = "none";
-
-  if(tab === "perfil"){
-    document.getElementById("tabPerfil").style.display = "block";
-  }
-
-  if(tab === "adm"){
-    document.getElementById("tabAdm").style.display = "block";
-  }
+function salvar(){
+  localStorage.setItem("produtos", JSON.stringify(produtos));
 }
 
- function openPerfil(){
-  document.getElementById("perfilModal").style.display = "block";
+function renderizar(){
 
-  document.getElementById("perfilUser").innerText =
-    "Usuário: " + userLogado;
+  const container = document.querySelector(".products");
 
-  if(userLogado === ADMIN_EMAIL){
-    document.getElementById("admTabBtn").style.display = "inline-block";
-  }
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  produtos.forEach(p => {
+
+    container.innerHTML += `
+      <div class="card">
+        ${p.img ? `<img src="${p.img}" width="100%">` : ""}
+
+        <h4>${p.nome}</h4>
+
+        <p>R$ ${p.preco}</p>
+
+        <button onclick="editarProdutoPrompt(${p.id})">
+          ✏️ Editar
+        </button>
+
+        <button onclick="liberarAfiliado(${p.id})">
+          🔓 Afiliado
+        </button>
+      </div>
+    `;
+  });
 }
 
+function editarProdutoPrompt(id){
+
+  let nome = prompt("Novo nome:");
+
+  let preco = prompt("Novo preço:");
+
+  produtos = produtos.map(p => {
+
+    if(p.id === id){
+      p.nome = nome;
+      p.preco = preco;
+    }
+
+    return p;
+  });
+
+  salvar();
+  renderizar();
+}
+
+function liberarAfiliado(id){
+  alert("Afiliado liberado para produto " + id);
+}
 function closePerfil(){
   document.getElementById("perfilModal").style.display = "none";
 }
@@ -355,6 +403,8 @@ function fecharAddProduto(){
   document.getElementById("modalAddProduto").style.display = "none";
 }
 
+
+renderizar();
 </script>
 <div id="perfilModal" style="
 display:none;
