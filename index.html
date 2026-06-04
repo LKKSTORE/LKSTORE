@@ -329,16 +329,28 @@ function editarProdutoPrompt(id){
   let preco = prompt("Novo preço:", produto.preco);
   if(preco === null) return;
 
+  let img = prompt("Nova URL da imagem:", produto.img || "");
+  if(img === null) return;
+
   produtos = produtos.map(p => {
 
     if(p.id === id){
       return {
         ...p,
-        nome: nome,
-        preco: preco
+        nome,
+        preco,
+        img
       };
     }
 
+    return p;
+  });
+
+  salvar();
+  renderizar();
+
+  alert("Produto atualizado!");
+}
     return p;
   });
 
