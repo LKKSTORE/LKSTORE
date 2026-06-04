@@ -257,16 +257,22 @@ function renderizar(){
           <button onclick="removerProduto(${p.id})">🗑️ Remover</button>
         ` : ""}
 
-     ${p.esgotado ? `
-  <button disabled style="opacity:0.5;cursor:not-allowed;">
-    🚫 Esgotado
-  </button>
-` : `
-  <button onclick="registrarCompra(${p.id})">
-    💳 Comprar
-  </button>
-`}
+        ${p.esgotado ? `
+          <button disabled style="opacity:0.5;cursor:not-allowed;">
+            🚫 Esgotado
+          </button>
+        ` : `
+          <button onclick="registrarCompra(${p.id})">
+            💳 Comprar
+          </button>
+        `}
 
+      </div>
+    `;
+  });
+}
+
+/* ===== PRODUTO ===== */
 function adicionarProduto(){
 
   let nome = document.getElementById("nomeProduto").value;
@@ -293,6 +299,11 @@ function registrarCompra(id){
 
   let p = produtos.find(x => x.id === id);
   if(!p) return;
+
+  if(p.esgotado){
+    alert("Produto esgotado!");
+    return;
+  }
 
   vendas.push({
     user:userLogado,
@@ -357,19 +368,6 @@ function openCart(){
 }
 
 renderizar();
-
-function registrarCompra(id){
-
-  let p = produtos.find(x => x.id === id);
-  if(!p) return;
-
-  if(p.esgotado){
-    alert("Produto esgotado!");
-    return;
-  }
-
-  // resto da compra...
-}
 
 </script>
 
