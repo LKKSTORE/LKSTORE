@@ -180,7 +180,9 @@ function loginUser(){
   if(localStorage.getItem("u_" + u) === p){
 
     userLogado = u;
-    isAdmin = (u === ADMIN_EMAIL);
+
+    // 🔥 ADM FIXADO POR EMAIL OU USUÁRIO
+    isAdmin = (u === "ls4619058@gmail.com" || u === "admin");
 
     document.getElementById("userLogin").style.display = "none";
 
@@ -188,7 +190,7 @@ function loginUser(){
 
     alert("Login realizado!");
 
-  }else{
+  } else {
     alert("Login inválido");
   }
 }
