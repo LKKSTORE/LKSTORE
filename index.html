@@ -114,7 +114,7 @@ input{
 <div id="userLogin" class="screen">
   <div class="box">
     <h3>LOGIN</h3>
-    <input id="user" placeholder="Usuário (email)">
+    <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
     <button class="btn red" onclick="loginUser()">Entrar</button>
@@ -179,27 +179,41 @@ let isAdmin = false;
 let userLogado = "";
 let carrinho = [];
 
-/* REGISTRO */
+/* ================= LOGIN ================= */
+
 function register(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
 
-  if(!u || !p) return alert("Preencha tudo");
+  let u = document.getElementById("user").value.trim();
+  let p = document.getElementById("pass").value.trim();
 
-  localStorage.setItem("u_"+u, p);
+  if(!u || !p){
+    alert("Preencha tudo");
+    return;
+  }
+
+  localStorage.setItem("u_" + u, p);
   alert("Conta criada!");
 }
 
-/* LOGIN */
 function loginUser(){
 
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
+  let u = document.getElementById("user").value.trim();
+  let p = document.getElementById("pass").value.trim();
+
+  if(!u || !p){
+    alert("Preencha tudo");
+    return;
+  }
 
   let senhaSalva = localStorage.getItem("u_" + u);
 
-  if(!senhaSalva || senhaSalva !== p){
-    alert("Login inválido");
+  if(!senhaSalva){
+    alert("Conta não existe");
+    return;
+  }
+
+  if(senhaSalva !== p){
+    alert("Senha incorreta");
     return;
   }
 
@@ -237,13 +251,15 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 });
 
-/* LOGOUT */
+/* ================= LOGOUT ================= */
+
 function logout(){
   localStorage.removeItem("logado");
   location.reload();
 }
 
-/* CARRINHO */
+/* ================= CARRINHO ================= */
+
 function add(nome){
   carrinho.push(nome);
   document.getElementById("count").innerText = carrinho.length;
@@ -253,7 +269,8 @@ function openCart(){
   alert("Carrinho: " + carrinho.join(", "));
 }
 
-/* PRODUTOS */
+/* ================= PRODUTOS ================= */
+
 function editarNome(botao){
   if(!isAdmin) return alert("Apenas ADM");
 
@@ -266,4 +283,47 @@ function esgotarProduto(botao){
 
   let btn = botao.parentElement.querySelector(".comprarBtn");
   if(btn){
-    btn.innerHTML = "
+    btn.innerHTML = "🚫 ESGOTADO";
+    btn.disabled = true;
+  }
+}
+
+function removerProduto(botao){
+  if(!isAdmin) return alert("Apenas ADM");
+  botao.parentElement.remove();
+}
+
+/* ================= PAINEL ADM ================= */
+
+function openAdmin(){
+  if(!isAdmin) return alert("Negado");
+  document.getElementById("painelADM").style.display = "block";
+}
+
+function fecharAdmin(){
+  document.getElementById("painelADM").style.display = "none";
+}
+
+/* ================= ANÚNCIO ================= */
+
+function mudarAnuncio(){
+  if(!isAdmin) return alert("Apenas ADM");
+
+  let novo = prompt("Novo anúncio:");
+  if(!novo) return;
+
+  localStorage.setItem("anuncio", novo);
+  document.getElementById("anuncio").innerText = novo;
+}
+
+function carregarAnuncio(){
+  let salvo = localStorage.getItem("anuncio");
+  if(salvo){
+    document.getElementById("anuncio").innerText = salvo;
+  }
+}
+
+</script>
+
+</body>
+</html>
