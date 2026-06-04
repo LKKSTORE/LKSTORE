@@ -244,7 +244,6 @@ function salvar(){
 function renderizar(){
 
   const container = document.querySelector(".products");
-
   container.innerHTML = "";
 
   produtos.forEach(p => {
@@ -252,36 +251,26 @@ function renderizar(){
     container.innerHTML += `
       <div class="card">
 
-        ${p.img ? <img src="${p.img}" width="100%"> : ""}
+        ${p.img ? `<img src="${p.img}" width="100%">` : ""}
 
         <h4>${p.nome}</h4>
-
         <p>R$ ${p.preco}</p>
 
-        <p>
-          ${p.esgotado ? "🚫 ESGOTADO" : "✅ DISPONÍVEL"}
-        </p>
+        <p>${p.esgotado ? "🚫 ESGOTADO" : "✅ DISPONÍVEL"}</p>
 
-        ${
-          isAdmin ? `
-            <button onclick="editarProdutoPrompt(${p.id})">
-              ✏️ Editar
-            </button>
+        ${isAdmin ? `
+          <button onclick="editarProdutoPrompt(${p.id})">✏️ Editar</button>
 
-            <button onclick="alternarEsgotado(${p.id})">
-              ${p.esgotado ? "✅ Disponível" : "🚫 Esgotar"}
-            </button>
+          <button onclick="alternarEsgotado(${p.id})">
+            ${p.esgotado ? "✅ Disponível" : "🚫 Esgotar"}
+          </button>
 
-            <button onclick="liberarAfiliado(${p.id})">
-              ${p.afiliadoLiberado ? "🤝 Afiliado ON" : "🤝 Afiliado OFF"}
-            </button>
+          <button onclick="liberarAfiliado(${p.id})">
+            ${p.afiliadoLiberado ? "🤝 Afiliado ON" : "🤝 Afiliado OFF"}
+          </button>
 
-            <button onclick="removerProduto(${p.id})">
-              🗑️ Remover
-            </button>
-          `
-          : ""
-        }
+          <button onclick="removerProduto(${p.id})">🗑️ Remover</button>
+        ` : ""}
 
       </div>
     `;
@@ -342,9 +331,6 @@ function editarProdutoPrompt(id){
     return p;
   });
 
-  salvar();
-  renderizar();
-
   alert("Produto atualizado!");
 }
 
@@ -362,10 +348,6 @@ function alternarEsgotado(id){
 
     return p;
   });
-
-  salvar();
-  renderizar();
-}
 
 function liberarAfiliado(id){
 
