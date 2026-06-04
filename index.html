@@ -87,6 +87,7 @@ input{
   border-left:4px solid red;
   text-align:center;
 }
+.adm-btn{margin-top:5px;width:100%;}
 </style>
 </head>
 
@@ -96,7 +97,7 @@ input{
 <div id="userLogin" class="screen">
   <div class="box">
     <h3>LOGIN</h3>
-    <input id="user" placeholder="Usuário">
+    <input id="user" placeholder="Email">
     <input id="pass" type="password" placeholder="Senha">
 
     <button class="btn red" onclick="loginUser()">Entrar</button>
@@ -114,7 +115,8 @@ input{
   </div>
 </header>
 
-<div id="avisoLoja" class="banner">
+<!-- ANÚNCIO -->
+<div id="anuncio" class="banner">
 🔥 Bem-vindo à LKSTORE
 </div>
 
@@ -122,24 +124,42 @@ input{
 <div class="products">
 
  <div class="card">
-
   <h4>Netflix</h4>
 
   <button class="btn red comprarBtn" onclick="add('Netflix')">
     Comprar
   </button>
 
- <button class="adm-btn" onclick="editarNome(this)">✏️ Editar Nome</button>
-<button class="adm-btn" onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
-<button class="adm-btn" onclick="esgotarProduto(this)">🚫 Esgotar</button>
-<button class="adm-btn" onclick="this.parentElement.remove()">🗑️ Remover</button>
-<button id="btnAddProduto" onclick="abrirAddProduto()">➕ Adicionar Produto</button>
-<button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
+  <button class="adm-btn" onclick="editarNome(this)">✏️ Editar Nome</button>
+  <button class="adm-btn" onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
+  <button class="adm-btn" onclick="esgotarProduto(this)">🚫 Esgotar</button>
+  <button class="adm-btn" onclick="this.parentElement.remove()">🗑️ Remover</button>
  </div>
 
 </div>
 
-<!-- SCRIPT -->
+<!-- MODAL PRODUTO -->
+<div id="modalAddProduto" style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+justify-content:center;
+align-items:center;
+">
+
+  <div style="background:#fff;color:#000;padding:20px;border-radius:10px;width:300px;">
+    <h3>Adicionar Produto</h3>
+
+    <input id="nomeProduto" placeholder="Nome">
+    <input id="precoProduto" placeholder="Preço">
+    <input id="imgProduto" placeholder="Imagem URL">
+
+    <button onclick="adicionarProduto()">Salvar</button>
+    <button onclick="fecharAddProduto()">Fechar</button>
+  </div>
+</div>
+
 <script>
 
 let isAdmin = false;
@@ -164,6 +184,7 @@ function loginUser(){
   if(localStorage.getItem("u_"+u) === p){
 
     userLogado = u;
+    localStorage.setItem("email", u); // IMPORTANTE
     document.getElementById("userLogin").style.display = "none";
 
     if(u === ADMIN_EMAIL){
@@ -176,9 +197,8 @@ function loginUser(){
   }
 }
 
-/* PRODUTO */
+/* PRODUTOS */
 function esgotarProduto(botao){
-
   let card = botao.parentElement;
   let btnComprar = card.querySelector(".comprarBtn");
 
@@ -214,24 +234,32 @@ function openCart(){
 /* ADMIN */
 function openAdmin(){
   if(!isAdmin) return alert("Negado");
-  alert("Painel ADM aberto (v2)");
+  alert("Painel ADM");
 }
 
-function abrirAddProduto() {
-  document.getElementById("modalAddProduto").style.display = "flex";
+/* ANÚNCIO */
+function mudarAnuncio(){
+  if(!isAdmin) return alert("Apenas ADM");
+
+  let novo = prompt("Digite o novo anúncio:");
+  if(!novo) return;
+
+  document.getElementById("anuncio").innerText = novo;
+  localStorage.setItem("anuncio", novo);
 }
 
-function fecharAddProduto() {
-  document.getElementById("modalAddProduto").style.display = "none";
-}
-
-let isAdmin = false;
-
+/* carregar anúncio */
 document.addEventListener("DOMContentLoaded", function () {
+  let salvo = localStorage.getItem("anuncio");
+  if (salvo) {
+    document.getElementById("anuncio").innerText = salvo;
+  }
+
   const emailLogado = localStorage.getItem("email");
 
-  if (emailLogado === "ls4619058@gmail.com") {
+  if (emailLogado === ADMIN_EMAIL) {
     isAdmin = true;
+    document.getElementById("adminBtn").style.display = "block";
   }
 
   if (!isAdmin) {
@@ -240,55 +268,22 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-const usuarioEmail = "ls4619058@gmail.com";
 
-if (usuarioEmail !== "ls4619058@gmail.com") {
-  document.getElementById("btnAnuncio").style.display = "none";
-}
-  
-
-function mudarAnuncio() {
-  let novo = prompt("Digite o novo anúncio:");
-
-  if (novo) {
-    document.getElementById("anuncio").innerText = novo;
-    localStorage.setItem("anuncio", novo);
-  }
+/* MODAL PRODUTO */
+function abrirAddProduto(){
+  document.getElementById("modalAddProduto").style.display = "flex";
 }
 
-// carregar anúncio salvo
-window.onload = function () {
-  let salvo = localStorage.getItem("anuncio");
-  if (salvo) {
-    document.getElementById("anuncio").innerText = salvo;
-  }
-};
-  
+function fecharAddProduto(){
+  document.getElementById("modalAddProduto").style.display = "none";
+}
+
+function adicionarProduto(){
+  alert("Produto adicionado (exemplo)");
+  fecharAddProduto();
+}
+
 </script>
-  
-  <div id="modalAddProduto" style="
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.6);
-  justify-content:center;
-  align-items:center;
-">
-
-  <div style="background:#fff; padding:20px; border-radius:10px; width:300px;">
-    <h3>Adicionar Produto</h3>
-
-    <input type="text" id="nomeProduto" placeholder="Nome"><br><br>
-    <input type="text" id="precoProduto" placeholder="Preço"><br><br>
-    <input type="text" id="imgProduto" placeholder="Imagem URL"><br><br>
-
-    <button onclick="adicionarProduto()">Salvar</button>
-    <button onclick="fecharAddProduto()">Fechar</button>
-  </div>
-</div>
 
 </body>
 </html>
