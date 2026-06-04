@@ -174,8 +174,8 @@ function register(){
 
 function loginUser(){
 
-  let u = document.getElementById("user").value.trim();
-  let p = document.getElementById("pass").value.trim();
+  const u = document.getElementById("user").value.trim();
+  const p = document.getElementById("pass").value.trim();
 
   if(!u || !p){
     alert("Preencha usuário e senha");
@@ -184,10 +184,9 @@ function loginUser(){
 
   const senhaSalva = localStorage.getItem("u_" + u);
 
-  if(senhaSalva && senhaSalva === p){
+  if(senhaSalva === p){
 
     userLogado = u;
-
     isAdmin = (u === "ls4619058@gmail.com");
 
     document.getElementById("userLogin").style.display = "none";
@@ -370,10 +369,6 @@ function alternarEsgotado(id){
 
     return p;
   });
-
-  salvar();
-  renderizar();
-}
 
 function liberarAfiliado(id){
 
