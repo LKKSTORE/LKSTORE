@@ -298,14 +298,42 @@ function openCart(){
   alert(carrinho.join(", "));
 }
 
-/* PERFIL SIMPLES */
 function openPerfil(){
-  alert("Usuário: " + userLogado);
-}
 
+  document.getElementById("perfilModal").style.display = "block";
+
+  document.getElementById("perfilUser").innerText =
+    "Usuário: " + userLogado;
+}
 renderizar();
 
+function closePerfil(){
+  document.getElementById("perfilModal").style.display = "none";
+}
 </script>
 
+<div id="perfilModal" style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.9);
+z-index:99999;
+color:white;
+padding:20px;
+">
+
+  <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
+
+    <h2>👤 Perfil</h2>
+
+    <p id="perfilUser"></p>
+
+    <br>
+
+    <button onclick="closePerfil()">❌ Fechar</button>
+  </div>
+
+</div>
+  
 </body>
 </html>
