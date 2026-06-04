@@ -133,7 +133,7 @@ input{
   <button onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
   <button onclick="esgotarProduto(this)">🚫 Esgotar</button>
   <button onclick="this.parentElement.remove()">🗑️ Remover</button>
-
+<button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
 </div>
 
 </div>
@@ -218,5 +218,39 @@ function openAdmin(){
 
 </script>
 
+  <script>
+function abrirAddProduto() {
+  document.getElementById("modalAddProduto").style.display = "flex";
+}
+
+function fecharAddProduto() {
+  document.getElementById("modalAddProduto").style.display = "none";
+}
+</script>
+  
+  <div id="modalAddProduto" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+">
+
+  <div style="background:#fff; padding:20px; border-radius:10px; width:300px;">
+    <h3>Adicionar Produto</h3>
+
+    <input type="text" id="nomeProduto" placeholder="Nome"><br><br>
+    <input type="text" id="precoProduto" placeholder="Preço"><br><br>
+    <input type="text" id="imgProduto" placeholder="Imagem URL"><br><br>
+
+    <button onclick="adicionarProduto()">Salvar</button>
+    <button onclick="fecharAddProduto()">Fechar</button>
+  </div>
+
+</div>
 </body>
 </html>
