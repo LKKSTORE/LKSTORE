@@ -252,7 +252,7 @@ function renderizar(){
     container.innerHTML += `
       <div class="card">
 
-        ${p.img ? `<img src="${p.img}" width="100%">` : ""}
+        ${p.img ? <img src="${p.img}" width="100%"> : ""}
 
         <h4>${p.nome}</h4>
 
@@ -329,28 +329,16 @@ function editarProdutoPrompt(id){
   let preco = prompt("Novo preço:", produto.preco);
   if(preco === null) return;
 
-  let img = prompt("Nova URL da imagem:", produto.img || "");
-  if(img === null) return;
-
   produtos = produtos.map(p => {
 
     if(p.id === id){
       return {
         ...p,
-        nome,
-        preco,
-        img
+        nome: nome,
+        preco: preco
       };
     }
 
-    return p;
-  });
-
-  salvar();
-  renderizar();
-
-  alert("Produto atualizado!");
-}
     return p;
   });
 
