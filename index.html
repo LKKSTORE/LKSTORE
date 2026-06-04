@@ -87,7 +87,24 @@ input{
   border-left:4px solid red;
   text-align:center;
 }
-.adm-btn{margin-top:5px;width:100%;}
+
+/* ===== PAINEL ADM ===== */
+#painelADM{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  z-index:99999;
+  padding:20px;
+}
+
+.painelBox{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  max-width:400px;
+  margin:auto;
+}
 </style>
 </head>
 
@@ -97,7 +114,7 @@ input{
 <div id="userLogin" class="screen">
   <div class="box">
     <h3>LOGIN</h3>
-    <input id="user" placeholder="Email">
+    <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
     <button class="btn red" onclick="loginUser()">Entrar</button>
@@ -111,7 +128,7 @@ input{
 
   <div class="topIcons">
     <div onclick="openCart()">🛒 <span id="count">0</span></div>
-    <div id="adminBtn" onclick="openAdmin()" style="display:none;">⚙️</div>
+    <div id="adminBtn" onclick="openAdmin()">⚙️</div>
   </div>
 </header>
 
@@ -130,40 +147,34 @@ input{
     Comprar
   </button>
 
-  <button class="adm-btn" onclick="editarNome(this)">✏️ Editar Nome</button>
-  <button class="adm-btn" onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
-  <button class="adm-btn" onclick="esgotarProduto(this)">🚫 Esgotar</button>
-  <button class="adm-btn" onclick="this.parentElement.remove()">🗑️ Remover</button>
+  <button onclick="editarNome(this)">✏️ Editar Nome</button>
+  <button onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
+  <button onclick="esgotarProduto(this)">🚫 Esgotar</button>
+  <button onclick="this.parentElement.remove()">🗑️ Remover</button>
  </div>
 
 </div>
 
-<!-- MODAL PRODUTO -->
-<div id="modalAddProduto" style="
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.6);
-justify-content:center;
-align-items:center;
-">
+<!-- PAINEL ADM -->
+<div id="painelADM">
+  <div class="painelBox">
 
-  <div style="background:#fff;color:#000;padding:20px;border-radius:10px;width:300px;">
-    <h3>Adicionar Produto</h3>
+    <h2>⚙️ Painel ADM</h2>
 
-    <input id="nomeProduto" placeholder="Nome">
-    <input id="precoProduto" placeholder="Preço">
-    <input id="imgProduto" placeholder="Imagem URL">
+    <button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
+    <button onclick="alert('Função: adicionar produto')">➕ Adicionar Produto</button>
+    <button onclick="alert('Função: liberar afiliado')">🤝 Afiliados</button>
 
-    <button onclick="adicionarProduto()">Salvar</button>
-    <button onclick="fecharAddProduto()">Fechar</button>
+    <br><br>
+
+    <button onclick="fecharAdmin()">❌ Fechar</button>
+
   </div>
 </div>
 
 <script>
 
 let isAdmin = false;
-let userLogado = "";
 let carrinho = [];
 
 const ADMIN_EMAIL = "ls4619058@gmail.com";
@@ -183,8 +194,6 @@ function loginUser(){
 
   if(localStorage.getItem("u_"+u) === p){
 
-    userLogado = u;
-    localStorage.setItem("email", u); // IMPORTANTE
     document.getElementById("userLogin").style.display = "none";
 
     if(u === ADMIN_EMAIL){
@@ -198,30 +207,6 @@ function loginUser(){
 }
 
 /* PRODUTOS */
-function esgotarProduto(botao){
-  let card = botao.parentElement;
-  let btnComprar = card.querySelector(".comprarBtn");
-
-  if(btnComprar){
-    btnComprar.innerHTML = "🚫 ESGOTADO";
-    btnComprar.disabled = true;
-  }
-}
-
-function editarNome(botao){
-  let novoNome = prompt("Novo nome:");
-  if(!novoNome) return;
-  botao.parentElement.querySelector("h4").innerText = novoNome;
-}
-
-function trocarImagem(botao){
-  let url = prompt("URL da imagem:");
-  if(!url) return;
-  let img = botao.parentElement.querySelector("img");
-  if(img) img.src = url;
-}
-
-/* CARRINHO */
 function add(nome){
   carrinho.push(nome);
   document.getElementById("count").innerText = carrinho.length;
@@ -231,84 +216,48 @@ function openCart(){
   alert("Carrinho: " + carrinho.join(", "));
 }
 
-/* ADMIN */
+function editarNome(botao){
+  if(!isAdmin) return alert("Negado");
+  let novo = prompt("Novo nome:");
+  if(novo) botao.parentElement.querySelector("h4").innerText = novo;
+}
+
+function trocarImagem(botao){
+  if(!isAdmin) return alert("Negado");
+  let url = prompt("URL:");
+  if(url) botao.parentElement.querySelector("img")?.setAttribute("src", url);
+}
+
+function esgotarProduto(botao){
+  let btn = botao.parentElement.querySelector(".comprarBtn");
+  if(btn){
+    btn.innerHTML = "🚫 ESGOTADO";
+    btn.disabled = true;
+  }
+}
+
+/* PAINEL ADM */
 function openAdmin(){
   if(!isAdmin) return alert("Negado");
-  alert("Painel ADM");
+  document.getElementById("painelADM").style.display = "block";
+}
+
+function fecharAdmin(){
+  document.getElementById("painelADM").style.display = "none";
 }
 
 /* ANÚNCIO */
 function mudarAnuncio(){
   if(!isAdmin) return alert("Apenas ADM");
 
-  let novo = prompt("Digite o novo anúncio:");
-  if(!novo) return;
-
-  document.getElementById("anuncio").innerText = novo;
-  localStorage.setItem("anuncio", novo);
-}
-
-/* carregar anúncio */
-document.addEventListener("DOMContentLoaded", function () {
-  let salvo = localStorage.getItem("anuncio");
-  if (salvo) {
-    document.getElementById("anuncio").innerText = salvo;
+  let novo = prompt("Novo anúncio:");
+  if(novo){
+    document.getElementById("anuncio").innerText = novo;
+    localStorage.setItem("anuncio", novo);
   }
-
-  const emailLogado = localStorage.getItem("email");
-
-  if (emailLogado === ADMIN_EMAIL) {
-    isAdmin = true;
-    document.getElementById("adminBtn").style.display = "block";
-  }
-
-  if (!isAdmin) {
-    document.querySelectorAll(".adm-btn").forEach(btn => {
-      btn.style.display = "none";
-    });
-  }
-});
-
-/* MODAL PRODUTO */
-function abrirAddProduto(){
-  document.getElementById("modalAddProduto").style.display = "flex";
 }
 
-function fecharAddProduto(){
-  document.getElementById("modalAddProduto").style.display = "none";
-}
-
-function adicionarProduto(){
-  alert("Produto adicionado (exemplo)");
-  fecharAddProduto();
-}
-function openAdmin(){
-  if(!isAdmin) return alert("Negado");
-  document.getElementById("painelADM").style.display = "block";
-}
-
-function fecharADM(){
-  document.getElementById("painelADM").style.display = "none";
-  }
 </script>
-<div id="painelADM" style="
-display:none;
-position:fixed;
-inset:0;
-background:#000;
-color:white;
-padding:20px;
-z-index:99999;
-">
 
-<h2>Painel ADM</h2>
-
-<button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
-<button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
-
-<br><br>
-<button onclick="fecharADM()">Fechar</button>
-
-</div>
 </body>
 </html>
