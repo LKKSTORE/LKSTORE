@@ -241,7 +241,7 @@ function renderizar(){
           <button onclick="liberarAfiliado(${p.id})">🤝 Afiliado</button>
           <button onclick="removerProduto(${p.id})">🗑️ Remover</button>
         ` : ""}
-
+<button onclick="registrarCompra(${p.id})">💳 Comprar</button>
       </div>
     `;
   });
@@ -336,7 +336,123 @@ function openCart(){
 
 renderizar();
 
-</script>
+ function logout(){
+  userLogado = "";
+  isAdmin = false;
 
+  document.getElementById("userLogin").style.display = "flex";
+}
+
+  function mudarAnuncio(){
+
+  let txt = prompt("Novo anúncio:");
+
+  if(txt){
+    document.getElementById("avisoLoja").innerText = txt;
+  }
+}
+  function virarAfiliado(){
+
+  if(!userLogado) return alert("Faça login");
+
+  usuarios[userLogado] = usuarios[userLogado] || {};
+  usuarios[userLogado].afiliado = true;
+
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+  alert("Agora você é afiliado!");
+}
+  function registrarCompra(produto){
+
+  vendas.push({
+    user: userLogado,
+    produto: produto.nome,
+    valor: produto.preco,
+    data: new Date().toLocaleString()
+  });
+
+  faturamento += Number(produto.preco);
+
+  localStorage.setItem("vendas", JSON.stringify(vendas));
+  localStorage.setItem("faturamento", JSON.stringify(faturamento));
+
+  alert("Compra registrada!");
+}
+  function verHistorico(){
+
+  let texto = vendas.map(v =>
+    `${v.user} comprou ${v.produto} - R$${v.valor} (${v.data})`
+  ).join("\n");
+
+  alert(texto || "Sem vendas ainda");
+}
+  function verFaturamento(){
+  alert("Faturamento total: R$ " + faturamento);
+}
+  function liberarAfiliado(id){
+
+  produtos = produtos.map(p => {
+    if(p.id === id){
+      p.afiliadoLiberado = !p.afiliadoLiberado;
+    }
+    return p;
+  });
+
+  salvar();
+  renderizar();
+}
+
+  function registrarCompra(id){
+  let produto = produtos.find(p => p.id === id);
+  if(!produto) return;
+  
+    let faturamento = JSON.parse(localStorage.getItem("faturamento")) || 0;
+let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
+
+function openPerfil(){
+
+  const modal = document.getElementById("perfilModal");
+  const user = document.getElementById("perfilUser");
+
+  if(!modal || !user){
+    alert("Perfil não encontrado no HTML");
+    return;
+  }
+
+  modal.style.display = "block";
+  user.innerText = "Usuário: " + userLogado;
+}
+
+function closePerfil(){
+  document.getElementById("perfilModal").style.display = "none";
+}
+    
+</script>
+<div id="perfilModal" style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.9);
+z-index:99999;
+color:white;
+padding:20px;
+">
+
+  <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
+
+    <h2>👤 Perfil</h2>
+
+    <p id="perfilUser"></p>
+
+    <br>
+
+    <button onclick="virarAfiliado()">🤝 Virar Afiliado</button>
+    <br><br>
+    <button onclick="closePerfil()">❌ Fechar</button>
+
+  </div>
+
+</div>
 </body>
 </html>
