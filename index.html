@@ -319,20 +319,34 @@ function adicionarProduto(){
 
 function editarProdutoPrompt(id){
 
-  let nome = prompt("Novo nome:");
-  let preco = prompt("Novo preço:");
+  let produto = produtos.find(p => p.id === id);
 
-  if(!nome || !preco) return;
+  if(!produto) return;
+
+  let nome = prompt("Novo nome:", produto.nome);
+  if(nome === null) return;
+
+  let preco = prompt("Novo preço:", produto.preco);
+  if(preco === null) return;
 
   produtos = produtos.map(p => {
 
     if(p.id === id){
-      p.nome = nome;
-      p.preco = preco;
+      return {
+        ...p,
+        nome: nome,
+        preco: preco
+      };
     }
 
     return p;
   });
+
+  salvar();
+  renderizar();
+
+  alert("Produto atualizado!");
+}
 
   salvar();
   renderizar();
