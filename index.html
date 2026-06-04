@@ -134,7 +134,8 @@ input{
 <button class="adm-btn" onclick="esgotarProduto(this)">🚫 Esgotar</button>
 <button class="adm-btn" onclick="this.parentElement.remove()">🗑️ Remover</button>
 <button id="btnAddProduto" onclick="abrirAddProduto()">➕ Adicionar Produto</button>
-</div>
+<button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
+ </div>
 
 </div>
 
@@ -216,9 +217,6 @@ function openAdmin(){
   alert("Painel ADM aberto (v2)");
 }
 
-</script>
-
-  <script>
 function abrirAddProduto() {
   document.getElementById("modalAddProduto").style.display = "flex";
 }
@@ -242,7 +240,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+const usuarioEmail = "ls4619058@gmail.com";
 
+if (usuarioEmail !== "ls4619058@gmail.com") {
+  document.getElementById("btnAnuncio").style.display = "none";
+}
+  
+
+function mudarAnuncio() {
+  let novo = prompt("Digite o novo anúncio:");
+
+  if (novo) {
+    document.getElementById("anuncio").innerText = novo;
+    localStorage.setItem("anuncio", novo);
+  }
+}
+
+// carregar anúncio salvo
+window.onload = function () {
+  let salvo = localStorage.getItem("anuncio");
+  if (salvo) {
+    document.getElementById("anuncio").innerText = salvo;
+  }
+};
+  
 </script>
   
   <div id="modalAddProduto" style="
@@ -267,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <button onclick="adicionarProduto()">Salvar</button>
     <button onclick="fecharAddProduto()">Fechar</button>
   </div>
-
 </div>
+
 </body>
 </html>
