@@ -149,24 +149,31 @@ padding:20px;
   <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
 
     <h2>👤 Perfil</h2>
-
     <p id="perfilUser"></p>
 
+    <button onclick="virarAfiliado()">🤝 Virar Afiliado</button>
+    <br><br>
+    <button onclick="logout()">🚪 Sair</button>
+    <br><br>
     <button onclick="closePerfil()">❌ Fechar</button>
-  </div>
 
+  </div>
 </div>
 
 <script>
 
+/* ===== DADOS ===== */
 let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-let isAdmin = false;
+let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
+let faturamento = JSON.parse(localStorage.getItem("faturamento")) || 0;
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
+
 let userLogado = "";
-let carrinho = [];
+let isAdmin = false;
 
 const ADMIN_USER = "admin";
 
-/* LOGIN */
+/* ===== LOGIN ===== */
 function register(){
   let u = document.getElementById("user").value;
   let p = document.getElementById("pass").value;
@@ -188,32 +195,41 @@ function loginUser(){
     isAdmin = (u === ADMIN_USER);
 
     document.getElementById("userLogin").style.display = "none";
-
     renderizar();
-    alert("Login realizado!");
 
   } else {
     alert("Login inválido");
   }
 }
 
-/* PERFIL */
+function logout(){
+  userLogado = "";
+  isAdmin = false;
+  document.getElementById("userLogin").style.display = "flex";
+}
+
+/* ===== PERFIL ===== */
 function openPerfil(){
-
-  const modal = document.getElementById("perfilModal");
-  const user = document.getElementById("perfilUser");
-
-  if(!modal || !user) return;
-
-  modal.style.display = "block";
-  user.innerText = "Usuário: " + userLogado;
+  document.getElementById("perfilModal").style.display = "block";
+  document.getElementById("perfilUser").innerText = "Usuário: " + userLogado;
 }
 
 function closePerfil(){
   document.getElementById("perfilModal").style.display = "none";
 }
 
-/* PRODUTOS */
+/* ===== AFILIADO ===== */
+function virarAfiliado(){
+
+  if(!userLogado) return alert("Faça login");
+
+  usuarios[userLogado] = {afiliado:true};
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+  alert("Agora você é afiliado!");
+}
+
+/* ===== PRODUTOS ===== */
 function salvar(){
   localStorage.setItem("produtos", JSON.stringify(produtos));
 }
@@ -238,10 +254,11 @@ function renderizar(){
         ${isAdmin ? `
           <button onclick="editarProdutoPrompt(${p.id})">✏️ Editar</button>
           <button onclick="alternarEsgotado(${p.id})">🚫 Esgotar</button>
-          <button onclick="liberarAfiliado(${p.id})">🤝 Afiliado</button>
           <button onclick="removerProduto(${p.id})">🗑️ Remover</button>
         ` : ""}
-<button onclick="registrarCompra(${p.id})">💳 Comprar</button>
+
+        <button onclick="registrarCompra(${p.id})">💳 Comprar</button>
+
       </div>
     `;
   });
@@ -260,8 +277,7 @@ function adicionarProduto(){
     nome,
     preco,
     img,
-    esgotado:false,
-    afiliadoLiberado:false
+    esgotado:false
   });
 
   salvar();
@@ -269,6 +285,28 @@ function adicionarProduto(){
   fecharAddProduto();
 }
 
+/* ===== COMPRA ===== */
+function registrarCompra(id){
+
+  let p = produtos.find(x => x.id === id);
+  if(!p) return;
+
+  vendas.push({
+    user:userLogado,
+    produto:p.nome,
+    valor:p.preco,
+    data:new Date().toLocaleString()
+  });
+
+  faturamento += Number(p.preco);
+
+  localStorage.setItem("vendas", JSON.stringify(vendas));
+  localStorage.setItem("faturamento", JSON.stringify(faturamento));
+
+  alert("Compra registrada!");
+}
+
+/* ===== ADM ===== */
 function editarProdutoPrompt(id){
 
   let p = produtos.find(x => x.id === id);
@@ -276,8 +314,6 @@ function editarProdutoPrompt(id){
 
   let nome = prompt("Nome:", p.nome);
   let preco = prompt("Preço:", p.preco);
-
-  if(nome === null || preco === null) return;
 
   produtos = produtos.map(x =>
     x.id === id ? {...x, nome, preco} : x
@@ -297,25 +333,13 @@ function alternarEsgotado(id){
   renderizar();
 }
 
-function liberarAfiliado(id){
-  produtos = produtos.map(p => {
-    if(p.id === id) p.afiliadoLiberado = !p.afiliadoLiberado;
-    return p;
-  });
-
-  salvar();
-  renderizar();
-}
-
 function removerProduto(id){
-  if(!confirm("Remover?")) return;
-
   produtos = produtos.filter(p => p.id !== id);
   salvar();
   renderizar();
 }
 
-/* MODAL */
+/* ===== MODAL ===== */
 function abrirAddProduto(){
   document.getElementById("modalAddProduto").style.display = "flex";
 }
@@ -324,135 +348,14 @@ function fecharAddProduto(){
   document.getElementById("modalAddProduto").style.display = "none";
 }
 
-/* CARRINHO */
-function add(nome){
-  carrinho.push(nome);
-  document.getElementById("count").innerText = carrinho.length;
-}
-
+/* ===== CARRINHO ===== */
 function openCart(){
-  alert(carrinho.join(", "));
+  alert("Carrinho em construção");
 }
 
 renderizar();
 
- function logout(){
-  userLogado = "";
-  isAdmin = false;
-
-  document.getElementById("userLogin").style.display = "flex";
-}
-
-  function mudarAnuncio(){
-
-  let txt = prompt("Novo anúncio:");
-
-  if(txt){
-    document.getElementById("avisoLoja").innerText = txt;
-  }
-}
-  function virarAfiliado(){
-
-  if(!userLogado) return alert("Faça login");
-
-  usuarios[userLogado] = usuarios[userLogado] || {};
-  usuarios[userLogado].afiliado = true;
-
-  localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-  alert("Agora você é afiliado!");
-}
-  function registrarCompra(produto){
-
-  vendas.push({
-    user: userLogado,
-    produto: produto.nome,
-    valor: produto.preco,
-    data: new Date().toLocaleString()
-  });
-
-  faturamento += Number(produto.preco);
-
-  localStorage.setItem("vendas", JSON.stringify(vendas));
-  localStorage.setItem("faturamento", JSON.stringify(faturamento));
-
-  alert("Compra registrada!");
-}
-  function verHistorico(){
-
-  let texto = vendas.map(v =>
-    `${v.user} comprou ${v.produto} - R$${v.valor} (${v.data})`
-  ).join("\n");
-
-  alert(texto || "Sem vendas ainda");
-}
-  function verFaturamento(){
-  alert("Faturamento total: R$ " + faturamento);
-}
-  function liberarAfiliado(id){
-
-  produtos = produtos.map(p => {
-    if(p.id === id){
-      p.afiliadoLiberado = !p.afiliadoLiberado;
-    }
-    return p;
-  });
-
-  salvar();
-  renderizar();
-}
-
-  function registrarCompra(id){
-  let produto = produtos.find(p => p.id === id);
-  if(!produto) return;
-  
-    let faturamento = JSON.parse(localStorage.getItem("faturamento")) || 0;
-let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
-
-function openPerfil(){
-
-  const modal = document.getElementById("perfilModal");
-  const user = document.getElementById("perfilUser");
-
-  if(!modal || !user){
-    alert("Perfil não encontrado no HTML");
-    return;
-  }
-
-  modal.style.display = "block";
-  user.innerText = "Usuário: " + userLogado;
-}
-
-function closePerfil(){
-  document.getElementById("perfilModal").style.display = "none";
-}
-    
 </script>
-<div id="perfilModal" style="
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.9);
-z-index:99999;
-color:white;
-padding:20px;
-">
 
-  <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
-
-    <h2>👤 Perfil</h2>
-
-    <p id="perfilUser"></p>
-
-    <br>
-
-    <button onclick="virarAfiliado()">🤝 Virar Afiliado</button>
-    <br><br>
-    <button onclick="closePerfil()">❌ Fechar</button>
-
-  </div>
-
-</div>
 </body>
 </html>
