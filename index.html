@@ -282,8 +282,33 @@ function adicionarProduto(){
   alert("Produto adicionado (exemplo)");
   fecharAddProduto();
 }
+function openAdmin(){
+  if(!isAdmin) return alert("Negado");
+  document.getElementById("painelADM").style.display = "block";
+}
 
+function fecharADM(){
+  document.getElementById("painelADM").style.display = "none";
+  }
 </script>
+<div id="painelADM" style="
+display:none;
+position:fixed;
+inset:0;
+background:#000;
+color:white;
+padding:20px;
+z-index:99999;
+">
 
+<h2>Painel ADM</h2>
+
+<button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
+<button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
+
+<br><br>
+<button onclick="fecharADM()">Fechar</button>
+
+</div>
 </body>
 </html>
