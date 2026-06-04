@@ -193,6 +193,38 @@ function showTab(tab){
   }
 }
 
+function openPerfil(){
+
+  document.getElementById("perfilModal").style.display = "block";
+
+  document.getElementById("perfilUser").innerText =
+    "Usuário: " + userLogado;
+
+  // libera aba ADM só pra você
+  if(userLogado === ADMIN_EMAIL){
+    document.getElementById("admTabBtn").style.display = "inline-block";
+  }
+}
+
+function closePerfil(){
+  document.getElementById("perfilModal").style.display = "none";
+}
+
+/* troca de abas */
+function showTab(tab){
+
+  document.getElementById("tabPerfil").style.display = "none";
+  document.getElementById("tabAdm").style.display = "none";
+
+  if(tab === "perfil"){
+    document.getElementById("tabPerfil").style.display = "block";
+  }
+
+  if(tab === "adm"){
+    document.getElementById("tabAdm").style.display = "block";
+  }
+}
+
   
 let isAdmin = false;
 let userLogado = "";
