@@ -161,9 +161,76 @@ align-items:center;
 
 <script>
 
+let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
   function openPerfil(){
+function adicionarProduto(nome, preco, img) {
+  produtos.push({
+    id: Date.now(),
+    nome,
+    preco,
+    img,
+    afiliadoLiberado: false
+  });
 
-  document.getElementById("perfilModal").style.display = "block";
+  salvar();
+  renderizar();
+}
+    function salvar() {
+  localStorage.setItem("produtos", JSON.stringify(produtos));
+}
+
+    function editarProduto(id, novoNome, novoPreco) {
+  produtos = produtos.map(p => {
+    if (p.id === id) {
+      return { ...p, nome: novoNome, preco: novoPreco };
+    }
+    return p;
+  });
+
+  salvar();
+  renderizar();
+}
+    function liberarAfiliado(id) {
+  produtos = produtos.map(p => {
+    if (p.id === id) {
+      return { ...p, afiliadoLiberado: true };
+    }
+    return p;
+  });
+
+  salvar();
+  renderizar();
+}
+    function renderizar() {
+  const container = document.querySelector(".products");
+  container.innerHTML = "";
+
+  produtos.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <h4>${p.nome}</h4>
+        <p>R$ ${p.preco}</p>
+
+        <button onclick="editarProdutoPrompt(${p.id})">✏️ Editar</button>
+        <button onclick="liberarAfiliado(${p.id})">
+          ${p.afiliadoLiberado ? "✔ Afiliado Liberado" : "🔓 Liberar Afiliado"}
+        </button>
+
+        <button onclick="this.parentElement.remove()">🗑 Remover</button>
+      </div>
+    `;
+  });
+}
+    function editarProdutoPrompt(id) {
+  let nome = prompt("Novo nome:");
+  let preco = prompt("Novo preço:");
+
+  if (nome && preco) {
+    editarProduto(id, nome, preco);
+  }
+}
+ 
+    document.getElementById("perfilModal").style.display = "block";
 
   document.getElementById("perfilUser").innerText =
     "Usuário: " + userLogado;
