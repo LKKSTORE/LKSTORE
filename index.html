@@ -174,15 +174,21 @@ function register(){
 
 function loginUser(){
 
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
+  let u = document.getElementById("user").value.trim();
+  let p = document.getElementById("pass").value.trim();
 
-  if(localStorage.getItem("u_" + u) === p){
+  if(!u || !p){
+    alert("Preencha usuário e senha");
+    return;
+  }
+
+  const senhaSalva = localStorage.getItem("u_" + u);
+
+  if(senhaSalva && senhaSalva === p){
 
     userLogado = u;
 
-    // 🔥 ADM FIXADO POR EMAIL OU USUÁRIO
-    isAdmin = (u === "ls4619058@gmail.com" || u === "admin");
+    isAdmin = (u === "ls4619058@gmail.com");
 
     document.getElementById("userLogin").style.display = "none";
 
