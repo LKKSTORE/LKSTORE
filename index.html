@@ -148,95 +148,8 @@ align-items:center;
   </div>
 
 </div>
-
 <script>
-
-let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-let isAdmin = false;
-let userLogado = "";
-let carrinho = [];
-
-const ADMIN_EMAIL = "ls4619058@gmail.com";
-
-/* LOGIN */
-function register(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
-
-  if(!u || !p){
-    alert("Preencha usuário e senha");
-    return;
-  }
-
-  localStorage.setItem("u_" + u, p);
-  alert("Conta criada!");
-}
-
-function loginUser(){
-
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
-
-  if(localStorage.getItem("u_" + u) === p){
-
-    userLogado = u;
-    isAdmin = (u === ADMIN_EMAIL);
-
-    document.getElementById("userLogin").style.display = "none";
-
-    alert("Login realizado!");
-
-  } else {
-    alert("Login inválido");
-  }
-}
-
-function logout(){
-  userLogado = "";
-  isAdmin = false;
-  document.getElementById("userLogin").style.display = "flex";
-  closePerfil();
-}
-
-/* PERFIL */
-function openPerfil(){
-
-  document.getElementById("perfilModal").style.display = "block";
-
-  document.getElementById("perfilUser").innerText =
-    "Usuário: " + userLogado;
-
-  if(isAdmin){
-    document.getElementById("admTabBtn").style.display = "inline-block";
-  }else{
-    document.getElementById("admTabBtn").style.display = "none";
-  }
-}
-
-function closePerfil(){
-  document.getElementById("perfilModal").style.display = "none";
-}
-
-function showTab(tab){
-
-  document.getElementById("tabPerfil").style.display = "none";
-  document.getElementById("tabAdm").style.display = "none";
-
-  if(tab === "perfil"){
-    document.getElementById("tabPerfil").style.display = "block";
-  }
-
-  if(tab === "adm"){
-    document.getElementById("tabAdm").style.display = "block";
-  }
-}
-
-/* PRODUTOS */
-function salvar(){
-  localStorage.setItem("produtos", JSON.stringify(produtos));
-}
-
-function renderizar(){
+  function renderizar(){
 
   const container = document.querySelector(".products");
 
@@ -255,45 +168,29 @@ function renderizar(){
 
         <p>R$ ${p.preco}</p>
 
+        <p>
+          ${p.esgotado ? "🚫 ESGOTADO" : "✅ DISPONÍVEL"}
+        </p>
+
         <button onclick="editarProdutoPrompt(${p.id})">
           ✏️ Editar
         </button>
 
+        <button onclick="alternarEsgotado(${p.id})">
+          ${p.esgotado ? "✅ Disponível" : "🚫 Esgotar"}
+        </button>
+
         <button onclick="liberarAfiliado(${p.id})">
-          🔓 Afiliado
+          ${p.afiliadoLiberado ? "🤝 Afiliado ON" : "🤝 Afiliado OFF"}
+        </button>
+
+        <button onclick="removerProduto(${p.id})">
+          🗑 Remover
         </button>
 
       </div>
     `;
   });
-}
-
-function adicionarProduto(){
-
-  let nome = document.getElementById("nomeProduto").value;
-  let preco = document.getElementById("precoProduto").value;
-  let img = document.getElementById("imgProduto").value;
-
-  if(!nome || !preco){
-    alert("Preencha nome e preço");
-    return;
-  }
-
-  produtos.push({
-    id: Date.now(),
-    nome,
-    preco,
-    img,
-    afiliadoLiberado:false
-  });
-
-  salvar();
-  renderizar();
-  fecharAddProduto();
-
-  document.getElementById("nomeProduto").value = "";
-  document.getElementById("precoProduto").value = "";
-  document.getElementById("imgProduto").value = "";
 }
 
 function editarProdutoPrompt(id){
@@ -318,39 +215,44 @@ function editarProdutoPrompt(id){
 }
 
 function liberarAfiliado(id){
-  alert("Afiliado liberado para produto " + id);
+
+  produtos = produtos.map(p => {
+
+    if(p.id === id){
+      p.afiliadoLiberado = !p.afiliadoLiberado;
+    }
+
+    return p;
+  });
+
+  salvar();
+  renderizar();
 }
 
-function mudarAnuncio(){
+function removerProduto(id){
 
-  let txt = prompt("Novo anúncio:");
+  if(!confirm("Remover produto?")) return;
 
-  if(txt){
-    document.getElementById("avisoLoja").innerText = txt;
-  }
+  produtos = produtos.filter(p => p.id !== id);
+
+  salvar();
+  renderizar();
 }
 
-/* CARRINHO */
-function add(nome){
-  carrinho.push(nome);
-  document.getElementById("count").innerText = carrinho.length;
+function alternarEsgotado(id){
+
+  produtos = produtos.map(p => {
+
+    if(p.id === id){
+      p.esgotado = !p.esgotado;
+    }
+
+    return p;
+  });
+
+  salvar();
+  renderizar();
 }
-
-function openCart(){
-  alert("Carrinho: " + carrinho.join(", "));
-}
-
-/* MODAL */
-function abrirAddProduto(){
-  document.getElementById("modalAddProduto").style.display = "flex";
-}
-
-function fecharAddProduto(){
-  document.getElementById("modalAddProduto").style.display = "none";
-}
-
-renderizar();
-
 </script>
 <div id="perfilModal" style="
 display:none;
@@ -389,6 +291,12 @@ color:white;
   <button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
   <button onclick="alert('Remover produto')">🗑️ Remover Produto</button>
   <button onclick="alert('Afiliados')">🤝 Afiliados</button>
+<button onclick="removerProduto(${p.id})">
+🗑 Remover
+<button onclick="liberarAfiliado(${p.id})">
+${p.afiliadoLiberado ? "🤝 Afiliado ON" : "🤝 Afiliado OFF"}
+</button>
+</button>
 </div>
 
 <br><br>
