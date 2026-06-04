@@ -121,7 +121,7 @@ input{
 </div>
 
 <!-- PRODUTOS -->
-<div
+<div class="products"></div>
 
 <!-- MODAL PRODUTO -->
 <div id="modalAddProduto" style="
@@ -250,14 +250,12 @@ function showTab(tab){
   }
 }
 
-function openPerfil(){
-
+ function openPerfil(){
   document.getElementById("perfilModal").style.display = "block";
 
   document.getElementById("perfilUser").innerText =
     "Usuário: " + userLogado;
 
-  // libera aba ADM só pra você
   if(userLogado === ADMIN_EMAIL){
     document.getElementById("admTabBtn").style.display = "inline-block";
   }
