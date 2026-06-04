@@ -1,79 +1,256 @@
-<script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LKSTORE PRO</title>
 
-const ADMIN_EMAIL = "ls4619058@gmail.com";
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b0b0b;
+  color:white;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  background:#000;
+  border-bottom:2px solid red;
+}
+
+.logo{color:red;font-weight:bold;}
+
+.topIcons{display:flex;gap:12px;align-items:center;}
+.topIcons div{cursor:pointer;font-size:22px;}
+
+.products{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+  padding:20px;
+}
+
+.card{
+  width:200px;
+  background:#111;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.screen{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.box{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  width:280px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:6px;
+}
+
+.btn{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:8px;
+  color:white;
+}
+
+.red{background:red;}
+.gray{background:#333;}
+
+.banner{
+  margin:10px;
+  padding:12px;
+  background:#111;
+  border-left:4px solid red;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="userLogin" class="screen">
+  <div class="box">
+    <h3>LOGIN</h3>
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
+
+    <button class="btn red" onclick="loginUser()">Entrar</button>
+    <button class="btn gray" onclick="register()">Criar conta</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">LKSTORE PRO</div>
+
+  <div class="topIcons">
+    <div onclick="openCart()">🛒 <span id="count">0</span></div>
+    <div id="adminBtn" onclick="openAdmin()" style="display:none;">⚙️</div>
+  </div>
+</header>
+
+<div id="avisoLoja" class="banner">
+🔥 Bem-vindo à LKSTORE
+</div>
+
+<!-- PRODUTOS -->
+<div class="products">
+
+ <div class="card">
+
+  <h4>Netflix</h4>
+
+  <button class="btn red comprarBtn" onclick="add('Netflix')">
+    Comprar
+  </button>
+
+  <button onclick="editarNome(this)">✏️ Editar Nome</button>
+  <button onclick="trocarImagem(this)">🖼️ Trocar Imagem</button>
+  <button onclick="esgotarProduto(this)">🚫 Esgotar</button>
+  <button onclick="this.parentElement.remove()">🗑️ Remover</button>
+<button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
+</div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
 
 let isAdmin = false;
 let userLogado = "";
 let carrinho = [];
 
-/* ================= LOGIN ================= */
+const ADMIN_EMAIL = "ls4619058@gmail.com";
 
+/* LOGIN */
 function register(){
-
   let u = document.getElementById("user").value;
   let p = document.getElementById("pass").value;
-
-  if(!u || !p){
-    alert("Preencha tudo");
-    return;
-  }
-
-  localStorage.setItem("u_" + u, p);
+  localStorage.setItem("u_"+u,p);
   alert("Conta criada!");
 }
 
 function loginUser(){
 
-  let u = document.getElementById("user").value.trim();
-  let p = document.getElementById("pass").value.trim();
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
 
-  if(u.length === 0 || p.length === 0){
-    alert("Preencha tudo");
-    return;
-  }
+  if(localStorage.getItem("u_"+u) === p){
 
-  let senhaSalva = localStorage.getItem("u_" + u);
-
-  if(!senhaSalva){
-    alert("Conta não existe");
-    return;
-  }
-
-  if(senhaSalva !== p){
-    alert("Senha incorreta");
-    return;
-  }
-
-  userLogado = u;
-  localStorage.setItem("logado", u);
-
-  document.getElementById("userLogin").style.display = "none";
-
-  isAdmin = (u === ADMIN_EMAIL);
-
-  document.getElementById("adminBtn").style.display =
-    isAdmin ? "block" : "none";
-
-  carregarAnuncio();
-}
-
-/* AUTO LOGIN */
-document.addEventListener("DOMContentLoaded", function(){
-
-  let logado = localStorage.getItem("logado");
-
-  if(logado){
-
-    userLogado = logado;
+    userLogado = u;
     document.getElementById("userLogin").style.display = "none";
 
-    isAdmin = (logado === ADMIN_EMAIL);
+    if(u === ADMIN_EMAIL){
+      isAdmin = true;
+      document.getElementById("adminBtn").style.display = "block";
+    }
 
-    document.getElementById("adminBtn").style.display =
-      isAdmin ? "block" : "none";
-
-    carregarAnuncio();
+  } else {
+    alert("Login inválido");
   }
-});
+}
+
+/* PRODUTO */
+function esgotarProduto(botao){
+
+  let card = botao.parentElement;
+  let btnComprar = card.querySelector(".comprarBtn");
+
+  if(btnComprar){
+    btnComprar.innerHTML = "🚫 ESGOTADO";
+    btnComprar.disabled = true;
+  }
+}
+
+function editarNome(botao){
+  let novoNome = prompt("Novo nome:");
+  if(!novoNome) return;
+  botao.parentElement.querySelector("h4").innerText = novoNome;
+}
+
+function trocarImagem(botao){
+  let url = prompt("URL da imagem:");
+  if(!url) return;
+  let img = botao.parentElement.querySelector("img");
+  if(img) img.src = url;
+}
+
+/* CARRINHO */
+function add(nome){
+  carrinho.push(nome);
+  document.getElementById("count").innerText = carrinho.length;
+}
+
+function openCart(){
+  alert("Carrinho: " + carrinho.join(", "));
+}
+
+/* ADMIN */
+function openAdmin(){
+  if(!isAdmin) return alert("Negado");
+  alert("Painel ADM aberto (v2)");
+}
 
 </script>
+
+  <script>
+function abrirAddProduto() {
+  document.getElementById("modalAddProduto").style.display = "flex";
+}
+
+function fecharAddProduto() {
+  document.getElementById("modalAddProduto").style.display = "none";
+}
+</script>
+  
+  <div id="modalAddProduto" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+">
+
+  <div style="background:#fff; padding:20px; border-radius:10px; width:300px;">
+    <h3>Adicionar Produto</h3>
+
+    <input type="text" id="nomeProduto" placeholder="Nome"><br><br>
+    <input type="text" id="precoProduto" placeholder="Preço"><br><br>
+    <input type="text" id="imgProduto" placeholder="Imagem URL"><br><br>
+
+    <button onclick="adicionarProduto()">Salvar</button>
+    <button onclick="fecharAddProduto()">Fechar</button>
+  </div>
+
+</div>
+</body>
+  </html>
