@@ -281,34 +281,35 @@ color:white;
 
   <div style="background:#111;padding:20px;border-radius:10px;max-width:400px;margin:auto;">
 
-    <h2>👤 Perfil</h2>
+   <h2>👤 Perfil</h2>
 
-    <p id="perfilUser"></p>
+<p id="perfilUser"></p>
 
-    <hr>
+<hr>
 
-    <button onclick="showTab('perfil')">👤 Meu Perfil</button>
-    <button id="admTabBtn" onclick="showTab('adm')" style="display:none;">⚙️ ADM</button>
-
-    <div id="tabPerfil">
-      <p>Bem-vindo ao seu perfil.</p>
-      <button onclick="logout()">🚪 Sair</button>
-    </div>
-
-    <div id="tabAdm" style="display:none;">
-      <h3>⚙️ Painel ADM</h3>
-
-      <button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
-      <button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
-      <button onclick="alert('Remover produto')">🗑️ Remover Produto</button>
-      <button onclick="alert('Afiliados')">🤝 Afiliados</button>
-    </div>
-
-    <br><br>
-    <button onclick="closePerfil()">❌ Fechar</button>
-
-  </div>
-
+<div style="display:flex;gap:10px;">
+  <button onclick="showTab('perfil')">👤 Perfil</button>
+  <button id="admTabBtn" onclick="showTab('adm')" style="display:none;">⚙️ ADM</button>
 </div>
-</body>
+
+<br>
+
+<div id="tabPerfil">
+  <p>Bem-vindo ao seu perfil.</p>
+  <button onclick="logout()">🚪 Sair</button>
+</div>
+
+<div id="tabAdm" style="display:none;">
+  <h3>⚙️ Painel ADM</h3>
+
+  <button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
+  <button onclick="abrirAddProduto()">➕ Adicionar Produto</button>
+  <button onclick="alert('Remover produto')">🗑️ Remover Produto</button>
+  <button onclick="alert('Afiliados')">🤝 Afiliados</button>
+</div>
+
+<br><br>
+<button onclick="closePerfil()">❌ Fechar</button>
+</div>
+  </body>
 </html>
