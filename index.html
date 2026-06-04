@@ -322,7 +322,50 @@ function editarProdutoPrompt(id){
 
     return p;
   });
+
+  salvar();
+  renderizar();
+}
+
 function alternarEsgotado(id){
+
+  produtos = produtos.map(p => {
+
+    if(p.id === id){
+      p.esgotado = !p.esgotado;
+    }
+
+    return p;
+  });
+
+  salvar();
+  renderizar();
+}
+
+function liberarAfiliado(id){
+
+  produtos = produtos.map(p => {
+
+    if(p.id === id){
+      p.afiliadoLiberado = !p.afiliadoLiberado;
+    }
+
+    return p;
+  });
+
+  salvar();
+  renderizar();
+}
+
+function removerProduto(id){
+
+  if(!confirm("Remover produto?")) return;
+
+  produtos = produtos.filter(p => p.id !== id);
+
+  salvar();
+  renderizar();
+}
 
   produtos = produtos.map(p => {
 
@@ -363,10 +406,6 @@ function removerProduto(id){
 }
   salvar();
   renderizar();
-}
-
-function liberarAfiliado(id){
-  alert("Afiliado liberado para produto " + id);
 }
 
 function mudarAnuncio(){
