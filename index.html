@@ -88,6 +88,238 @@ input{
   text-align:center;
 }
 
+/* PAINEL ADM */
+#painelADM{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  z-index:99999;
+  padding:20px;
+}
+
+.painelBox{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  max-width:400px;
+  margin:auto;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="userLogin" class="screen">
+  <div class="box">
+    <h3>LOGIN</h3>
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
+
+    <button class="btn red" onclick="loginUser()">Entrar</button>
+    <button class="btn gray" onclick="register()">Criar conta</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">LKSTORE PRO</div>
+
+  <div class="topIcons">
+    <div onclick="openCart()">🛒 <span id="count">0</span></div>
+    <div id="adminBtn" onclick="openAdmin()" style="display:none;">⚙️</div>
+  </div>
+</header>
+
+<!-- ANÚNCIO -->
+<div id="anuncio" class="banner">
+🔥 Bem-vindo à LKSTORE
+</div>
+
+<!-- PRODUTOS -->
+<div class="products">
+
+ <div class="card">
+  <h4>Netflix</h4>
+
+  <button class="btn red comprarBtn" onclick="add('Netflix')">
+    Comprar
+  </button>
+
+  <button class="adm-btn" onclick="editarNome(this)">✏️ Editar Nome</button>
+  <button class="adm-btn" onclick="esgotarProduto(this)">🚫 Esgotar</button>
+  <button class="adm-btn" onclick="removerProduto(this)">🗑️ Remover</button>
+ </div>
+
+</div>
+
+<!-- PAINEL ADM -->
+<div id="painelADM">
+  <div class="painelBox">
+
+    <h2>⚙️ Painel ADM</h2>
+
+    <button onclick="mudarAnuncio()">📢 Mudar Anúncio</button>
+    <button onclick="alert('Adicionar produto')">➕ Adicionar Produto</button>
+    <button onclick="alert('Afiliados')">🤝 Afiliados</button>
+
+    <br><br>
+    <button onclick="fecharAdmin()">❌ Fechar</button>
+
+  </div>
+</div>
+
+<script>
+
+let isAdmin = false;
+let userLogado = "";
+let carrinho = [];
+
+const ADMIN_EMAIL = "ls4619058@gmail.com";
+
+/* LOGIN */
+function register(){
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+  localStorage.setItem("u_"+u,p);
+  alert("Conta criada!");
+}
+
+function loginUser(){
+
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if(localStorage.getItem("u_"+u) === p){
+
+    userLogado = u;
+    document.getElementById("userLogin").style.display = "none";
+
+    // 🔐 REGRA ÚNICA DE ADM
+    isAdmin = (u === ADMIN_EMAIL);
+
+    if(isAdmin){
+      document.getElementById("adminBtn").style.display = "block";
+    }
+
+  } else {
+    alert("Login inválido");
+  }
+}
+
+/* SEGURANÇA DAS FUNÇÕES */
+
+function editarNome(botao){
+  if(!isAdmin) return alert("Apenas ADM");
+
+  let novo = prompt("Novo nome:");
+  if(novo) botao.parentElement.querySelector("h4").innerText = novo;
+}
+
+function esgotarProduto(botao){
+  if(!isAdmin) return alert("Apenas ADM");
+
+  let btn = botao.parentElement.querySelector(".comprarBtn");
+  if(btn){
+    btn.innerHTML = "🚫 ESGOTADO";
+    btn.disabled = true;
+  }
+}
+
+function removerProduto(botao){
+  if(!isAdmin) return alert("Apenas ADM");
+  botao.parentElement.remove();
+}
+
+/* CARRINHO */
+function add(nome){
+  carrinho.push(nome);
+  document.getElementById("count").innerText = carrinho.length;
+}
+
+function openCart(){
+  alert("Carrinho: " + carrinho.join(", "));
+}
+
+/* PAINEL ADM */
+function openAdmin(){
+  if(!isAdmin) return alert("Negado");
+  document.getElementById("painelADM").style.display = "block";
+}
+
+function fecharAdmin(){
+  document.getElementById("painelADM").style.display = "none";
+}
+
+/* ANÚNCIO */
+function mudarAnuncio(){
+  if(!isAdmin) return alert("Apenas ADM");
+
+  let novo = prompt("Novo anúncio:");
+  if(novo){
+    document.getElementById("anuncio").innerText = novo;
+    localStorage.setItem("anuncio", novo);
+  }
+}
+
+</script>
+
+</body>
+</html>
+.card{
+  width:200px;
+  background:#111;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.screen{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.box{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  width:280px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:6px;
+}
+
+.btn{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:8px;
+  color:white;
+}
+
+.red{background:red;}
+.gray{background:#333;}
+
+.banner{
+  margin:10px;
+  padding:12px;
+  background:#111;
+  border-left:4px solid red;
+  text-align:center;
+}
+
 /* ===== PAINEL ADM ===== */
 #painelADM{
   display:none;
