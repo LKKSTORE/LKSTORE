@@ -257,21 +257,21 @@ function renderizar(){
           ${p.esgotado ? "🚫 ESGOTADO" : "✅ DISPONÍVEL"}
         </p>
 
-        <button onclick="editarProdutoPrompt(${p.id})">
-          ✏️ Editar
-        </button>
+        ${isAdmin ? `
+<button onclick="editarProdutoPrompt(${p.id})">✏️ Editar</button>
 
-        <button onclick="alternarEsgotado(${p.id})">
-          ${p.esgotado ? "✅ Disponível" : "🚫 Esgotar"}
-        </button>
+<button onclick="alternarEsgotado(${p.id})">
+${p.esgotado ? "✅ Disponível" : "🚫 Esgotar"}
+</button>
 
-        <button onclick="liberarAfiliado(${p.id})">
-          ${p.afiliadoLiberado ? "🤝 Afiliado ON" : "🤝 Afiliado OFF"}
-        </button>
+<button onclick="liberarAfiliado(${p.id})">
+${p.afiliadoLiberado ? "🤝 Afiliado ON" : "🤝 Afiliado OFF"}
+</button>
 
-        <button onclick="removerProduto(${p.id})">
-          🗑️ Remover
-        </button>
+<button onclick="removerProduto(${p.id})">
+🗑️ Remover
+</button>
+` : ""}
 
       </div>
     `;
