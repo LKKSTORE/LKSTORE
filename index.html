@@ -118,6 +118,11 @@ input{
 
 <div class="products"></div>
 
+<!-- ADM -->
+<div id="adminPanel" class="adminPanel" style="display:none;">
+  <button onclick="abrirAddProduto()">➕ Produto</button>
+</div>
+
 <!-- PERFIL -->
 <div id="perfilModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:99999;color:white;padding:20px;">
   <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
@@ -127,11 +132,6 @@ input{
     <button onclick="logout()">🚪 Sair</button>
     <button onclick="closePerfil()">❌ Fechar</button>
   </div>
-</div>
-
-<!-- ADM -->
-<div id="adminPanel" class="adminPanel" style="display:none;">
-  <button onclick="abrirAddProduto()">➕ Produto</button>
 </div>
 
 <!-- ADD PRODUTO -->
@@ -156,32 +156,39 @@ let isAdmin = false;
 const ADMIN_USER = "admin";
 
 /* ===== DADOS ===== */
-let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
+let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
+let vendas = JSON.parse(localStorage.getItem("vendas") || "[]");
 
 /* ===== LOGIN ===== */
 function register(){
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
 
-  if(!u || !p) return alert("Preencha tudo");
+  let u = document.getElementById("user").value.trim();
+  let p = document.getElementById("pass").value.trim();
 
-  let users = JSON.parse(localStorage.getItem("users")) || {};
+  if(!u || !p){
+    alert("Preencha tudo");
+    return;
+  }
 
-  if(users[u]) return alert("Usuário já existe!");
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+  if(users[u]){
+    alert("Usuário já existe!");
+    return;
+  }
 
   users[u] = p;
   localStorage.setItem("users", JSON.stringify(users));
 
-  alert("Conta criada!");
+  alert("Conta criada com sucesso!");
 }
 
 function loginUser(){
 
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
+  let u = document.getElementById("user").value.trim();
+  let p = document.getElementById("pass").value.trim();
 
-  let users = JSON.parse(localStorage.getItem("users")) || {};
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
 
   if(users[u] && users[u] === p){
 
@@ -232,4 +239,51 @@ function renderizar(){
 
         ${p.img ? `<img src="${p.img}" width="100%">` : ""}
 
-        <
+        <h4>${p.nome}</h4>
+        <p>R$ ${p.preco}</p>
+
+        <p>${p.esgotado ? "🚫 ESGOTADO" : "✅ DISPONÍVEL"}</p>
+
+        ${isAdmin ? `
+          <button onclick="editarProduto(${p.id})">✏️ Editar</button>
+          <button onclick="alternarEsgotado(${p.id})">🚫 Esgotar</button>
+          <button onclick="removerProduto(${p.id})">🗑️ Remover</button>
+        ` : ""}
+
+        ${p.esgotado ? `
+          <button disabled>🚫 Esgotado</button>
+        ` : `
+          <button onclick="comprar(${p.id})">💳 Comprar</button>
+        `}
+
+      </div>
+    `;
+  });
+}
+
+/* ===== COMPRA ===== */
+function comprar(id){
+
+  let p = produtos.find(x => x.id === id);
+  if(!p) return;
+
+  window.open("https://link.mercadopago.com.br/lkkstore", "_blank");
+
+  vendas.push({
+    user:userLogado,
+    produto:p.nome,
+    valor:p.preco,
+    status:"aguardando pagamento",
+    data:new Date().toLocaleString()
+  });
+
+  localStorage.setItem("vendas", JSON.stringify(vendas));
+}
+
+/* ===== ADM ===== */
+function abrirAddProduto(){
+  document.getElementById("modalAddProduto").style.display = "flex";
+}
+
+function fecharAddProduto(){
+  document.getElementById("modalAddProduto").style.display = "
