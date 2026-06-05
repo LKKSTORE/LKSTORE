@@ -13,6 +13,7 @@ body{
   color:white;
 }
 
+/* HEADER */
 header{
   display:flex;
   justify-content:space-between;
@@ -23,9 +24,6 @@ header{
 }
 
 .logo{color:red;font-weight:bold;}
-
-.topIcons{display:flex;gap:12px;align-items:center;}
-.topIcons div{cursor:pointer;font-size:22px;}
 
 .products{
   display:flex;
@@ -43,6 +41,7 @@ header{
   text-align:center;
 }
 
+/* LOGIN */
 .screen{
   position:fixed;
   inset:0;
@@ -81,6 +80,15 @@ input{
 .red{background:red;}
 .gray{background:#333;}
 
+/* LOADING */
+#loading{
+  display:none;
+  text-align:center;
+  margin-top:10px;
+  color:lime;
+}
+
+/* ADM */
 .adminPanel{
   position:fixed;
   bottom:10px;
@@ -103,17 +111,15 @@ input{
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
-    <button class="btn red" onclick="register()">Criar conta</button>
-    <button class="btn gray" onclick="loginUser()">Entrar</button>
+    <button class="btn red" onclick="loginUser()">Entrar</button>
+    <button class="btn gray" onclick="register()">Criar conta</button>
+
+    <div id="loading">⏳ Entrando...</div>
   </div>
 </div>
 
 <header>
   <div class="logo">LKSTORE PRO</div>
-
-  <div class="topIcons">
-    <div onclick="openPerfil()">👤</div>
-  </div>
 </header>
 
 <div class="products"></div>
@@ -123,7 +129,7 @@ input{
   <button onclick="abrirAddProduto()">➕ Produto</button>
 </div>
 
-<!-- ADD PRODUTO -->
+<!-- MODAL PRODUTO -->
 <div id="modalAddProduto" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;">
   <div style="background:#fff;padding:20px;border-radius:10px;width:300px;color:black;">
     <h3>Adicionar Produto</h3>
@@ -139,14 +145,13 @@ input{
 
 <script>
 
-/* ===== LOGIN FIX ESTÁVEL ===== */
+/* ===== USUÁRIO ===== */
 let userLogado = "";
 let isAdmin = false;
 const ADMIN_USER = "admin";
 
 /* ===== DADOS ===== */
 let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
-let vendas = JSON.parse(localStorage.getItem("vendas") || "[]");
 let users = JSON.parse(localStorage.getItem("users") || "{}");
 
 /* ===== REGISTER ===== */
@@ -155,17 +160,11 @@ function register(){
   let u = document.getElementById("user").value.trim();
   let p = document.getElementById("pass").value.trim();
 
-  if(!u || !p){
-    alert("Preencha tudo");
-    return;
-  }
+  if(!u || !p) return alert("Preencha tudo");
 
   users = JSON.parse(localStorage.getItem("users") || "{}");
 
-  if(users[u]){
-    alert("Usuário já existe");
-    return;
-  }
+  if(users[u]) return alert("Usuário já existe");
 
   users[u] = p;
   localStorage.setItem("users", JSON.stringify(users));
@@ -173,32 +172,39 @@ function register(){
   alert("Conta criada!");
 }
 
-/* ===== LOGIN (CORRIGIDO) ===== */
+/* ===== LOGIN (CORRIGIDO + FEEDBACK) ===== */
 function loginUser(){
 
   let u = document.getElementById("user").value.trim();
   let p = document.getElementById("pass").value.trim();
 
+  let loading = document.getElementById("loading");
+  loading.style.display = "block";
+
   users = JSON.parse(localStorage.getItem("users") || "{}");
 
-  console.log("USERS DEBUG:", users);
+  setTimeout(() => {
 
-  if(users[u] === p){
+    if(users[u] && users[u] === p){
 
-    userLogado = u;
-    isAdmin = (u === ADMIN_USER);
+      userLogado = u;
+      isAdmin = (u === ADMIN_USER);
 
-    document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("loginScreen").style.display = "none";
 
-    if(isAdmin){
-      document.getElementById("adminPanel").style.display = "block";
+      if(isAdmin){
+        document.getElementById("adminPanel").style.display = "block";
+      }
+
+      renderizar();
+
+    } else {
+      alert("Usuário ou senha inválidos!");
     }
 
-    renderizar();
+    loading.style.display = "none";
 
-  } else {
-    alert("Login inválido");
-  }
+  }, 800);
 }
 
 /* ===== PRODUTOS ===== */
@@ -245,4 +251,61 @@ function comprar(id){
   let p = produtos.find(x => x.id === id);
   if(!p) return;
 
-  window.open("https://link.m
+  window.open("https://link.mercadopago.com.br/lkkstore", "_blank");
+}
+
+/* ===== ADM ===== */
+function abrirAddProduto(){
+  document.getElementById("modalAddProduto").style.display = "flex";
+}
+
+function fecharAddProduto(){
+  document.getElementById("modalAddProduto").style.display = "none";
+}
+
+function adicionarProduto(){
+
+  let nome = document.getElementById("nomeProduto").value;
+  let preco = document.getElementById("precoProduto").value;
+  let img = document.getElementById("imgProduto").value;
+
+  produtos.push({
+    id:Date.now(),
+    nome,
+    preco,
+    img,
+    esgotado:false
+  });
+
+  salvar();
+  renderizar();
+  fecharAddProduto();
+}
+
+function editar(id){
+
+  let p = produtos.find(x => x.id === id);
+
+  let nome = prompt("Nome", p.nome);
+  let preco = prompt("Preço", p.preco);
+
+  produtos = produtos.map(x =>
+    x.id === id ? {...x, nome, preco} : x
+  );
+
+  salvar();
+  renderizar();
+}
+
+function remover(id){
+  produtos = produtos.filter(p => p.id !== id);
+  salvar();
+  renderizar();
+}
+
+renderizar();
+
+</script>
+
+</body>
+</html>
