@@ -43,6 +43,31 @@ header{
   text-align:center;
 }
 
+.screen{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.box{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  width:280px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:6px;
+}
+
 .btn{
   width:100%;
   padding:10px;
@@ -56,30 +81,40 @@ header{
 .red{background:red;}
 .gray{background:#333;}
 
-.banner{
-  margin:10px;
-  padding:12px;
+.adminPanel{
+  position:fixed;
+  bottom:10px;
+  right:10px;
   background:#111;
-  border-left:4px solid red;
-  text-align:center;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid red;
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
+<div id="loginScreen" class="screen">
+  <div class="box">
+    <h3>LOGIN</h3>
+
+    <input id="user" placeholder="Usuário">
+    <input id="pass" type="password" placeholder="Senha">
+
+    <button class="btn red" onclick="loginUser()">Entrar</button>
+    <button class="btn gray" onclick="register()">Criar conta</button>
+  </div>
+</div>
+
 <header>
   <div class="logo">LKSTORE PRO</div>
 
   <div class="topIcons">
     <div onclick="openPerfil()">👤</div>
-    <div onclick="openCart()">🛒 <span id="count">0</span></div>
   </div>
 </header>
-
-<div class="banner">
-🔥 Bem-vindo à LKSTORE
-</div>
 
 <div class="products"></div>
 
@@ -87,23 +122,104 @@ header{
 <div id="perfilModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:99999;color:white;padding:20px;">
   <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
     <h2>👤 Perfil</h2>
-    <p>Usuário: visitante</p>
+    <p id="perfilUser"></p>
 
+    <button onclick="logout()">🚪 Sair</button>
     <button onclick="closePerfil()">❌ Fechar</button>
+  </div>
+</div>
+
+<!-- ADM -->
+<div id="adminPanel" class="adminPanel" style="display:none;">
+  <button onclick="abrirAddProduto()">➕ Produto</button>
+</div>
+
+<!-- ADD PRODUTO -->
+<div id="modalAddProduto" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;">
+  <div style="background:#fff;padding:20px;border-radius:10px;width:300px;color:black;">
+    <h3>Adicionar Produto</h3>
+
+    <input id="nomeProduto" placeholder="Nome">
+    <input id="precoProduto" placeholder="Preço">
+    <input id="imgProduto" placeholder="Imagem URL">
+
+    <button onclick="adicionarProduto()">Salvar</button>
+    <button onclick="fecharAddProduto()">Fechar</button>
   </div>
 </div>
 
 <script>
 
-/* ===== USUÁRIO FIXO ===== */
-let userLogado = "visitante";
-let isAdmin = true;
+/* ===== USUÁRIOS ===== */
+let userLogado = "";
+let isAdmin = false;
+const ADMIN_USER = "admin";
 
 /* ===== DADOS ===== */
 let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
 let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
 
-/* ===== RENDER ===== */
+/* ===== LOGIN ===== */
+function register(){
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if(!u || !p) return alert("Preencha tudo");
+
+  let users = JSON.parse(localStorage.getItem("users")) || {};
+
+  if(users[u]) return alert("Usuário já existe!");
+
+  users[u] = p;
+  localStorage.setItem("users", JSON.stringify(users));
+
+  alert("Conta criada!");
+}
+
+function loginUser(){
+
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  let users = JSON.parse(localStorage.getItem("users")) || {};
+
+  if(users[u] && users[u] === p){
+
+    userLogado = u;
+    isAdmin = (u === ADMIN_USER);
+
+    document.getElementById("loginScreen").style.display = "none";
+
+    if(isAdmin){
+      document.getElementById("adminPanel").style.display = "block";
+    }
+
+    renderizar();
+
+  } else {
+    alert("Login inválido!");
+  }
+}
+
+function logout(){
+  location.reload();
+}
+
+/* ===== PERFIL ===== */
+function openPerfil(){
+  document.getElementById("perfilModal").style.display = "block";
+  document.getElementById("perfilUser").innerText = "Usuário: " + userLogado;
+}
+
+function closePerfil(){
+  document.getElementById("perfilModal").style.display = "none";
+}
+
+/* ===== PRODUTOS ===== */
+function salvar(){
+  localStorage.setItem("produtos", JSON.stringify(produtos));
+}
+
 function renderizar(){
 
   const container = document.querySelector(".products");
@@ -116,7 +232,4 @@ function renderizar(){
 
         ${p.img ? `<img src="${p.img}" width="100%">` : ""}
 
-        <h4>${p.nome}</h4>
-        <p>R$ ${p.preco}</p>
-
-        <p>${
+        <
