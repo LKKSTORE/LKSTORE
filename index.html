@@ -103,8 +103,8 @@ input{
     <input id="user" placeholder="Usuário">
     <input id="pass" type="password" placeholder="Senha">
 
-    <button class="btn red" onclick="loginUser()">Entrar</button>
-    <button class="btn gray" onclick="register()">Criar conta</button>
+    <button class="btn red" onclick="register()">Criar conta</button>
+    <button class="btn gray" onclick="loginUser()">Entrar</button>
   </div>
 </div>
 
@@ -123,17 +123,6 @@ input{
   <button onclick="abrirAddProduto()">➕ Produto</button>
 </div>
 
-<!-- PERFIL -->
-<div id="perfilModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:99999;color:white;padding:20px;">
-  <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
-    <h2>👤 Perfil</h2>
-    <p id="perfilUser"></p>
-
-    <button onclick="logout()">🚪 Sair</button>
-    <button onclick="closePerfil()">❌ Fechar</button>
-  </div>
-</div>
-
 <!-- ADD PRODUTO -->
 <div id="modalAddProduto" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;">
   <div style="background:#fff;padding:20px;border-radius:10px;width:300px;color:black;">
@@ -150,7 +139,7 @@ input{
 
 <script>
 
-/* ===== USUÁRIOS ===== */
+/* ===== LOGIN FIX ESTÁVEL ===== */
 let userLogado = "";
 let isAdmin = false;
 const ADMIN_USER = "admin";
@@ -158,8 +147,9 @@ const ADMIN_USER = "admin";
 /* ===== DADOS ===== */
 let produtos = JSON.parse(localStorage.getItem("produtos") || "[]");
 let vendas = JSON.parse(localStorage.getItem("vendas") || "[]");
+let users = JSON.parse(localStorage.getItem("users") || "{}");
 
-/* ===== LOGIN ===== */
+/* ===== REGISTER ===== */
 function register(){
 
   let u = document.getElementById("user").value.trim();
@@ -170,27 +160,30 @@ function register(){
     return;
   }
 
-  let users = JSON.parse(localStorage.getItem("users") || "{}");
+  users = JSON.parse(localStorage.getItem("users") || "{}");
 
   if(users[u]){
-    alert("Usuário já existe!");
+    alert("Usuário já existe");
     return;
   }
 
   users[u] = p;
   localStorage.setItem("users", JSON.stringify(users));
 
-  alert("Conta criada com sucesso!");
+  alert("Conta criada!");
 }
 
+/* ===== LOGIN (CORRIGIDO) ===== */
 function loginUser(){
 
   let u = document.getElementById("user").value.trim();
   let p = document.getElementById("pass").value.trim();
 
-  let users = JSON.parse(localStorage.getItem("users") || "{}");
+  users = JSON.parse(localStorage.getItem("users") || "{}");
 
-  if(users[u] && users[u] === p){
+  console.log("USERS DEBUG:", users);
+
+  if(users[u] === p){
 
     userLogado = u;
     isAdmin = (u === ADMIN_USER);
@@ -204,22 +197,8 @@ function loginUser(){
     renderizar();
 
   } else {
-    alert("Login inválido!");
+    alert("Login inválido");
   }
-}
-
-function logout(){
-  location.reload();
-}
-
-/* ===== PERFIL ===== */
-function openPerfil(){
-  document.getElementById("perfilModal").style.display = "block";
-  document.getElementById("perfilUser").innerText = "Usuário: " + userLogado;
-}
-
-function closePerfil(){
-  document.getElementById("perfilModal").style.display = "none";
 }
 
 /* ===== PRODUTOS ===== */
@@ -245,9 +224,8 @@ function renderizar(){
         <p>${p.esgotado ? "🚫 ESGOTADO" : "✅ DISPONÍVEL"}</p>
 
         ${isAdmin ? `
-          <button onclick="editarProduto(${p.id})">✏️ Editar</button>
-          <button onclick="alternarEsgotado(${p.id})">🚫 Esgotar</button>
-          <button onclick="removerProduto(${p.id})">🗑️ Remover</button>
+          <button onclick="editar(${p.id})">✏️ Editar</button>
+          <button onclick="remover(${p.id})">🗑️ Remover</button>
         ` : ""}
 
         ${p.esgotado ? `
@@ -267,23 +245,4 @@ function comprar(id){
   let p = produtos.find(x => x.id === id);
   if(!p) return;
 
-  window.open("https://link.mercadopago.com.br/lkkstore", "_blank");
-
-  vendas.push({
-    user:userLogado,
-    produto:p.nome,
-    valor:p.preco,
-    status:"aguardando pagamento",
-    data:new Date().toLocaleString()
-  });
-
-  localStorage.setItem("vendas", JSON.stringify(vendas));
-}
-
-/* ===== ADM ===== */
-function abrirAddProduto(){
-  document.getElementById("modalAddProduto").style.display = "flex";
-}
-
-function fecharAddProduto(){
-  document.getElementById("modalAddProduto").style.display = "
+  window.open("https://link.m
