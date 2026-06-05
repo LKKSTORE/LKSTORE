@@ -43,31 +43,6 @@ header{
   text-align:center;
 }
 
-.screen{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
-.box{
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-  width:280px;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-  border:none;
-  border-radius:6px;
-}
-
 .btn{
   width:100%;
   padding:10px;
@@ -75,6 +50,7 @@ input{
   border:none;
   border-radius:8px;
   color:white;
+  cursor:pointer;
 }
 
 .red{background:red;}
@@ -92,12 +68,55 @@ input{
 
 <body>
 
-<!-- LOGIN -->
-<div id="userLogin" class="screen">
-  <div class="box">
-    <h3>LOGIN</h3>
-    <input id="user" placeholder="Usuário">
-    <input id="pass" type="password" placeholder="Senha">
+<header>
+  <div class="logo">LKSTORE PRO</div>
 
-    <button class="btn red" onclick="loginUser()">Entrar</button>
-    <button class="
+  <div class="topIcons">
+    <div onclick="openPerfil()">👤</div>
+    <div onclick="openCart()">🛒 <span id="count">0</span></div>
+  </div>
+</header>
+
+<div class="banner">
+🔥 Bem-vindo à LKSTORE
+</div>
+
+<div class="products"></div>
+
+<!-- PERFIL -->
+<div id="perfilModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:99999;color:white;padding:20px;">
+  <div style="background:#111;padding:20px;border-radius:10px;max-width:350px;margin:auto;">
+    <h2>👤 Perfil</h2>
+    <p>Usuário: visitante</p>
+
+    <button onclick="closePerfil()">❌ Fechar</button>
+  </div>
+</div>
+
+<script>
+
+/* ===== USUÁRIO FIXO ===== */
+let userLogado = "visitante";
+let isAdmin = true;
+
+/* ===== DADOS ===== */
+let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
+
+/* ===== RENDER ===== */
+function renderizar(){
+
+  const container = document.querySelector(".products");
+  container.innerHTML = "";
+
+  produtos.forEach(p => {
+
+    container.innerHTML += `
+      <div class="card">
+
+        ${p.img ? `<img src="${p.img}" width="100%">` : ""}
+
+        <h4>${p.nome}</h4>
+        <p>R$ ${p.preco}</p>
+
+        <p>${
